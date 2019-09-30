@@ -1,0 +1,16 @@
+{
+    "LOGIN_PAGE": {
+        "WELCOME": "Bus to School",
+        "CHOOSE_DOMAIN": "Cấu hình domain",
+        "EMAIL": "Email",
+        "PASSWORD": "Mật khẩu",
+        "SHOW": "Hiện",
+        "HIDE": "Ẩn",
+        "SIGN_IN": "Đăng nhập",
+        "CHOOSE_TYPE": "Chọn loại hình sử dụng",
+        "MANUAL": "Thủ công",
+        "QR_CODE": "QR Code",
+        "SALE_TICKET": "Bán vé",
+        "CHECK_TICKET": "Soát vé"
+    }
+}

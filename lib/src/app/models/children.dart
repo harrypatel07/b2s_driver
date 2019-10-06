@@ -6,6 +6,16 @@ class Children {
   String gender;
   int age;
   Children(this.id, this.name, this.photo, this.gender, this.age);
+
+  static List<Children> getChildrenByListID( List<Children> listChildren, List<int> listId) {
+     List<Children> listResult = [];
+    for (var id in listId) {
+      var child = listChildren.singleWhere((child) => child.id == id); 
+      if(child != null) listResult.add(child);
+    }
+  return listResult;
+  }
+
   static final List<Children> list = [
     Children(
         1,

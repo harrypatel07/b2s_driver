@@ -1,5 +1,5 @@
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
-import 'package:b2s_driver/src/app/pages/home/home_page_viewmodel.dart';
+import 'package:b2s_driver/src/app/pages/home/home_page_viewmodel_bk.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/children.dart';
@@ -256,9 +256,9 @@ class ChildrenRowState extends State<ChildrenRow> {
 
 }
 class ChildrenRow extends StatefulWidget {
-  HomePageViewModel viewModel;
+  final HomePageViewModel viewModel;
   final Children children;
-  int statusID;
+  final int statusID;
   ChildrenRow(this.children, this.statusID,this.viewModel);
   @override
   State<StatefulWidget> createState() => new ChildrenRowState(this.children, this.statusID, this.viewModel);

@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "917273183839",
+    "firebase_url": "https://b2school-7f2b6.firebaseio.com",
+    "project_id": "b2school-7f2b6",
+    "storage_bucket": "b2school-7f2b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:917273183839:android:df88ad241924f1d179fdea",
+        "android_client_info": {
+          "package_name": "b2sparent.ts24corp.com.b2s_parent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "917273183839-pd3v4itt8se1g0m156k344hne04gl3je.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZFweraZt0BIS_SUz4QnUZL--fhoYUSqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "917273183839-pd3v4itt8se1g0m156k344hne04gl3je.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:917273183839:android:7585b0403c947d3e79fdea",
+        "android_client_info": {
+          "package_name": "bs2driver.ts24corp.com.b2s_driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "917273183839-pd3v4itt8se1g0m156k344hne04gl3je.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZFweraZt0BIS_SUz4QnUZL--fhoYUSqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "917273183839-pd3v4itt8se1g0m156k344hne04gl3je.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

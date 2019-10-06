@@ -3,12 +3,12 @@ import 'dart:core';
 import 'package:b2s_driver/src/app/models/children.dart';
 
 class DriverBusSession {
-  final String sessionID;
-  final String busID;
-  final int type; //0: lượt đi, //1: lượt về
-  final List<Children> listChildren;
-  final List<ChildDrenStatus> childDrenStatus;
-  final List<ChildDrenRoute> childDrenRoute;
+   String sessionID;
+   String busID;
+   int type; //0: lượt đi, //1: lượt về
+   List<Children> listChildren;
+   List<ChildDrenStatus> childDrenStatus;
+   List<ChildDrenRoute> childDrenRoute;
 
   DriverBusSession(
       {this.childDrenRoute,
@@ -38,13 +38,22 @@ class DriverBusSession {
 class ChildDrenStatus {
   final int id;
   final int childrenID;
-  int statusID;  //remove final to do change status 0->1 in code 
+  int statusID; //remove final to do change status 0->1 in code
 
   ChildDrenStatus({this.id, this.childrenID, this.statusID});
   static List<ChildDrenStatus> list = [
     ChildDrenStatus(id: 1, childrenID: 1, statusID: 0),
     ChildDrenStatus(id: 2, childrenID: 2, statusID: 0),
+    ChildDrenStatus(id: 3, childrenID: 3, statusID: 0),
+    ChildDrenStatus(id: 4, childrenID: 4, statusID: 0),
   ];
+
+  static int getStatusIDByChildrenID(List<ChildDrenStatus> list, int childrenID) {
+    var statusID = 0;
+    final _childrenStatus =  list.firstWhere((item) => item.childrenID == childrenID,  orElse: () => null);
+    if(_childrenStatus != null) statusID = _childrenStatus.statusID;
+    return statusID;
+  }
 }
 
 class ChildDrenRoute {
@@ -56,7 +65,16 @@ class ChildDrenRoute {
   static List<ChildDrenRoute> list = [
     ChildDrenRoute(id: 1, listChildrenID: [1, 2], routeBusID: 1),
     ChildDrenRoute(id: 2, listChildrenID: [3, 4], routeBusID: 2),
+       ChildDrenRoute(id: 2, listChildrenID: [3, 4], routeBusID: 3),
   ];
+
+  static ChildDrenRoute getChilDrenRouteByRouteID(
+      List<ChildDrenRoute> list, routeBusID) {
+     ChildDrenRoute _childrenRoute;
+     _childrenRoute = list.firstWhere((item) => item.routeBusID == routeBusID,  orElse: () => null);
+    // if(_childrenRoute == null) _childrenRoute = ChildDrenRoute();
+     return _childrenRoute;
+  }
 }
 
 class RouteBus {
@@ -130,6 +148,11 @@ class RouteBus {
       lng: 0,
     ),
   ];
+
+  static List<RouteBus> getListRouteBusByType(
+      List<RouteBus> listRouteBus, int type) {
+    return listRouteBus.where((item) => item.type == type).toList();
+  }
 }
 
 class StatusBus {
@@ -145,4 +168,7 @@ class StatusBus {
     StatusBus(3, "Nghỉ học", 0xFFE80F0F),
     StatusBus(4, "Đã về nhà", 0xFF6F32A0),
   ];
+  static getStatusByID(List<StatusBus> list, id) {
+    return list.singleWhere((item) => item.statusID == id);
+  }
 }

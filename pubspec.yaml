@@ -14,7 +14,7 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -46,6 +46,12 @@ dependencies:
   fancy_bottom_navigation: ^0.3.2
   google_maps_flutter: ^0.5.21+3
   cached_network_image: ^1.1.1
+  sliding_up_panel: ^0.3.6
+  cloud_firestore: ^0.12.9+4
+  geoflutterfire: ^2.0.3+5
+  location: ^2.3.5
+  url_launcher: ^5.1.4
+  json_serializable: ^3.2.2
 
 dev_dependencies:
   flutter_test:

@@ -194,26 +194,28 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
 //                  SizedBox(
 //                    width: 12.0,
 //                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: radioButton(false),
-                  ),
-                  SizedBox(
-                    width: 8.0,
-                  ),
-                  Text("Remember me",
-                      style: TextStyle(
-                        fontSize: 12,
-                        //fontFamily: "Poppins-Medium"
-                      ))
+                  // GestureDetector(
+                  //   onTap: () {},
+                  //   child: radioButton(false),
+                  // ),
+                  // SizedBox(
+                  //   width: 8.0,
+                  // ),
+                  // Text("Remember me",
+                  //     style: TextStyle(
+                  //       fontSize: 12,
+                  //       //fontFamily: "Poppins-Medium"
+                  //     ))
                 ],
               ),
               Container(
                 width: MediaQuery.of(context).size.width - 250,
                 height: 40,
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: [Color(0xFFFFD752), Color(0xFFD4AF0B)]),
+                    gradient: LinearGradient(colors: [
+                      ThemePrimary.primaryColor,
+                      ThemePrimary.gradientColor
+                    ]),
                     borderRadius: BorderRadius.circular(6.0),
                     boxShadow: [
                       BoxShadow(

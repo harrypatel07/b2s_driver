@@ -1,13 +1,8 @@
-import 'package:b2s_driver/src/app/pages/busAttendance/bus_attendance_page.dart';
-import 'package:b2s_driver/src/app/pages/history/history_page.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
-import 'package:b2s_driver/src/app/pages/leave/leave_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page.dart';
+
 import 'package:b2s_driver/src/app/pages/login/login_page.dart';
-import 'package:b2s_driver/src/app/pages/message/messageDetail/message_detail_page.dart';
-import 'package:b2s_driver/src/app/pages/message/messageUser/message_user_page.dart';
-import 'package:b2s_driver/src/app/pages/message/message_page.dart';
-import 'package:b2s_driver/src/app/pages/notification/notification_page.dart';
+
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
 import 'package:flutter/material.dart';
 
@@ -18,16 +13,7 @@ class Routes {
     TabsPage.routeName: (context) =>
         TabsPage(ModalRoute.of(context).settings.arguments),
     HomePage.routeName: (context) => HomePage(),
-    HistoryPage.routeName: (context) => HistoryPage(),
     LocateBusPage.routeName: (context) => LocateBusPage(),
-    BusAttendancePage.routeName: (context) => BusAttendancePage(),
-    LeavePage.routeName: (context) => LeavePage(),
-    MessagePage.routeName: (context) => MessagePage(),
-    MessageDetailPage.routeName: (context) =>
-        MessageDetailPage(userId: ModalRoute.of(context).settings.arguments),
-    MessageUserPage.routeName: (context) =>
-        MessageUserPage(userId: ModalRoute.of(context).settings.arguments),
-    NotificationPage.routeName: (context) => NotificationPage(),
   };
 }
 

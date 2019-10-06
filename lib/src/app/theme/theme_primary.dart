@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ThemePrimary {
-  static const primaryColor = Color(0xFFFFD752);
+  static const primaryColor = Color(0xFF8a8d91);
 
-  static const gradientColor = Color(0xFFc49b29);
+  static const gradientColor = Color(0xFFa3a7ad);
 
   static const primaryFontFamily = "Quicksand";
 

@@ -1,4 +1,3 @@
-import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/menu.dart';
 import 'package:b2s_driver/src/app/pages/sidemenu/sidemenu_page.dart';
@@ -65,7 +64,7 @@ class _TabsPageState extends State<TabsPage> {
                 index: viewModel.currentTabIndex,
                 children: tabs,
               ),
-              drawer: SideMenuPage(),
+              //drawer: SideMenuPage(),
               // bottomNavigationBar: BottomNavigationBar(
               //   onTap: viewModel.onTapped,
               //   currentIndex: viewModel.currentTabIndex,

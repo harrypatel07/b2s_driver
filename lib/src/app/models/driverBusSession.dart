@@ -3,12 +3,12 @@ import 'dart:core';
 import 'package:b2s_driver/src/app/models/children.dart';
 
 class DriverBusSession {
-   String sessionID;
-   String busID;
-   int type; //0: lượt đi, //1: lượt về
-   List<Children> listChildren;
-   List<ChildDrenStatus> childDrenStatus;
-   List<ChildDrenRoute> childDrenRoute;
+  String sessionID;
+  String busID;
+  int type; //0: lượt đi, //1: lượt về
+  List<Children> listChildren;
+  List<ChildDrenStatus> childDrenStatus;
+  List<ChildDrenRoute> childDrenRoute;
 
   DriverBusSession(
       {this.childDrenRoute,
@@ -39,19 +39,31 @@ class ChildDrenStatus {
   final int id;
   final int childrenID;
   int statusID; //remove final to do change status 0->1 in code
-
-  ChildDrenStatus({this.id, this.childrenID, this.statusID});
+  final int routeBusID;
+  ChildDrenStatus({
+    this.id,
+    this.childrenID,
+    this.statusID,
+    this.routeBusID,
+  });
   static List<ChildDrenStatus> list = [
-    ChildDrenStatus(id: 1, childrenID: 1, statusID: 0),
-    ChildDrenStatus(id: 2, childrenID: 2, statusID: 0),
-    ChildDrenStatus(id: 3, childrenID: 3, statusID: 0),
-    ChildDrenStatus(id: 4, childrenID: 4, statusID: 0),
+    ChildDrenStatus(id: 1, childrenID: 1, statusID: 0, routeBusID: 1),
+    ChildDrenStatus(id: 2, childrenID: 2, statusID: 0, routeBusID: 1),
+    ChildDrenStatus(id: 3, childrenID: 3, statusID: 0, routeBusID: 1),
+    ChildDrenStatus(id: 4, childrenID: 3, statusID: 0, routeBusID: 2),
+    ChildDrenStatus(id: 5, childrenID: 4, statusID: 0, routeBusID: 2),
+    ChildDrenStatus(id: 6, childrenID: 3, statusID: 0, routeBusID: 4),
+    ChildDrenStatus(id: 7, childrenID: 4, statusID: 0, routeBusID: 4),
   ];
 
-  static int getStatusIDByChildrenID(List<ChildDrenStatus> list, int childrenID) {
+  static int getStatusIDByChildrenID(
+      List<ChildDrenStatus> list, int childrenID, int routeBusID) {
     var statusID = 0;
-    final _childrenStatus =  list.firstWhere((item) => item.childrenID == childrenID,  orElse: () => null);
-    if(_childrenStatus != null) statusID = _childrenStatus.statusID;
+    final _childrenStatus = list.firstWhere(
+        (item) =>
+            item.childrenID == childrenID && item.routeBusID == routeBusID,
+        orElse: () => null);
+    if (_childrenStatus != null) statusID = _childrenStatus.statusID;
     return statusID;
   }
 }
@@ -63,17 +75,18 @@ class ChildDrenRoute {
 
   ChildDrenRoute({this.id, this.listChildrenID, this.routeBusID});
   static List<ChildDrenRoute> list = [
-    ChildDrenRoute(id: 1, listChildrenID: [1, 2], routeBusID: 1),
+    ChildDrenRoute(id: 1, listChildrenID: [1, 2, 3], routeBusID: 1),
     ChildDrenRoute(id: 2, listChildrenID: [3, 4], routeBusID: 2),
-       ChildDrenRoute(id: 2, listChildrenID: [3, 4], routeBusID: 3),
+    // ChildDrenRoute(id: 3, listChildrenID: [3, 4], routeBusID: 4),
   ];
 
   static ChildDrenRoute getChilDrenRouteByRouteID(
       List<ChildDrenRoute> list, routeBusID) {
-     ChildDrenRoute _childrenRoute;
-     _childrenRoute = list.firstWhere((item) => item.routeBusID == routeBusID,  orElse: () => null);
+    ChildDrenRoute _childrenRoute;
+    _childrenRoute = list.firstWhere((item) => item.routeBusID == routeBusID,
+        orElse: () => null);
     // if(_childrenRoute == null) _childrenRoute = ChildDrenRoute();
-     return _childrenRoute;
+    return _childrenRoute;
   }
 }
 
@@ -162,13 +175,13 @@ class StatusBus {
 
   StatusBus(this.statusID, this.statusName, this.statusColor);
   static List<StatusBus> list = [
-    StatusBus(0, "Đang chờ", 0xFF8FD838),
+    StatusBus(0, "Đang chờ", 0xFFFFD752),
     StatusBus(1, "Đang trong chuyến", 0xFF8FD838),
     StatusBus(2, "Đã tới trường", 0xFF3DABEC),
     StatusBus(3, "Nghỉ học", 0xFFE80F0F),
     StatusBus(4, "Đã về nhà", 0xFF6F32A0),
   ];
-  static getStatusByID(List<StatusBus> list, id) {
+  static StatusBus getStatusByID(List<StatusBus> list, id) {
     return list.singleWhere((item) => item.statusID == id);
   }
 }

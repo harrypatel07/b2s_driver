@@ -8,16 +8,17 @@ class ChildrenRowState extends State<ChildrenRow> {
   HomePageViewModel viewModel;
   Children children;
   int statusID;
-  ChildrenRowState(this.children,this.statusID,this.viewModel);
+  ChildrenRowState(this.children, this.statusID, this.viewModel);
   bool isEnablePicked;
   int isChangeStatus;
   @override
   void initState() {
     setState(() {
       isChangeStatus = statusID;
-      if(statusID==0)
-      isEnablePicked = true;
-      else isEnablePicked = false;
+      if (statusID == 0)
+        isEnablePicked = true;
+      else
+        isEnablePicked = false;
       //viewModel.ad = 'cao1';
     });
     super.initState();
@@ -59,7 +60,7 @@ class ChildrenRowState extends State<ChildrenRow> {
       child: Row(
         children: <Widget>[
           new Container(
-            margin: EdgeInsets.only(left: 10,right: 5),
+            margin: EdgeInsets.only(left: 10, right: 5),
             width: 10.0,
             height: 10.0,
             decoration: new BoxDecoration(
@@ -67,7 +68,11 @@ class ChildrenRowState extends State<ChildrenRow> {
               shape: BoxShape.circle,
             ),
           ),
-          new Text(StatusBus.list[isChangeStatus].statusName,style: TextStyle(fontSize: 14,fontWeight: FontWeight.w700,color: Colors.grey)),
+          new Text(StatusBus.list[isChangeStatus].statusName,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.grey)),
         ],
       ),
     );
@@ -143,21 +148,22 @@ class ChildrenRowState extends State<ChildrenRow> {
               children: <Widget>[
                 new Container(
                     child: Column(
-                      children: <Widget>[
-                        new Container(height: 4.0),
-                        new Text(children.name, style: headerTextStyle),
-                        new Container(height: 4.0),
-                        new Text(children.gender == 'F' ? 'Female' : 'Male',
-                            style: subHeaderTextStyle),
-                      ],
-                    )),
+                  children: <Widget>[
+                    new Container(height: 4.0),
+                    new Text(children.name, style: headerTextStyle),
+                    new Container(height: 4.0),
+                    new Text(children.gender == 'F' ? 'Female' : 'Male',
+                        style: subHeaderTextStyle),
+                  ],
+                )),
                 Spacer(),
                 new InkWell(
                   onTap: () {
                     setState(() {
                       isChangeStatus = 1;
-                      if(isEnablePicked == true) {
-                        viewModel.setStatusByChildrenID(children.id,1,ChildDrenStatus.list);
+                      if (isEnablePicked == true) {
+                        viewModel.setStatusByChildrenID(
+                            children.id, 1, ChildDrenStatus.list);
                         isEnablePicked = false;
                       }
                       //viewModel.setup();
@@ -174,16 +180,18 @@ class ChildrenRowState extends State<ChildrenRow> {
                         BoxShadow(
                           color: Colors.black38,
                           blurRadius:
-                          5.0, // has the effect of softening the shadow
+                              5.0, // has the effect of softening the shadow
                           spreadRadius:
-                          1.0, // has the effect of extending the shadow
+                              1.0, // has the effect of extending the shadow
                           offset: Offset(
                             5.0, // horizontal, move right 10
                             5.0, // vertical, move down 10
                           ),
                         )
                       ],
-                      color: (isEnablePicked==true)? Colors.blueAccent: Colors.grey,
+                      color: (isEnablePicked == true)
+                          ? Colors.blueAccent
+                          : Colors.grey,
                       //border: new Border.all(color: Colors.white, width: 2.0),
                       borderRadius: new BorderRadius.circular(15.0),
                     ),
@@ -191,7 +199,7 @@ class ChildrenRowState extends State<ChildrenRow> {
                       child: new Text(
                         "Picked",
                         style:
-                        new TextStyle(fontSize: 14.0, color: Colors.white),
+                            new TextStyle(fontSize: 14.0, color: Colors.white),
                       ),
                     ),
                   ),
@@ -208,9 +216,9 @@ class ChildrenRowState extends State<ChildrenRow> {
                 Spacer(),
                 Container(
                     child: Icon(
-                      Icons.location_on,
-                      color: Colors.grey.shade600,
-                    ))
+                  Icons.location_on,
+                  color: Colors.grey.shade600,
+                ))
 //              new Expanded(
 //                  child: _childrenValue(
 //                      value: children.age.toString(), image: children.photo))
@@ -239,9 +247,6 @@ class ChildrenRowState extends State<ChildrenRow> {
       ),
     );
 
-
-
-
     return new Container(
         height: 80.0,
         child: new Stack(
@@ -253,14 +258,14 @@ class ChildrenRowState extends State<ChildrenRow> {
           ],
         ));
   }
-
 }
+
 class ChildrenRow extends StatefulWidget {
   final HomePageViewModel viewModel;
   final Children children;
   final int statusID;
-  ChildrenRow(this.children, this.statusID,this.viewModel);
+  ChildrenRow(this.children, this.statusID, this.viewModel);
   @override
-  State<StatefulWidget> createState() => new ChildrenRowState(this.children, this.statusID, this.viewModel);
-
+  State<StatefulWidget> createState() =>
+      new ChildrenRowState(this.children, this.statusID, this.viewModel);
 }

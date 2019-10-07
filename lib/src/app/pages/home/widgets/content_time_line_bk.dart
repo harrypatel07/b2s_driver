@@ -7,13 +7,15 @@ import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
 import 'package:flutter/material.dart';
 
 class ContentTimeLineWidget extends StatefulWidget {
-  HomePageViewModel viewModel;
-  List<ChildDrenStatus> listChildDrenStatus;
-  ChildDrenRoute childDrenRoute;
-  ContentTimeLineWidget({Key key, this.childDrenRoute, this.listChildDrenStatus,this.viewModel}) : super(key: key);
+  final HomePageViewModel viewModel;
+  final List<ChildDrenStatus> listChildDrenStatus;
+  final ChildDrenRoute childDrenRoute;
+  ContentTimeLineWidget(
+      {Key key, this.childDrenRoute, this.listChildDrenStatus, this.viewModel})
+      : super(key: key);
   @override
-  State<StatefulWidget> createState() =>
-      new ContentWidgetState(this.childDrenRoute,this.listChildDrenStatus,this.viewModel);
+  State<StatefulWidget> createState() => new ContentWidgetState(
+      this.childDrenRoute, this.listChildDrenStatus, this.viewModel);
 }
 
 class ContentWidgetState extends State<ContentTimeLineWidget> {
@@ -21,23 +23,25 @@ class ContentWidgetState extends State<ContentTimeLineWidget> {
   ChildDrenRoute childDrenRoute;
   List<ChildDrenStatus> listChilDrenStatus;
   var listChildren = List<Widget>();
-  ContentWidgetState(this.childDrenRoute, this.listChilDrenStatus, this.viewModel);
+  ContentWidgetState(
+      this.childDrenRoute, this.listChilDrenStatus, this.viewModel);
 
   @override
   void initState() {
     // TODO: implement initState
-    for(var children in Children.list){
-      for(var i in childDrenRoute.listChildrenID)
-        if(children.id==i) {
-          for(var s in listChilDrenStatus)
-            if(s.childrenID == children.id)
+    for (var children in Children.list) {
+      for (var i in childDrenRoute.listChildrenID)
+        if (children.id == i) {
+          for (var s in listChilDrenStatus)
+            if (s.childrenID == children.id)
               listChildren.add(new Padding(
                   padding: new EdgeInsets.only(top: 5.0),
-                  child: new ChildrenRow(children,s.statusID,viewModel)));
+                  child: new ChildrenRow(children, s.statusID, viewModel)));
         }
     }
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return new Expanded(
@@ -53,10 +57,15 @@ class ContentWidgetState extends State<ContentTimeLineWidget> {
               child: Row(
                 children: <Widget>[
                   Text(
-                    RouteBus.list[childDrenRoute.routeBusID - 1].routeName.toUpperCase(),
+                    RouteBus.list[childDrenRoute.routeBusID - 1].routeName
+                        .toUpperCase(),
                     style: new TextStyle(
                       fontWeight: FontWeight.w500,
-                      color: (RouteBus.list[childDrenRoute.routeBusID - 1].status==true)?Colors.green: Colors.black,
+                      color: (RouteBus
+                                  .list[childDrenRoute.routeBusID - 1].status ==
+                              true)
+                          ? Colors.green
+                          : Colors.black,
                       fontSize: 16.0,
                     ),
                     textAlign: TextAlign.start,
@@ -74,7 +83,7 @@ class ContentWidgetState extends State<ContentTimeLineWidget> {
               ),
             ),
           ),
-          new Column(children:listChildren),
+          new Column(children: listChildren),
         ],
       ),
     );

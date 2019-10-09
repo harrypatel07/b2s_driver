@@ -75,13 +75,30 @@ class LocateBusPageViewModel extends ViewModelBase {
         target: LatLng(myLoc.latitude, myLoc.longitude), zoom: 13.0)));
     myLocationEnabled = true;
     childrenBus.status = StatusBus.list[0];
+    final iconMy = await GoogleMapService.getMarkerIcon(
+        'assets/images/icon_bus.png',
+        width: 50);
+    markers[MarkerId("location")] = Marker(
+      markerId: MarkerId("location"),
+      position: LatLng(myLoc.latitude, myLoc.longitude),
+      rotation: myLoc.heading,
+      icon: iconMy,
+    );
+    location.onLocationChanged().listen((onData) {
+      final _marker = markers[MarkerId("location")];
+      markers[MarkerId("location")] = _marker.copyWith(
+          rotationParam: onData.heading,
+          positionParam: LatLng(onData.latitude, onData.longitude));
+      this.updateState();
+    });
     this.updateState();
   }
 
   Future movingBus() async {
     markers.clear();
-    final iconBus =
-        await GoogleMapService.getMarkerIcon('assets/images/pin.png');
+    final iconBus = await GoogleMapService.getMarkerIcon(
+        'assets/images/pin.png',
+        width: 100);
     final iconSchool =
         await GoogleMapService.getMarkerIcon('assets/images/school.png');
     final iconChild =
@@ -102,11 +119,11 @@ class LocateBusPageViewModel extends ViewModelBase {
     );
 
     //Create marker child
-    markers[markerChild] = Marker(
-      markerId: markerChild,
-      position: pinFrom,
-      icon: iconChild,
-    );
+    // markers[markerChild] = Marker(
+    //   markerId: markerChild,
+    //   position: pinFrom,
+    //   icon: iconChild,
+    // );
 
     this.updateState();
     //Draw polyline

@@ -1,10 +1,9 @@
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page_viewmodel.dart';
-import 'package:b2s_driver/src/app/pages/home/widgets/home_page_timeline_widget.dart';
-import 'package:b2s_driver/src/app/pages/home/widgets/home_page_timeline_widget2.dart';
+import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
-import 'package:b2s_driver/src/app/widgets/home_page_cart_timeline.dart';
+import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_appbar_widget.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +33,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget _buildBody(DriverBusSession driverBusSession) {
     var listTimeLine =
         RouteBus.getListRouteBusByType(RouteBus.list, driverBusSession.type)
-            .map((item) => TimeLineEventTime(
+            .map((item) => TimeLineEvent(
                 time: item.time,
                 task: item.routeName,
                 content: viewModel
@@ -70,13 +69,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging)
-        // Tab Changed tapping on new tab
-        viewModel.heightTimeline = [];
-      else if (_tabController.index != _tabController.previousIndex)
-        // Tab Changed swiping to a new tab
-        viewModel.heightTimeline = [];
+    // _tabController.addListener(() {
+    //   if (_tabController.indexIsChanging)
+    //     // Tab Changed tapping on new tab
+    //     viewModel.heightTimeline = [];
+    //   else if (_tabController.index != _tabController.previousIndex)
+    //     // Tab Changed swiping to a new tab
+    //     viewModel.heightTimeline = [];
+    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      viewModel.listenData();
     });
     super.initState();
   }

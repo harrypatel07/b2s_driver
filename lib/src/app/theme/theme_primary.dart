@@ -41,18 +41,18 @@ class ThemePrimary {
   );
   static theme() {
     return ThemeData(
-      fontFamily: "Quicksand",
-      primaryColor: primaryColor,
-      //primaryColor: Colors.blue,
-      backgroundColor: Colors.white,
-      snackBarTheme: SnackBarThemeData(
-        backgroundColor: Colors.blue,
-        actionTextColor: Colors.white,
-      ),
-      //canvasColor: Colors.white,
-      // appBarTheme: AppBarTheme(
-      //     textTheme: appBar_textTheme, iconTheme: appBar_iconTheme),
-    );
+        fontFamily: primaryFontFamily,
+        primaryColor: primaryColor,
+        //primaryColor: Colors.blue,
+        backgroundColor: Colors.white,
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: Colors.blue,
+          actionTextColor: Colors.white,
+        )
+        //canvasColor: Colors.white,
+        // appBarTheme: AppBarTheme(
+        //     textTheme: appBar_textTheme, iconTheme: appBar_iconTheme),
+        );
   }
 
   static TextStyle loginPageButton(BuildContext context) {

@@ -17,6 +17,35 @@ class DriverBusSession {
       this.type,
       this.listChildren,
       this.childDrenStatus});
+
+  fromJson(Map<dynamic, dynamic> json) {
+    List list = [];
+    sessionID = json['sessionID'];
+    busID = json['busID'];
+    list = json['listChildren'];
+    listChildren = list.map((item) => Children.fromJson(item)).toList();
+    type = json['type'];
+    list = json['childDrenStatus'];
+    childDrenStatus =
+        list.map((item) => ChildDrenStatus.fromJson(item)).toList();
+    list = json['childDrenRoute'];
+    childDrenRoute = list.map((item) => ChildDrenRoute.fromJson(item)).toList();
+  }
+
+  Map<dynamic, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['sessionID'] = this.sessionID;
+    data['busID'] = this.busID;
+    data['listChildren'] =
+        this.listChildren.map((item) => item.toJson()).toList();
+    data['type'] = this.type;
+    data['childDrenStatus'] =
+        this.childDrenStatus.map((item) => item.toJson()).toList();
+    data['childDrenRoute'] =
+        this.childDrenRoute.map((item) => item.toJson()).toList();
+    return data;
+  }
+
   static List<DriverBusSession> list = [
     DriverBusSession(
         sessionID: "S01",
@@ -36,25 +65,32 @@ class DriverBusSession {
 }
 
 class ChildDrenStatus {
-  final int id;
-  final int childrenID;
+  int id;
+  int childrenID;
   int statusID; //remove final to do change status 0->1 in code
-  final int routeBusID;
+  int routeBusID;
   ChildDrenStatus({
     this.id,
     this.childrenID,
     this.statusID,
     this.routeBusID,
   });
-  static List<ChildDrenStatus> list = [
-    ChildDrenStatus(id: 1, childrenID: 1, statusID: 0, routeBusID: 1),
-    ChildDrenStatus(id: 2, childrenID: 2, statusID: 0, routeBusID: 1),
-    ChildDrenStatus(id: 3, childrenID: 3, statusID: 0, routeBusID: 1),
-    ChildDrenStatus(id: 4, childrenID: 3, statusID: 0, routeBusID: 2),
-    ChildDrenStatus(id: 5, childrenID: 4, statusID: 0, routeBusID: 2),
-    ChildDrenStatus(id: 6, childrenID: 3, statusID: 0, routeBusID: 4),
-    ChildDrenStatus(id: 7, childrenID: 4, statusID: 0, routeBusID: 4),
-  ];
+
+  ChildDrenStatus.fromJson(Map<dynamic, dynamic> json) {
+    id = json['id'];
+    childrenID = json['childrenID'];
+    statusID = json['statusID'];
+    routeBusID = json['routeBusID'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["id"] = this.id;
+    data["childrenID"] = this.childrenID;
+    data["statusID"] = this.statusID;
+    data["routeBusID"] = this.routeBusID;
+    return data;
+  }
 
   static int getStatusIDByChildrenID(
       List<ChildDrenStatus> list, int childrenID, int routeBusID) {
@@ -66,19 +102,37 @@ class ChildDrenStatus {
     if (_childrenStatus != null) statusID = _childrenStatus.statusID;
     return statusID;
   }
+
+  static List<ChildDrenStatus> list = [
+    ChildDrenStatus(id: 1, childrenID: 3, statusID: 0, routeBusID: 1),
+    ChildDrenStatus(id: 2, childrenID: 4, statusID: 0, routeBusID: 1),
+    ChildDrenStatus(id: 3, childrenID: 1, statusID: 0, routeBusID: 2),
+    ChildDrenStatus(id: 4, childrenID: 2, statusID: 0, routeBusID: 2),
+    ChildDrenStatus(id: 6, childrenID: 1, statusID: 0, routeBusID: 4),
+    ChildDrenStatus(id: 7, childrenID: 2, statusID: 0, routeBusID: 4),
+  ];
 }
 
 class ChildDrenRoute {
-  final int id;
-  final List<int> listChildrenID;
-  final int routeBusID;
+  int id;
+  List<int> listChildrenID;
+  int routeBusID;
 
   ChildDrenRoute({this.id, this.listChildrenID, this.routeBusID});
-  static List<ChildDrenRoute> list = [
-    ChildDrenRoute(id: 1, listChildrenID: [1, 2, 3], routeBusID: 1),
-    ChildDrenRoute(id: 2, listChildrenID: [3, 4], routeBusID: 2),
-    // ChildDrenRoute(id: 3, listChildrenID: [3, 4], routeBusID: 4),
-  ];
+
+  ChildDrenRoute.fromJson(Map<dynamic, dynamic> json) {
+    id = json['id'];
+    listChildrenID = json['listChildrenID'].cast<int>();
+    routeBusID = json['routeBusID'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["id"] = this.id;
+    data["listChildrenID"] = this.listChildrenID;
+    data["routeBusID"] = this.routeBusID;
+    return data;
+  }
 
   static ChildDrenRoute getChilDrenRouteByRouteID(
       List<ChildDrenRoute> list, routeBusID) {
@@ -88,17 +142,23 @@ class ChildDrenRoute {
     // if(_childrenRoute == null) _childrenRoute = ChildDrenRoute();
     return _childrenRoute;
   }
+
+  static List<ChildDrenRoute> list = [
+    ChildDrenRoute(id: 1, listChildrenID: [3, 4], routeBusID: 1),
+    ChildDrenRoute(id: 2, listChildrenID: [1, 2], routeBusID: 2),
+    ChildDrenRoute(id: 3, listChildrenID: [1, 2], routeBusID: 4),
+  ];
 }
 
 class RouteBus {
-  final int id;
-  final String date;
-  final String time;
-  final String routeName;
-  final int type; //0: lượt đi, //1: lượt về
-  final bool status; // hoàn thành
-  final double lat;
-  final double lng;
+  int id;
+  String date;
+  String time;
+  String routeName;
+  int type; //0: lượt đi, //1: lượt về
+  bool status; // hoàn thành
+  double lat;
+  double lng;
   RouteBus(
       {this.id,
       this.date,
@@ -109,12 +169,36 @@ class RouteBus {
       this.lat,
       this.lng});
 
+  RouteBus.fromJson(Map<dynamic, dynamic> json) {
+    id = json['id'];
+    date = json['date'];
+    time = json['time'];
+    routeName = json['routeName'];
+    type = json['type'];
+    status = json['status'];
+    lat = json['lat'];
+    lng = json['lng'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["id"] = this.id;
+    data["date"] = this.date;
+    data["time"] = this.time;
+    data["routeName"] = this.routeName;
+    data["type"] = this.type;
+    data["status"] = this.status;
+    data["lat"] = this.lat;
+    data["lng"] = this.lng;
+    return data;
+  }
+
   static List<RouteBus> list = [
     RouteBus(
       id: 1,
       date: "2019-09-09",
       time: "07:00 am",
-      routeName: "12 cách mạng tháng tám",
+      routeName: "200 võ thị sáu, p10, q3",
       type: 0,
       status: true,
       lat: 0,
@@ -124,7 +208,7 @@ class RouteBus {
       id: 2,
       date: "2019-09-09",
       time: "07:10 am",
-      routeName: "285/95 cách mạng tháng 8",
+      routeName: "285/94B cách mạng tháng tám, p12, q10",
       type: 0,
       status: true,
       lat: 0,
@@ -154,7 +238,7 @@ class RouteBus {
       id: 5,
       date: "2019-09-09",
       time: "04:30 pm",
-      routeName: "285/95 cách mạng tháng 8",
+      routeName: "285/94 cách mạng tháng 8, p12, q10",
       type: 1,
       status: false,
       lat: 0,
@@ -169,11 +253,30 @@ class RouteBus {
 }
 
 class StatusBus {
-  final int statusID;
-  final String statusName;
-  final int statusColor;
+  int statusID;
+  String statusName;
+  int statusColor;
 
   StatusBus(this.statusID, this.statusName, this.statusColor);
+
+  StatusBus.fromJson(Map<dynamic, dynamic> json) {
+    statusID = json['statusID'];
+    statusName = json['statusName'];
+    statusColor = json['statusColor'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["statusID"] = this.statusID;
+    data["statusName"] = this.statusName;
+    data["statusColor"] = this.statusColor;
+    return data;
+  }
+
+  static StatusBus getStatusByID(List<StatusBus> list, id) {
+    return list.singleWhere((item) => item.statusID == id);
+  }
+
   static List<StatusBus> list = [
     StatusBus(0, "Đang chờ", 0xFFFFD752),
     StatusBus(1, "Đang trong chuyến", 0xFF8FD838),
@@ -181,7 +284,4 @@ class StatusBus {
     StatusBus(3, "Nghỉ học", 0xFFE80F0F),
     StatusBus(4, "Đã về nhà", 0xFF6F32A0),
   ];
-  static StatusBus getStatusByID(List<StatusBus> list, id) {
-    return list.singleWhere((item) => item.statusID == id);
-  }
 }

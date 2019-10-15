@@ -39,6 +39,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 content: viewModel
                     .getListChildrenForTimeLine(driverBusSession, item.id)
                     .map((children) {
+                  viewModel.addChildrenByDriverBusSessionType(
+                      driverBusSession.type, children);
                   final statusID = ChildDrenStatus.getStatusIDByChildrenID(
                       driverBusSession.childDrenStatus, children.id, item.id);
                   final statusBus =
@@ -54,6 +56,108 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 }).toList(),
                 isFinish: item.status))
             .toList();
+    Widget __buildBottomRight() {
+      return Positioned(
+        bottom: 0,
+        right: 0,
+        child: Container(
+          padding: EdgeInsets.only(left: 10),
+          decoration: new BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black38,
+                  blurRadius: 1.0, // has the effect of softening the shadow
+                  spreadRadius: 1.0, // has the effect of extending the shadow
+                  offset: Offset(
+                    -1.0, // horizontal, move right 10
+                    -1.0, // vertical, move down 10
+                  ),
+                )
+              ],
+              color: Colors.green,
+              //border: new Border.all(color: Colors.white, width: 2.0),
+              borderRadius: new BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  bottomLeft: Radius.circular(25))),
+          width: MediaQuery.of(context).size.width / 3,
+          height: 50,
+          //color: Colors.white,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              new Expanded(
+                flex: 1,
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        //height:32,
+                        margin: EdgeInsets.only(right: 5, left: 5),
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          children: <Widget>[
+                            Text("Picked/Sum:",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white)),
+                            Spacer(),
+                            Text(
+                                viewModel
+                                        .getCountChildrenByStatus(
+                                            driverBusSession.childDrenStatus,
+                                            1,
+                                            driverBusSession.type)
+                                        .toString() +
+                                    "/" +
+                                    viewModel
+                                        .getLengthListChildrenByBusSessionType(
+                                            driverBusSession.type)
+                                        .toString(),
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white)),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        //height:32,
+                        margin: EdgeInsets.only(right: 5, left: 5),
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          children: <Widget>[
+                            Text("Vacation:",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white)),
+                            Spacer(),
+                            Text(
+                                viewModel
+                                    .getCountChildrenByStatus(
+                                        driverBusSession.childDrenStatus,
+                                        3,
+                                        driverBusSession.type)
+                                    .toString(),
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Stack(
       children: <Widget>[
@@ -61,7 +165,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             color: Colors.grey.shade300,
             child: HomePageTimeLineV2(listTimeLine: listTimeLine)
             // child: ContainerHomeTimeLine(evenTime: listTimeLine[0]),
-            )
+            ),
+        __buildBottomRight(),
       ],
     );
   }

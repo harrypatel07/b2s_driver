@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
-import 'package:b2s_driver/src/app/models/childrenBusSession.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
 
@@ -11,7 +10,8 @@ class HomePageViewModel extends ViewModelBase {
   StreamSubscription streamCloud;
   CloudFiresStoreService cloudSerivce = CloudFiresStoreService();
   HomePageViewModel();
-
+  List<Children> listChildrenSS1 = new List();
+  List<Children> listChildrenSS2 = new List();
   List<Children> getListChildrenForTimeLine(
       DriverBusSession driverBusSession, int routeBusID) {
     List<Children> _listChildren = [];
@@ -57,5 +57,42 @@ class HomePageViewModel extends ViewModelBase {
   void dispose() {
     streamCloud.cancel();
     super.dispose();
+  }
+
+  int getCountChildrenByStatus(
+      List<ChildDrenStatus> listChildDrenStatus, int statusId, int type) {
+    int sum = 0;
+    if (type == DriverBusSession.list[0].type) {
+      for (int i = 0; i < listChildrenSS1.length; i++)
+        for (int j = 0; j < listChildDrenStatus.length; j++)
+          if (listChildDrenStatus[j].statusID == statusId &&
+              listChildrenSS1[i].id == listChildDrenStatus[j].id) sum++;
+    } else {
+      for (int i = 0; i < listChildrenSS2.length; i++)
+        for (int j = 0; j < listChildDrenStatus.length; j++)
+          if (listChildDrenStatus[j].statusID == statusId &&
+              listChildrenSS2[i].id == listChildDrenStatus[j].id) sum++;
+    }
+    return sum;
+  }
+
+  void addChildrenByDriverBusSessionType(int type, Children children) {
+    if (type == DriverBusSession.list[0].type) {
+      if (constraint(listChildrenSS1, children)) listChildrenSS1.add(children);
+    } else if (constraint(listChildrenSS2, children))
+      listChildrenSS2.add(children);
+  }
+
+  bool constraint(List<Children> listChildren, Children children) {
+    for (int i = 0; i < listChildren.length; i++)
+      if (listChildren[i].id == children.id) return false;
+    return true;
+  }
+
+  int getLengthListChildrenByBusSessionType(int type) {
+    if (type == DriverBusSession.list[0].type)
+      return listChildrenSS1.length;
+    else
+      return listChildrenSS2.length;
   }
 }

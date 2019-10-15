@@ -130,7 +130,7 @@ class LocateBusPageViewModel extends ViewModelBase {
     var step = await GoogleMapService.directionGetListStep(
         LatLng(10.777433, 106.677502), LatLng(10.743524, 106.699328));
     routes.addAll(step);
-
+  
     polyline.clear();
     polyline[selectedPolyline] = Polyline(
       polylineId: selectedPolyline,

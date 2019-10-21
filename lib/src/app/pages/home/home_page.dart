@@ -1,11 +1,14 @@
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+import 'package:b2s_driver/src/app/models/menu.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page_viewmodel.dart';
+import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
 import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_appbar_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,6 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   HomePageViewModel viewModel;
   TabController _tabController;
+  int tagWidgetHero = 0;
   Widget _appBar() {
     return TS24AppBar(
       title: Text(viewModel.listDriverBusSession[0].busID),
@@ -45,115 +49,131 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       driverBusSession.childDrenStatus, children.id, item.id);
                   final statusBus =
                       StatusBus.getStatusByID(StatusBus.list, statusID);
+                  var tag = children.id.toString()+item.id.toString()+driverBusSession.busID.toString();
                   return HomePageCardTimeLine(
                     children: children,
                     isEnablePicked: statusID == 0 ? true : false,
                     status: statusBus,
+                    isEnableTapChildrenContentCard: true,
+                    heroTag: tag,
                     onTapPickUp: () {
                       viewModel.onTapPickUp(driverBusSession, children, item);
+                    },
+                    onTapChangeStatusLeave: () {
+                      viewModel.onTapChangeChildrenStatus(
+                          driverBusSession, children, item, 3);
+                      print("show button call");
+                    },
+                    onTapShowChildrenProfile: () {
+                      Navigator.pushNamed(
+                          context, ProfileChildrenPage.routeName,
+                          arguments: ProfileChildrenArgs(
+                              children: children,
+                              heroTag: tag));
                     },
                   );
                 }).toList(),
                 isFinish: item.status))
             .toList();
-    Widget __buildBottomRight() {
+    Widget __buildReport() {
       return Positioned(
         bottom: 0,
-        right: 0,
+        right: 63,
         child: Container(
-          padding: EdgeInsets.only(left: 10),
+          padding: EdgeInsets.only(left: 5),
           decoration: new BoxDecoration(
               boxShadow: [
                 BoxShadow(
                   color: Colors.black38,
-                  blurRadius: 1.0, // has the effect of softening the shadow
-                  spreadRadius: 1.0, // has the effect of extending the shadow
+                  //blurRadius: 1.0, // has the effect of softening the shadow
+                  //spreadRadius: 1.0, // has the effect of extending the shadow
                   offset: Offset(
                     -1.0, // horizontal, move right 10
                     -1.0, // vertical, move down 10
                   ),
                 )
               ],
-              color: Colors.green,
+              color: Colors.red,
               //border: new Border.all(color: Colors.white, width: 2.0),
-              borderRadius: new BorderRadius.only(
-                  topLeft: Radius.circular(25),
-                  bottomLeft: Radius.circular(25))),
-          width: MediaQuery.of(context).size.width / 3,
-          height: 50,
+              borderRadius:
+                  new BorderRadius.only(topLeft: Radius.circular(40))),
+          width: MediaQuery.of(context).size.width / 2,
+          height: 30,
           //color: Colors.white,
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              new Expanded(
-                flex: 1,
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        //height:32,
-                        margin: EdgeInsets.only(right: 5, left: 5),
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          children: <Widget>[
-                            Text("Picked/Sum:",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white)),
-                            Spacer(),
-                            Text(
-                                viewModel
-                                        .getCountChildrenByStatus(
-                                            driverBusSession.childDrenStatus,
-                                            1,
-                                            driverBusSession.type)
-                                        .toString() +
-                                    "/" +
-                                    viewModel
-                                        .getLengthListChildrenByBusSessionType(
-                                            driverBusSession.type)
-                                        .toString(),
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white)),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        //height:32,
-                        margin: EdgeInsets.only(right: 5, left: 5),
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          children: <Widget>[
-                            Text("Vacation:",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white)),
-                            Spacer(),
-                            Text(
-                                viewModel
-                                    .getCountChildrenByStatus(
-                                        driverBusSession.childDrenStatus,
-                                        3,
-                                        driverBusSession.type)
-                                    .toString(),
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              Text("Sỉ số - Tổng - Vắng:",
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white)),
+              Text(
+                  viewModel
+                          .getCountChildrenByStatus(
+                              driverBusSession.childDrenStatus,
+                              1,
+                              driverBusSession.type)
+                          .toString() +
+                      "-" +
+                      viewModel
+                          .getLengthListChildrenByBusSessionType(
+                              driverBusSession.type)
+                          .toString() +
+                      "-" +
+                      viewModel
+                          .getCountChildrenByStatus(
+                              driverBusSession.childDrenStatus,
+                              3,
+                              driverBusSession.type)
+                          .toString(),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white)),
             ],
+          ),
+        ),
+      );
+    }
+
+    Widget __buildButtonStart() {
+      return Positioned(
+        bottom: 0,
+        right: 0,
+        child: GestureDetector(
+          onTap: () {
+            viewModel.listContentOnTap(Menu.tabMenu[1]);
+          },
+          child: Container(
+            padding: EdgeInsets.only(left: 20),
+            decoration: new BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black38,
+                    blurRadius: 1.0, // has the effect of softening the shadow
+                    spreadRadius: 1.0, // has the effect of extending the shadow
+                    offset: Offset(
+                      -1.0, // horizontal, move right 10
+                      -1.0, // vertical, move down 10
+                    ),
+                  )
+                ],
+                color: Colors.red,
+                //border: new Border.all(color: Colors.white, width: 2.0),
+                borderRadius: new BorderRadius.only(
+                    topLeft: Radius.circular(200),
+                    topRight: Radius.circular(0))),
+            width: 70,
+            height: 70,
+            //color: Colors.white,
+            child: Container(
+                padding: EdgeInsets.only(left: 12, top: 20),
+                child: Text(
+                  'BẮT ĐẦU',
+                  style: TextStyle(
+                      color: Colors.yellow, fontWeight: FontWeight.w900),
+                )),
           ),
         ),
       );
@@ -166,7 +186,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: HomePageTimeLineV2(listTimeLine: listTimeLine)
             // child: ContainerHomeTimeLine(evenTime: listTimeLine[0]),
             ),
-        __buildBottomRight(),
+        __buildButtonStart(),
+        __buildReport(),
       ],
     );
   }
@@ -187,10 +208,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
     super.initState();
   }
-
+  TabsPageViewModel tabsPageViewModel;
   @override
   Widget build(BuildContext context) {
-    TabsPageViewModel tabsPageViewModel = ViewModelProvider.of(context);
+    tabsPageViewModel = ViewModelProvider.of(context);
     viewModel = tabsPageViewModel.homePageViewModel;
     viewModel.context = context;
     return ViewModelProvider(

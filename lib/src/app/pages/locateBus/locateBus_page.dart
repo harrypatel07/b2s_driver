@@ -1,4 +1,5 @@
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
+import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
@@ -64,13 +65,161 @@ class _LocateBusPageState extends State<LocateBusPage> {
       );
     }
 
+    Widget __report() {
+      return Positioned(
+        top: 0,
+        child: Container(
+          padding: EdgeInsets.fromLTRB(15, 30, 15, 5),
+          width: MediaQuery.of(context).size.width,
+          color: Colors.white54,
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: Text(
+                        "Học sinh đăng ký",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: Text(
+                        "Học sinh trên xe",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: Text(
+                        "Học sinh báo nghỉ",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+                      child: Text(
+                        "20",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w900),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+                      child: Text(
+                        "10",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w900),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+                      child: Text(
+                        "02",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w900),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    Widget __sosButton() {
+      return Positioned(
+        bottom: MediaQuery.of(context).size.height / 2,
+        right: 0,
+        child: Stack(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(left: 20),
+              decoration: new BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black38,
+                      blurRadius: 1.0, // has the effect of softening the shadow
+                      spreadRadius: 1.0, // has the effect of extending the shadow
+                      offset: Offset(
+                        -1.0, // horizontal, move right 10
+                        -1.0, // vertical, move down 10
+                      ),
+                    )
+                  ],
+                  color: Colors.white54,
+                  //border: new Border.all(color: Colors.white, width: 2.0),
+                  borderRadius: new BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      bottomLeft: Radius.circular(40))),
+              width: 60,
+              height: 60,
+            ),
+            Positioned(
+              top: 4,
+              left: 2,
+              child: InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, EmergencyPage.routeName);
+                  print("On tab SOS");
+                },
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  alignment: Alignment.center,
+                  //margin: EdgeInsets.fromLTRB(0, 3, 10, 3),
+                  decoration: new BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text("SOS",textAlign: TextAlign.center,style: TextStyle(color: Colors.yellow,fontWeight: FontWeight.w900),),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Stack(
       children: <Widget>[
         viewModel.showGoolgeMap ? __buildGoogleMap() : Container(),
         viewModel.showSpinner
             ? LoadingIndicator.progress(
                 context: context, loading: true, position: Alignment.topCenter)
-            : Container()
+            : Container(),
+        __report(),
+        __sosButton()
       ],
     );
   }

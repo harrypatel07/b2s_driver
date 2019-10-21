@@ -50,8 +50,9 @@ dependencies:
   cloud_firestore: ^0.12.9+4
   geoflutterfire: ^2.0.3+5
   location: ^2.3.5
-  url_launcher: ^5.1.4
   json_serializable: ^3.2.2
+  polygon_clipper: ^1.0.2
+  url_launcher: ^5.2.0
 
 dev_dependencies:
   flutter_test:
@@ -63,7 +64,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

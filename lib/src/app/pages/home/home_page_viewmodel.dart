@@ -1,14 +1,16 @@
 import 'dart:async';
-
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+import 'package:b2s_driver/src/app/models/menu.dart';
+import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
-
 class HomePageViewModel extends ViewModelBase {
   List<DriverBusSession> listDriverBusSession = DriverBusSession.list;
   StreamSubscription streamCloud;
   CloudFiresStoreService cloudSerivce = CloudFiresStoreService();
+  bool isShowListButton = false;
+  TabsPageViewModel tabsPageViewModel;
   HomePageViewModel();
   List<Children> listChildrenSS1 = new List();
   List<Children> listChildrenSS2 = new List();
@@ -36,6 +38,17 @@ class HomePageViewModel extends ViewModelBase {
         break;
       default:
     }
+    cloudSerivce.updateDriverBusSession(driverBusSession);
+    cloudSerivce.updateStatusChildrenBus(children, childrenStatus);
+    this.updateState();
+  }
+
+
+
+  onTapChangeChildrenStatus(DriverBusSession driverBusSession, Children children, RouteBus routeBus,int statusID) {
+    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
+        item.childrenID == children.id && item.routeBusID == routeBus.id);
+    childrenStatus.statusID = statusID;
     cloudSerivce.updateDriverBusSession(driverBusSession);
     cloudSerivce.updateStatusChildrenBus(children, childrenStatus);
     this.updateState();
@@ -94,5 +107,11 @@ class HomePageViewModel extends ViewModelBase {
       return listChildrenSS1.length;
     else
       return listChildrenSS2.length;
+  }
+  void listContentOnTap(Menu menu) {
+    this.updateState();
+    tabsPageViewModel = ViewModelProvider.of(context);
+    if (tabsPageViewModel != null)
+      tabsPageViewModel.onSlideMenuTapped(menu.index);
   }
 }

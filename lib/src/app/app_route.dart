@@ -1,4 +1,6 @@
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
+import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
+import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page.dart';
 
 import 'package:b2s_driver/src/app/pages/login/login_page.dart';
@@ -14,6 +16,8 @@ class Routes {
         TabsPage(ModalRoute.of(context).settings.arguments),
     HomePage.routeName: (context) => HomePage(),
     LocateBusPage.routeName: (context) => LocateBusPage(),
+    EmergencyPage.routeName: (context) => EmergencyPage(),
+    ProfileChildrenPage.routeName:(context) => ProfileChildrenPage(args: ModalRoute.of(context).settings.arguments)
   };
 }
 

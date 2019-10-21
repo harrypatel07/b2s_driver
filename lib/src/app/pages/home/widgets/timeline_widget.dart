@@ -11,7 +11,7 @@ class HomePageTimeLineV2 extends StatelessWidget {
     return Container(
       child: ListView.builder(
         itemCount: listTimeLine.length,
-        padding: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(bottom: 60),
         itemBuilder: (context, index) {
           return new LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {

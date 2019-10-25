@@ -1,7 +1,13 @@
+import 'dart:async';
+
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
+import 'package:b2s_driver/src/app/models/busTimeLine.dart';
+import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
+import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +16,15 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class LocateBusPage extends StatefulWidget {
   static const String routeName = "/locateBus";
+
   @override
   _LocateBusPageState createState() => _LocateBusPageState();
 }
 
-class _LocateBusPageState extends State<LocateBusPage> {
+class _LocateBusPageState extends State<LocateBusPage>
+    with SingleTickerProviderStateMixin {
   LocateBusPageViewModel viewModel;
-
+  BusTimeLine busTimeLine;
   final double _initFabHeight = 100.0;
   double _fabHeight;
   double _panelHeightOpen = 0;
@@ -25,10 +33,13 @@ class _LocateBusPageState extends State<LocateBusPage> {
   ScrollController _sc = ScrollController();
   PanelController _pc = PanelController();
   bool disableScroll = true;
-
+  AnimationController animationController;
+  CurvedAnimation curvedAnimation;
+  Animation<double> animation;
   @override
   void dispose() {
     _sc.dispose();
+    animationController.dispose();
     super.dispose();
   }
 
@@ -43,6 +54,43 @@ class _LocateBusPageState extends State<LocateBusPage> {
       //   });
       // }
     });
+    busTimeLine = new BusTimeLine();
+    busTimeLine.percent = 0.0;
+    busTimeLine.routBusIndex = 1;
+    animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 60));
+    animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        animationController.stop();
+      }
+      // else if (status == AnimationStatus.dismissed) {
+      //   animationController.forward();
+      // }
+    });
+    // curvedAnimation =
+    //     CurvedAnimation(parent: animationController, curve: Curves.easeIn);
+    // animation = Tween(begin: 0.0, end: 100.0).animate(curvedAnimation)
+    //   ..addListener(() {
+    //     setState(() {
+    //       busTimeLine.percent = animation.value;
+    //     });
+    //   });
+    // curvedAnimation.curve = Curves.ease;
+    Future.delayed(Duration(seconds: 2), () {
+      animationController.forward();
+    });
+    // Timer(const Duration(seconds: 30), () {
+    //   animationController.reset();
+    //   animationController.forward();
+    // });
+    // double percent = 0;
+    // Timer.periodic(new Duration(seconds: 2), (timer) {
+    //   if (percent == 100) timer.cancel();
+    //   percent += 1;
+    //   setState(() {
+    //     busTimeLine.percent = percent;
+    //   });
+    // });
   }
 
   Widget _buildBody() {
@@ -66,6 +114,12 @@ class _LocateBusPageState extends State<LocateBusPage> {
     }
 
     Widget __report() {
+      final ___textStyle =
+          TextStyle(fontSize: 16, color: ThemePrimary.primaryColor);
+      final ___numberStyle = TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w900,
+          color: ThemePrimary.primaryColor);
       return Positioned(
         top: 0,
         child: Container(
@@ -83,7 +137,7 @@ class _LocateBusPageState extends State<LocateBusPage> {
                       child: Text(
                         "Học sinh đăng ký",
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16),
+                        style: ___textStyle,
                       ),
                     ),
                   ),
@@ -94,7 +148,7 @@ class _LocateBusPageState extends State<LocateBusPage> {
                       child: Text(
                         "Học sinh trên xe",
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16),
+                        style: ___textStyle,
                       ),
                     ),
                   ),
@@ -105,7 +159,7 @@ class _LocateBusPageState extends State<LocateBusPage> {
                       child: Text(
                         "Học sinh báo nghỉ",
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16),
+                        style: ___textStyle,
                       ),
                     ),
                   ),
@@ -120,8 +174,7 @@ class _LocateBusPageState extends State<LocateBusPage> {
                       child: Text(
                         "20",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w900),
+                        style: ___numberStyle,
                       ),
                     ),
                   ),
@@ -132,8 +185,7 @@ class _LocateBusPageState extends State<LocateBusPage> {
                       child: Text(
                         "10",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w900),
+                        style: ___numberStyle,
                       ),
                     ),
                   ),
@@ -144,8 +196,7 @@ class _LocateBusPageState extends State<LocateBusPage> {
                       child: Text(
                         "02",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w900),
+                        style: ___numberStyle,
                       ),
                     ),
                   ),
@@ -170,7 +221,8 @@ class _LocateBusPageState extends State<LocateBusPage> {
                     BoxShadow(
                       color: Colors.black38,
                       blurRadius: 1.0, // has the effect of softening the shadow
-                      spreadRadius: 1.0, // has the effect of extending the shadow
+                      spreadRadius:
+                          1.0, // has the effect of extending the shadow
                       offset: Offset(
                         -1.0, // horizontal, move right 10
                         -1.0, // vertical, move down 10
@@ -178,7 +230,6 @@ class _LocateBusPageState extends State<LocateBusPage> {
                     )
                   ],
                   color: Colors.white54,
-                  //border: new Border.all(color: Colors.white, width: 2.0),
                   borderRadius: new BorderRadius.only(
                       topLeft: Radius.circular(40),
                       bottomLeft: Radius.circular(40))),
@@ -189,7 +240,7 @@ class _LocateBusPageState extends State<LocateBusPage> {
               top: 4,
               left: 2,
               child: InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.pushNamed(context, EmergencyPage.routeName);
                   print("On tab SOS");
                 },
@@ -197,12 +248,16 @@ class _LocateBusPageState extends State<LocateBusPage> {
                   width: 50,
                   height: 50,
                   alignment: Alignment.center,
-                  //margin: EdgeInsets.fromLTRB(0, 3, 10, 3),
                   decoration: new BoxDecoration(
                     color: Colors.red,
                     shape: BoxShape.circle,
                   ),
-                  child: Text("SOS",textAlign: TextAlign.center,style: TextStyle(color: Colors.yellow,fontWeight: FontWeight.w900),),
+                  child: Text(
+                    "SOS",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.yellow, fontWeight: FontWeight.w900),
+                  ),
                 ),
               ),
             ),
@@ -225,18 +280,50 @@ class _LocateBusPageState extends State<LocateBusPage> {
   }
 
   Widget _buildPanel() {
+    DriverBusSession driverBusSession = DriverBusSession.list[0];
+    var listTimeLine = RouteBus.getListRouteBusByType(
+            RouteBus.list, driverBusSession.type)
+        .map((item) => TimeLineEvent(
+            time: item.time,
+            task: item.routeName,
+            content: viewModel
+                .getListChildrenForTimeLine(driverBusSession, item.id)
+                .map((children) {
+              final statusID = ChildDrenStatus.getStatusIDByChildrenID(
+                  driverBusSession.childDrenStatus, children.id, item.id);
+              final statusBus =
+                  StatusBus.getStatusByID(StatusBus.list, statusID);
+              return HomePageCardTimeLine(
+                children: children,
+                isEnablePicked: statusID == 0 ? true : false,
+                status: statusBus,
+                isEnableTapChildrenContentCard: false,
+                onTapPickUp: () {
+                  viewModel.onTapPickUpChild(driverBusSession, children, item);
+                },
+              );
+            }).toList(),
+            isFinish: item.status))
+        .toList();
     Widget __childrenCard() {
       return Stack(
         children: <Widget>[
-          HomePageCardTimeLine(
-            children: viewModel.childrenBus.child,
-            isEnablePicked:
-                viewModel.childrenBus.status.statusID == 0 ? true : false,
-            status: viewModel.childrenBus.status,
-            onTapPickUp: () {
-              viewModel.onTapPickUp();
-            },
-          ),
+          Container(
+              margin: EdgeInsets.only(top: 25),
+              padding: EdgeInsets.only(top: 5),
+              decoration: new BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: new BorderRadius.only(
+                  topLeft: Radius.circular(35),
+                  topRight: Radius.circular(35),
+                ),
+              ),
+              height: 430,
+              child: HomePageTimeLineV2(
+                listTimeLine: listTimeLine,
+                busTimeLine: busTimeLine,
+                animationBusController: animationController,
+              )),
           Positioned(
             left: MediaQuery.of(context).size.width / 2 - 15,
             top: 5,
@@ -266,17 +353,12 @@ class _LocateBusPageState extends State<LocateBusPage> {
       );
     }
 
-    return SingleChildScrollView(
-        controller: _sc,
-        physics: disableScroll
-            ? NeverScrollableScrollPhysics()
-            : ClampingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            __childrenCard(),
-          ],
-        ));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        __childrenCard(),
+      ],
+    );
   }
 
   Widget _buildIconLocation() {

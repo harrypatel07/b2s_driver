@@ -399,7 +399,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                 hr,
                 row1('Địa chỉ :', '285 Cách mạng tháng 8'),
                 hr,
-                row1('Phụ huynh :', 'Nguyên Minh Long'),
+                rowIcon('Phụ huynh :', 'Nguyên Minh Long','0983932933'),
                 Container(height: 1, margin: EdgeInsets.only(bottom: 10),)
               ],
             ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/pages/home/popup_card_timeline/popup_card_timeline_viewmodel.dart';
 import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -27,7 +28,7 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     animation = CurvedAnimation(parent: controller, curve: Curves.easeIn);
-    _animation = Tween(begin: 0.0, end: 1.0).animate(animation)
+    _animation = Tween(begin: -0.2, end: 1.0).animate(animation)
       ..addListener(() {
         _animation.value;
         viewModel.updateState();
@@ -46,62 +47,56 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
     Widget _bottomButton() {
       Widget _buttonCall() {
         return GestureDetector(
-          onTap: (){
+          onTap: () {
             launch('tel:0123456');
           },
           child: Container(
             decoration: new BoxDecoration(
                 color: Colors.green,
-                borderRadius: new BorderRadius.only(
-                    bottomLeft: Radius.circular(70))),
+                borderRadius:
+                    new BorderRadius.only(bottomLeft: Radius.circular(70))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                    alignment: Alignment.center,
-                    child: Icon(Icons.call)
+                Container(alignment: Alignment.center, child: Icon(Icons.call)),
+                SizedBox(
+                  width: 5,
                 ),
-                SizedBox(width: 5,),
-                Container(
-                    alignment: Alignment.center,
-                    child: Text('Gọi')
-                )
+                Container(alignment: Alignment.center, child: Text('Gọi'))
               ],
             ),
           ),
         );
       }
+
       Widget _buttonLeave() {
         return GestureDetector(
-          onTap: (){
+          onTap: () {
             viewModel.onTapChangeStatus(3);
             widget.arguments.homePageCardTimeLine.onTapChangeStatusLeave();
           },
           child: Container(
             decoration: new BoxDecoration(
                 color: Colors.deepOrange,
-                borderRadius: new BorderRadius.only(
-                    bottomRight: Radius.circular(70))),
+                borderRadius:
+                    new BorderRadius.only(bottomRight: Radius.circular(70))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                    alignment: Alignment.center,
-                    child: Icon(Icons.check)
+                Container(alignment: Alignment.center, child: Icon(Icons.home)),
+                SizedBox(
+                  width: 5,
                 ),
-                SizedBox(width: 5,),
-                Container(
-                    alignment: Alignment.center,
-                    child: Text('Nghỉ')
-                )
+                Container(alignment: Alignment.center, child: Text('Nghỉ'))
               ],
             ),
           ),
         );
       }
+
       Widget _buttonSms() {
         return GestureDetector(
-          onTap: (){
+          onTap: () {
             launch('sms:0123456');
           },
           child: Container(
@@ -109,45 +104,91 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                    alignment: Alignment.center,
-                    child: Icon(Icons.sms)
+                Container(alignment: Alignment.center, child: Icon(Icons.sms)),
+                SizedBox(
+                  width: 5,
                 ),
-                SizedBox(width: 5,),
-                Container(
-                    alignment: Alignment.center,
-                    child: Text('SMS')
-                )
+                Container(alignment: Alignment.center, child: Text('SMS'))
               ],
             ),
           ),
         );
       }
+
       return Transform.translate(
         offset: Offset(0, _animation.value * 50),
         child: Container(
-          height: 50,
+          height: 100,
           width: MediaQuery.of(context).size.width - 80,
           margin: EdgeInsets.only(left: 25),
           decoration: new BoxDecoration(
-              //color: Colors.white,
+              color: Colors.white,
               borderRadius: new BorderRadius.only(
                   bottomRight: Radius.circular(70),
                   bottomLeft: Radius.circular(70))),
-          child: Row(
-            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: Column(
             children: <Widget>[
               Expanded(
-                flex: 1,
-                child: _buttonCall(),
+                flex: 3,
+                child: Container(
+                  color: Colors.white,
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(width: 30,),
+                      Container(
+                        width: 40,
+                        height: 40,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: null,
+                            child: new CachedNetworkImage(
+                              imageUrl:
+                                  "https://shalimarbphotography.com/wp-content/uploads/2018/06/SBP-2539.jpg",
+                              imageBuilder: (context, imageProvider) =>
+                                  CircleAvatar(
+                                radius: 35.0,
+                                backgroundImage: imageProvider,
+                                backgroundColor: Colors.transparent,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10,),
+                      Expanded(
+                        child: Text('Nguyễn Văn Cao',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                color: Colors.grey.shade600,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.center,),
+                      ),
+                      SizedBox(width: 10,)
+                    ],
+                  ),
+                ),
               ),
               Expanded(
-                flex: 1,
-                child: _buttonSms(),
-              ),
-              Expanded(
-                flex: 1,
-                child: _buttonLeave(),
+                flex: 2,
+                child: Row(
+                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: _buttonCall(),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: _buttonSms(),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: _buttonLeave(),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

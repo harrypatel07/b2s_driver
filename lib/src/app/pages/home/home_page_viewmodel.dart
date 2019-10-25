@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/menu.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
+import 'dart:ui'as ui;
+
+import 'package:flutter/services.dart';
+
 class HomePageViewModel extends ViewModelBase {
   List<DriverBusSession> listDriverBusSession = DriverBusSession.list;
   StreamSubscription streamCloud;
@@ -112,6 +117,8 @@ class HomePageViewModel extends ViewModelBase {
     this.updateState();
     tabsPageViewModel = ViewModelProvider.of(context);
     if (tabsPageViewModel != null)
-      tabsPageViewModel.onSlideMenuTapped(menu.index);
+     tabsPageViewModel.onSlideMenuTapped(menu.index);
   }
+
+
 }

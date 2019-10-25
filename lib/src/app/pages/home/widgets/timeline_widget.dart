@@ -1,10 +1,21 @@
+import 'dart:math';
+import 'dart:ui';
+
+import 'package:b2s_driver/src/app/models/busTimeLine.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 
 class HomePageTimeLineV2 extends StatelessWidget {
   final List<TimeLineEvent> listTimeLine;
-  HomePageTimeLineV2({this.listTimeLine});
+  final BusTimeLine busTimeLine;
+  final Animation<double> animationBusController;
+//  final ui.Image image;
+//  final bool isEnableIconBus;
+  HomePageTimeLineV2(
+      {this.listTimeLine, this.busTimeLine, this.animationBusController});
+
   @override
   Widget build(BuildContext context) {
     double iconSize = 30;
@@ -81,16 +92,6 @@ class HomePageTimeLineV2 extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 12.0),
         child: Container(
-          // padding: const EdgeInsets.all(14.0),
-          // decoration: BoxDecoration(
-          //     color: Colors.white,
-          //     borderRadius: BorderRadius.all(Radius.circular(12)),
-          //     boxShadow: [
-          //       BoxShadow(
-          //           color: Color(0x20000000),
-          //           blurRadius: 5,
-          //           offset: Offset(0, 3))
-          //     ]),
           child: Column(
             //key: _containerKey,
             children: <Widget>[
@@ -105,46 +106,65 @@ class HomePageTimeLineV2 extends StatelessWidget {
 
   Widget _lineStyle(BuildContext context, double iconSize, int index,
       int listLength, bool isFinish, RenderBox renderBox) {
-    return Container(
-        decoration: CustomIconDecoration(
-          iconSize: iconSize,
-          lineWidth: 1,
-          firstData: index == 0 ?? true,
-          lastData: index == listLength - 1 ?? true,
-          isFinish: isFinish,
-          renderBox: renderBox,
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(50)),
-              boxShadow: [
-                BoxShadow(
-                    offset: Offset(0, 3),
-                    color: Color(0x20000000),
-                    blurRadius: 5)
-              ]),
-          child: Stack(
-            children: <Widget>[
-              Icon(
-                  isFinish
-                      ? Icons.fiber_manual_record
-                      : Icons.radio_button_unchecked,
-                  size: iconSize,
-                  color: Theme.of(context).accentColor),
-              Container(
-                width: iconSize,
-                height: iconSize,
-                alignment: Alignment.center,
-                child: Text(
-                  "${index + 1}",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
+    return Stack(
+      children: <Widget>[
+        Container(
+            decoration: CustomIconDecoration(
+              iconSize: iconSize,
+              lineWidth: 1,
+              firstData: index == 0 ?? true,
+              lastData: index == listLength - 1 ?? true,
+              isFinish: isFinish,
+              renderBox: renderBox,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  boxShadow: [
+                    BoxShadow(
+                        offset: Offset(0, 3),
+                        color: Color(0x20000000),
+                        blurRadius: 5)
+                  ]),
+              child: Stack(
+                children: <Widget>[
+                  Icon(
+                      isFinish
+                          ? Icons.fiber_manual_record
+                          : Icons.radio_button_unchecked,
+                      size: iconSize,
+                      color: Theme.of(context).accentColor),
+                  Container(
+                    width: iconSize,
+                    height: iconSize,
+                    alignment: Alignment.center,
+                    child: Text(
+                      "${index + 1}",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ));
+            )),
+        busTimeLine != null
+            ? Container(
+                child: CustomPaint(
+                  painter: ImageEditor(
+                    image: busTimeLine.image,
+                    renderBox: renderBox,
+                    lastData: index == listLength - 1 ?? true,
+                    percent: busTimeLine.percent,
+                    controller: animationBusController,
+                    currentIndex: busTimeLine.routBusIndex, //  <=> busSession
+                    index: index,
+                  ),
+                ),
+              )
+            : SizedBox(),
+      ],
+    );
   }
 }
 
@@ -195,14 +215,14 @@ class IconLine extends BoxPainter {
   final bool isFinish;
   final Paint paintLine;
   final RenderBox renderBox;
-  IconLine({
-    @required double iconSize,
-    @required double lineWidth,
-    @required bool firstData,
-    @required bool lastData,
-    this.isFinish,
-    this.renderBox,
-  })  : this.iconSize = iconSize,
+  IconLine(
+      {@required double iconSize,
+      @required double lineWidth,
+      @required bool firstData,
+      @required bool lastData,
+      this.isFinish,
+      this.renderBox})
+      : this.iconSize = iconSize,
         this.firstData = firstData,
         this.lastData = lastData,
         paintLine = Paint()
@@ -220,6 +240,59 @@ class IconLine extends BoxPainter {
         configuration.size.topLeft(Offset(leftOffset.dx, leftOffset.dx + 5));
     final Offset end = configuration.size
         .centerLeft(Offset(leftOffset.dx, leftOffset.dy - iconSpace));
-    if (!lastData) canvas.drawLine(begin, end, paintLine);
+    if (!lastData) {
+      canvas.drawLine(begin, end, paintLine);
+    }
+  }
+}
+
+class ImageEditor extends CustomPainter {
+  ui.Image image;
+  final RenderBox renderBox;
+  final bool lastData;
+  final double percent;
+  final int currentIndex;
+  final int index;
+  final Animation<double> controller;
+  final Animation<double> animation;
+  ImageEditor(
+      {this.image,
+      this.renderBox,
+      this.lastData,
+      this.percent,
+      this.currentIndex,
+      this.index,
+      this.controller})
+      : animation = new Tween(begin: 0.0, end: 100.0).animate(
+          new CurvedAnimation(
+            parent: controller,
+            curve: Curves.easeIn,
+          ),
+        ),
+        super(repaint: controller);
+  @override
+  void paint(Canvas canvas, Size size) {
+    double _scale = 0.09;
+    double _value = -(renderBox.size.height *
+                24.4565 *
+                animation.value *
+                (renderBox.size.height / 100)) /
+            renderBox.size.height +
+        1300;
+    rotate(canvas, image.width / 2 * _scale, image.height / 2 * _scale, pi);
+    canvas.scale(_scale * 0.45);
+    if (!lastData && currentIndex == index + 1) //<<<<<<<<<<<<<<<<<<<<<<<<<<<
+      canvas.drawImage(image, new Offset(370.0, _value), new Paint()); //
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
+
+  void rotate(Canvas canvas, double cx, double cy, double angle) {
+    canvas.translate(cx, cy);
+    canvas.rotate(angle);
+    canvas.translate(-cx, -cy);
   }
 }

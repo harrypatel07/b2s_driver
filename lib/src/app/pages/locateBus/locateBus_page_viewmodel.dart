@@ -269,4 +269,32 @@ class LocateBusPageViewModel extends ViewModelBase {
       // });
     }
   }
+
+  List<Children> getListChildrenForTimeLine(
+      DriverBusSession driverBusSession, int routeBusID) {
+    List<Children> _listChildren = [];
+    var _childrenRoute = ChildDrenRoute.getChilDrenRouteByRouteID(
+        driverBusSession.childDrenRoute, routeBusID);
+    if (_childrenRoute != null)
+      _listChildren = Children.getChildrenByListID(
+          driverBusSession.listChildren, _childrenRoute.listChildrenID);
+    return _listChildren;
+  }
+  onTapPickUpChild(
+      DriverBusSession driverBusSession, Children children, RouteBus routeBus) {
+    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
+    item.childrenID == children.id && item.routeBusID == routeBus.id);
+    switch (childrenStatus.statusID) {
+      case 0:
+        childrenStatus.statusID = 1;
+        break;
+      case 1:
+        childrenStatus.statusID = 0;
+        break;
+      default:
+    }
+    cloudSerivce.updateDriverBusSession(driverBusSession);
+    cloudSerivce.updateStatusChildrenBus(children, childrenStatus);
+    this.updateState();
+  }
 }

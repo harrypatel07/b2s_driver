@@ -1,6 +1,7 @@
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/menu.dart';
+import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
 import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
@@ -37,6 +38,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
     super.initState();
   }
+
   Widget _appBar() {
     return TS24AppBar(
       title: Text(viewModel.listDriverBusSession[0].busID),
@@ -49,48 +51,49 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
     );
   }
+
   Widget _buildBody(DriverBusSession driverBusSession) {
     var listTimeLine =
-    RouteBus.getListRouteBusByType(RouteBus.list, driverBusSession.type)
-        .map((item) => TimeLineEvent(
-        time: item.time,
-        task: item.routeName,
-        content: viewModel
-            .getListChildrenForTimeLine(driverBusSession, item.id)
-            .map((children) {
-          viewModel.addChildrenByDriverBusSessionType(
-              driverBusSession.type, children);
-          final statusID = ChildDrenStatus.getStatusIDByChildrenID(
-              driverBusSession.childDrenStatus, children.id, item.id);
-          final statusBus =
-          StatusBus.getStatusByID(StatusBus.list, statusID);
-          var tag = children.id.toString() +
-              item.id.toString() +
-              driverBusSession.busID.toString();
-          return HomePageCardTimeLine(
-            children: children,
-            isEnablePicked: statusID == 0 ? true : false,
-            status: statusBus,
-            isEnableTapChildrenContentCard: true,
-            heroTag: tag,
-            onTapPickUp: () {
-              viewModel.onTapPickUp(driverBusSession, children, item);
-            },
-            onTapChangeStatusLeave: () {
-              viewModel.onTapChangeChildrenStatus(
-                  driverBusSession, children, item, 3);
-              print("show button call");
-            },
-            onTapShowChildrenProfile: () {
-              Navigator.pushNamed(
-                  context, ProfileChildrenPage.routeName,
-                  arguments: ProfileChildrenArgs(
-                      children: children, heroTag: tag));
-            },
-          );
-        }).toList(),
-        isFinish: item.status))
-        .toList();
+        RouteBus.getListRouteBusByType(RouteBus.list, driverBusSession.type)
+            .map((item) => TimeLineEvent(
+                time: item.time,
+                task: item.routeName,
+                content: viewModel
+                    .getListChildrenForTimeLine(driverBusSession, item.id)
+                    .map((children) {
+                  viewModel.addChildrenByDriverBusSessionType(
+                      driverBusSession.type, children);
+                  final statusID = ChildDrenStatus.getStatusIDByChildrenID(
+                      driverBusSession.childDrenStatus, children.id, item.id);
+                  final statusBus =
+                      StatusBus.getStatusByID(StatusBus.list, statusID);
+                  var tag = children.id.toString() +
+                      item.id.toString() +
+                      driverBusSession.busID.toString();
+                  return HomePageCardTimeLine(
+                    children: children,
+                    isEnablePicked: statusID == 0 ? true : false,
+                    status: statusBus,
+                    isEnableTapChildrenContentCard: true,
+                    heroTag: tag,
+                    onTapPickUp: () {
+                      viewModel.onTapPickUp(driverBusSession, children, item);
+                    },
+                    onTapChangeStatusLeave: () {
+                      viewModel.onTapChangeChildrenStatus(
+                          driverBusSession, children, item, 3);
+                      print("show button call");
+                    },
+                    onTapShowChildrenProfile: () {
+                      Navigator.pushNamed(
+                          context, ProfileChildrenPage.routeName,
+                          arguments: ProfileChildrenArgs(
+                              children: children, heroTag: tag));
+                    },
+                  );
+                }).toList(),
+                isFinish: item.status))
+            .toList();
     Widget __buildReport() {
       final ___textStyle = TextStyle(
           fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white);
@@ -116,7 +119,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               color: ThemePrimary.primaryColor,
               //border: new Border.all(color: Colors.white, width: 2.0),
               borderRadius:
-              new BorderRadius.only(topLeft: Radius.circular(40))),
+                  new BorderRadius.only(topLeft: Radius.circular(40))),
           width: MediaQuery.of(context).size.width / 5 * 3,
           height: 65,
           //color: Colors.white,
@@ -137,23 +140,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   Text(
                       viewModel
                           .getCountChildrenByStatus(
-                          driverBusSession.childDrenStatus,
-                          1,
-                          driverBusSession.type)
+                              driverBusSession.childDrenStatus,
+                              1,
+                              driverBusSession.type)
                           .toString(),
                       style: ___numberStyle),
                   Text(
                       viewModel
                           .getLengthListChildrenByBusSessionType(
-                          driverBusSession.type)
+                              driverBusSession.type)
                           .toString(),
                       style: ___numberStyle),
                   Text(
                       viewModel
                           .getCountChildrenByStatus(
-                          driverBusSession.childDrenStatus,
-                          3,
-                          driverBusSession.type)
+                              driverBusSession.childDrenStatus,
+                              3,
+                              driverBusSession.type)
                           .toString(),
                       style: ___numberStyle),
                 ],
@@ -209,13 +212,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       children: <Widget>[
         Container(
             color: Colors.grey.shade300,
-            child: HomePageTimeLineV2(listTimeLine: listTimeLine)
-        ),
+            child: HomePageTimeLineV2(listTimeLine: listTimeLine)),
         __buildReport(),
         __buildButtonStart(),
       ],
     );
   }
+
   TabsPageViewModel tabsPageViewModel;
   @override
   Widget build(BuildContext context) {

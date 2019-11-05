@@ -1,5 +1,5 @@
 import 'package:b2s_driver/src/app/models/children.dart';
-import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/pages/home/popup_card_timeline/popup_card_timeline.dart';
 import 'package:cached_network_image/cached_network_image.dart';

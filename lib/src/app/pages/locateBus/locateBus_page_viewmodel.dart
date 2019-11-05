@@ -4,6 +4,7 @@ import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/childrenBusSession.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -130,7 +131,7 @@ class LocateBusPageViewModel extends ViewModelBase {
     var step = await GoogleMapService.directionGetListStep(
         LatLng(10.777433, 106.677502), LatLng(10.743524, 106.699328));
     routes.addAll(step);
-  
+
     polyline.clear();
     polyline[selectedPolyline] = Polyline(
       polylineId: selectedPolyline,
@@ -280,10 +281,11 @@ class LocateBusPageViewModel extends ViewModelBase {
           driverBusSession.listChildren, _childrenRoute.listChildrenID);
     return _listChildren;
   }
+
   onTapPickUpChild(
       DriverBusSession driverBusSession, Children children, RouteBus routeBus) {
     var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
-    item.childrenID == children.id && item.routeBusID == routeBus.id);
+        item.childrenID == children.id && item.routeBusID == routeBus.id);
     switch (childrenStatus.statusID) {
       case 0:
         childrenStatus.statusID = 1;

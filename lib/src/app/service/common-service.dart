@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:b2s_driver/src/app/theme/sizeConfig.dart';
-import 'package:flutter/material.dart';
+
+import 'package:flutter/material.dart' hide Key;
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
@@ -9,7 +10,7 @@ class Common {
   Common();
 
   ///Trả về định dạng tiền theo VND
-  static String formatMoney(int number) {
+  static String formatMoney(double number) {
     final oCcy = new NumberFormat("#,##0");
     return oCcy.format(number);
   }
@@ -20,23 +21,85 @@ class Common {
     return diacr.removeDiacritics(str).toLowerCase();
   }
 
-  //Khởi tạo Size Config
+  ///Khởi tạo Size Config
   static void initFontSize(context) {
     SizeConfig.getInstance()..init(context);
   }
 
-  //Chỉnh font size scale được cho từng screen.
+  ///Chỉnh font size scale được cho từng screen.
   static double setFontSize(double size) {
     return SizeConfig.setSize(size);
   }
 
-  //Convert image from base64
+  ///Convert image from base64
   static Image convertImageFromBase64(String base64) {
     return Image.memory(base64Decode(base64));
   }
 
   static Future<String> getJsonFile(String path) async {
     return await rootBundle.loadString(path);
+  }
+
+  ///Trả về object gồm thứ trong tuần và giờ phút
+  ///ex:
+  ///{
+  ///week: "Thứ hai",
+  ///time: "02:00"
+  ///}
+  static Map convertToWeekDayAndHHMM({DateTime day}) {
+    Map result = Map();
+    if (day == null) day = DateTime.now();
+    switch (day.weekday) {
+      case 1:
+        result["week"] = 'Thứ 2';
+        break;
+      case 2:
+        result["week"] = 'Thứ 3';
+        break;
+      case 3:
+        result["week"] = 'Thứ 4';
+        break;
+      case 4:
+        result["week"] = 'Thứ 5';
+        break;
+      case 5:
+        result["week"] = 'Thứ 6';
+        break;
+      case 6:
+        result["week"] = 'Thứ 7';
+        break;
+      case 7:
+        result["week"] = 'Chủ nhật';
+        break;
+      default:
+        break;
+    }
+    result["time"] = DateFormat('hh:mm a').format(day);
+    return result;
+  }
+
+  static createKeyWord(String name, {String split = ''}) {
+    var arrName = [], curName = '';
+    name.split(split).forEach((letter) {
+      curName += letter;
+      arrName.add(curName);
+    });
+    return arrName;
+  }
+
+  static createKeyWordForChat(String name, {String split = ''}) {
+    var arrName = [], curName = '';
+    name.split(split).forEach((letter) {
+      curName = letter;
+      arrName.add(curName);
+    });
+    return arrName;
+  }
+
+  ///Get value of enum
+  static String getValueEnum(enumValue) {
+    if (enumValue != null) return enumValue.toString().split('.').last;
+    return null;
   }
 }
 

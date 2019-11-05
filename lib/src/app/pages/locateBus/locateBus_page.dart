@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/busTimeLine.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';

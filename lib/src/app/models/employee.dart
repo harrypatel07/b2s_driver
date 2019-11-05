@@ -1,12 +1,27 @@
+import 'package:b2s_driver/src/app/models/res-partner.dart';
+
 class Employee {
   int id;
-  String name;
-  String photo;
-  String location = 'HCM, VN.';
-  String gender;
-  int age;
+  dynamic name;
+  dynamic photo;
+  dynamic location = 'HCM, VN.';
+  dynamic gender;
+  dynamic genderId;
+  dynamic age;
 
   Employee(this.id, this.name, this.photo, this.gender, this.age);
+
+  Employee.fromResPartner(ResPartner resPartner, {bool primary}) {
+    id = resPartner.id;
+    name = resPartner.name;
+    photo = resPartner.image;
+    location = resPartner.contactAddress;
+    if (resPartner.title is List) {
+      gender = resPartner.title[1];
+      genderId = resPartner.title[0];
+    }
+  }
+
   // Names generated at http://random-name-generator.info/
   static final List<Employee> listEmployee = [
     Employee(

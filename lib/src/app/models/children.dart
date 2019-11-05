@@ -1,12 +1,25 @@
+import 'dart:typed_data';
+
+import 'package:b2s_driver/src/app/models/res-partner.dart';
+
 class Children {
   int id;
-  String name;
-  String photo;
-  String location = 'HCM, VN.';
-  String gender;
-  int age;
+  dynamic name;
+  dynamic photo;
+  dynamic location = 'HCM, VN.';
+  dynamic gender;
+  dynamic genderId;
+  dynamic age;
   bool primary;
-  String schoolName;
+  dynamic schoolName = "";
+  dynamic schoolId;
+  dynamic phone;
+  dynamic email;
+  dynamic parentId;
+  dynamic paidTicket;
+  dynamic lat;
+  dynamic lng;
+  dynamic classes;
 
   Children(
       {this.id,
@@ -15,17 +28,62 @@ class Children {
       this.gender,
       this.age,
       this.primary,
-      this.schoolName});
+      this.schoolName,
+      this.schoolId,
+      this.classes,
+      this.phone,
+      this.email,
+      this.parentId,
+      this.genderId,
+      this.paidTicket,
+      this.location = "HCM",
+      this.lat,
+      this.lng});
+
+  Children.fromResPartner(ResPartner resPartner, {bool primary}) {
+    id = resPartner.id;
+    name = resPartner.name;
+    photo = resPartner.image;
+    location = resPartner.contactAddress;
+    if (resPartner.title is List) {
+      gender = resPartner.title[1];
+      genderId = resPartner.title[0];
+    }
+    if (resPartner.xSchool is List) {
+      schoolName = resPartner.xSchool[1];
+      schoolId = resPartner.xSchool[0];
+      classes = resPartner.xClass;
+    }
+    email = resPartner.email;
+    phone = resPartner.phone;
+    paidTicket = false;
+
+    if (resPartner.parentId is List) parentId = resPartner.parentId[0];
+    this.primary = primary;
+  }
 
   Children.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    photo = json['photo'];
+    if (json['photo'] is List) {
+      List photoUint8 = json['photo'];
+      photoUint8 = photoUint8.cast<int>();
+      photo = Uint8List.fromList(photoUint8);
+    } else if (!(json['photo'] is bool)) photo = json['photo'];
     location = json['location'];
     gender = json['gender'];
+    genderId = json['genderId'];
     age = json['age'];
     primary = json['primary'];
     schoolName = json['schoolName'];
+    schoolId = json['schoolId'];
+    classes = json['classes'];
+    phone = json['phone'];
+    email = json['email'];
+    parentId = json['parentId'];
+    paidTicket = json['paidTicket'];
+    lat = json['lat'];
+    lng = json['lng'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,20 +93,19 @@ class Children {
     data["photo"] = this.photo;
     data["location"] = this.location;
     data["gender"] = this.gender;
+    data["genderId"] = this.genderId;
     data["age"] = this.age;
     data["primary"] = this.primary;
     data["schoolName"] = this.schoolName;
+    data["schoolId"] = this.schoolId;
+    data["classes"] = this.classes;
+    data["phone"] = this.phone;
+    data["email"] = this.email;
+    data["parentId"] = this.parentId;
+    data["paidTicket"] = this.paidTicket;
+    data["lat"] = this.lat;
+    data["lng"] = this.lng;
     return data;
-  }
-
-  static List<Children> getChildrenByListID(
-      List<Children> listChildren, List<int> listId) {
-    List<Children> listResult = [];
-    for (var id in listId) {
-      var child = listChildren.singleWhere((child) => child.id == id);
-      if (child != null) listResult.add(child);
-    }
-    return listResult;
   }
 
   static final List<Children> list = [
@@ -88,4 +145,38 @@ class Children {
         primary: false,
         schoolName: "VStar school"),
   ];
+
+  static List<Children> setChildrenPrimary(
+      List<Children> list, int childrenID) {
+    for (var item in list) {
+      if (item.id == childrenID)
+        item.primary = true;
+      else
+        item.primary = false;
+    }
+    return list;
+  }
+
+  static List<Children> getListChildrenPaidTicket(List<Children> list) {
+    return list.where((child) => child.paidTicket == true).toList();
+  }
+
+  static Children getChildrenPrimary(List<Children> list) {
+    return list.firstWhere((child) => child.primary == true,
+        orElse: () => null);
+  }
+
+  static List<Children> getChildrenNotPrimary(List<Children> list) {
+    return list.where((child) => child.primary == false).toList();
+  }
+
+  static List<Children> getChildrenByListID(
+      List<Children> listChildren, List<int> listId) {
+    List<Children> listResult = [];
+    for (var id in listId) {
+      var child = listChildren.singleWhere((child) => child.id == id);
+      if (child != null) listResult.add(child);
+    }
+    return listResult;
+  }
 }

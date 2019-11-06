@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Widget _appBar() {
     return TS24AppBar(
-      title: Text(viewModel.listDriverBusSession[0].busID),
+      title: Text(viewModel.busId),
       bottom: TabBar(
         controller: _tabController,
         tabs: <Widget>[
@@ -53,47 +53,45 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildBody(DriverBusSession driverBusSession) {
-    var listTimeLine =
-        RouteBus.getListRouteBusByType(RouteBus.list, driverBusSession.type)
-            .map((item) => TimeLineEvent(
-                time: item.time,
-                task: item.routeName,
-                content: viewModel
-                    .getListChildrenForTimeLine(driverBusSession, item.id)
-                    .map((children) {
-                  viewModel.addChildrenByDriverBusSessionType(
-                      driverBusSession.type, children);
-                  final statusID = ChildDrenStatus.getStatusIDByChildrenID(
-                      driverBusSession.childDrenStatus, children.id, item.id);
-                  final statusBus =
-                      StatusBus.getStatusByID(StatusBus.list, statusID);
-                  var tag = children.id.toString() +
-                      item.id.toString() +
-                      driverBusSession.busID.toString();
-                  return HomePageCardTimeLine(
-                    children: children,
-                    isEnablePicked: statusID == 0 ? true : false,
-                    status: statusBus,
-                    isEnableTapChildrenContentCard: true,
-                    heroTag: tag,
-                    onTapPickUp: () {
-                      viewModel.onTapPickUp(driverBusSession, children, item);
-                    },
-                    onTapChangeStatusLeave: () {
-                      viewModel.onTapChangeChildrenStatus(
-                          driverBusSession, children, item, 3);
-                      print("show button call");
-                    },
-                    onTapShowChildrenProfile: () {
-                      Navigator.pushNamed(
-                          context, ProfileChildrenPage.routeName,
-                          arguments: ProfileChildrenArgs(
-                              children: children, heroTag: tag));
-                    },
-                  );
-                }).toList(),
-                isFinish: item.status))
-            .toList();
+    var listTimeLine = driverBusSession.listRouteBus
+        .map((item) => TimeLineEvent(
+            time: item.time,
+            task: item.routeName,
+            content: viewModel
+                .getListChildrenForTimeLine(driverBusSession, item.id)
+                .map((children) {
+              viewModel.addChildrenByDriverBusSessionType(
+                  driverBusSession.type, children);
+              final statusID = ChildDrenStatus.getStatusIDByChildrenID(
+                  driverBusSession.childDrenStatus, children.id, item.id);
+              final statusBus =
+                  StatusBus.getStatusByID(StatusBus.list, statusID);
+              var tag = children.id.toString() +
+                  item.id.toString() +
+                  driverBusSession.busID.toString();
+              return HomePageCardTimeLine(
+                children: children,
+                isEnablePicked: statusID == 0 ? true : false,
+                status: statusBus,
+                isEnableTapChildrenContentCard: true,
+                heroTag: tag,
+                onTapPickUp: () {
+                  viewModel.onTapPickUp(driverBusSession, children, item);
+                },
+                onTapChangeStatusLeave: () {
+                  viewModel.onTapChangeChildrenStatus(
+                      driverBusSession, children, item, 3);
+                  print("show button call");
+                },
+                onTapShowChildrenProfile: () {
+                  Navigator.pushNamed(context, ProfileChildrenPage.routeName,
+                      arguments: ProfileChildrenArgs(
+                          children: children, heroTag: tag));
+                },
+              );
+            }).toList(),
+            isFinish: item.status))
+        .toList();
     Widget __buildReport() {
       final ___textStyle = TextStyle(
           fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white);
@@ -219,6 +217,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
+  List<Widget> _buildListDriverBusSession() {
+    List<Widget> list = [];
+    for (var i = 0; i < 2; i++) {
+      if (viewModel.listDriverBusSession.length == 2) {
+        list.add(_buildBody(viewModel.listDriverBusSession[i]));
+      } else if (viewModel.listDriverBusSession.length == 1) {
+        if (viewModel.listDriverBusSession[0].type == 0) {
+          list.add(_buildBody(viewModel.listDriverBusSession[i]));
+          list.add(Container());
+          break;
+        } else {
+          list.add(Container());
+          list.add(_buildBody(viewModel.listDriverBusSession[i]));
+          break;
+        }
+      } else if (viewModel.listDriverBusSession.length == 0) {
+        list.add(Container());
+      }
+    }
+    return list;
+  }
+
   TabsPageViewModel tabsPageViewModel;
   @override
   Widget build(BuildContext context) {
@@ -237,10 +257,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   appBar: _appBar(),
                   body: TabBarView(
                     controller: _tabController,
-                    children:
-                        viewModel.listDriverBusSession.map((driverBusSession) {
-                      return _buildBody(driverBusSession);
-                    }).toList(),
+                    children: _buildListDriverBusSession(),
                   ),
                 ),
               ),

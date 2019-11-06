@@ -43,11 +43,11 @@ class LocateBusPageViewModel extends ViewModelBase {
   StreamSubscription streamCloud;
   DriverBusSession driverBusSession;
   LocateBusPageViewModel() {
-    childrenBus =
-        ChildrenBusSession.list.singleWhere((item) => item.child.id == 1);
-    driverBusSession = DriverBusSession.list
-        .singleWhere((item) => item.sessionID == childrenBus.sessionID);
-    listenData(childrenBus.sessionID);
+    // childrenBus =
+    //     ChildrenBusSession.list.singleWhere((item) => item.child.id == 1);
+    // driverBusSession = DriverBusSession.list
+    //     .singleWhere((item) => item.sessionID == childrenBus.sessionID);
+    // listenData(childrenBus.sessionID);
   }
 
   @override
@@ -177,7 +177,7 @@ class LocateBusPageViewModel extends ViewModelBase {
 
   listenData(sessionID) {
     if (streamCloud != null) streamCloud.cancel();
-    streamCloud = cloudSerivce
+    streamCloud = cloudSerivce.busSession
         .listenChildrenBusSession(childrenBus.sessionID)
         .listen((onData) {
       childrenBus.fromJson(onData.data);
@@ -197,8 +197,9 @@ class LocateBusPageViewModel extends ViewModelBase {
         break;
       default:
     }
-    cloudSerivce.updateDriverBusSession(driverBusSession);
-    cloudSerivce.updateStatusChildrenBus(childrenBus.child, childrenStatus);
+    cloudSerivce.busSession.updateDriverBusSession(driverBusSession);
+    cloudSerivce.busSession
+        .updateStatusChildrenBus(childrenBus.child, childrenStatus);
     this.updateState();
   }
 
@@ -295,8 +296,8 @@ class LocateBusPageViewModel extends ViewModelBase {
         break;
       default:
     }
-    cloudSerivce.updateDriverBusSession(driverBusSession);
-    cloudSerivce.updateStatusChildrenBus(children, childrenStatus);
+    cloudSerivce.busSession.updateDriverBusSession(driverBusSession);
+    cloudSerivce.busSession.updateStatusChildrenBus(children, childrenStatus);
     this.updateState();
   }
 }

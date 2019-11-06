@@ -281,9 +281,10 @@ class _LocateBusPageState extends State<LocateBusPage>
   }
 
   Widget _buildPanel() {
-    DriverBusSession driverBusSession = DriverBusSession.list[0];
-    var listTimeLine = RouteBus.getListRouteBusByType(
-            RouteBus.list, driverBusSession.type)
+    var driverBusSession =
+        DriverBusSession.list.length > 0 ? DriverBusSession.list[0] : null;
+    if (driverBusSession == null) return Container();
+    var listTimeLine = driverBusSession.listRouteBus
         .map((item) => TimeLineEvent(
             time: item.time,
             task: item.routeName,

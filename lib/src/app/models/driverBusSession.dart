@@ -9,14 +9,15 @@ class DriverBusSession {
   List<Children> listChildren;
   List<ChildDrenStatus> childDrenStatus;
   List<ChildDrenRoute> childDrenRoute;
-
+  List<RouteBus> listRouteBus;
   DriverBusSession(
       {this.childDrenRoute,
       this.sessionID,
       this.busID,
       this.type,
       this.listChildren,
-      this.childDrenStatus});
+      this.childDrenStatus,
+      this.listRouteBus});
 
   fromJson(Map<dynamic, dynamic> json) {
     List list = [];
@@ -30,6 +31,8 @@ class DriverBusSession {
         list.map((item) => ChildDrenStatus.fromJson(item)).toList();
     list = json['childDrenRoute'];
     childDrenRoute = list.map((item) => ChildDrenRoute.fromJson(item)).toList();
+    list = json['listRouteBus'];
+    listRouteBus = list.map((item) => RouteBus.fromJson(item)).toList();
   }
 
   Map<dynamic, dynamic> toJson() {
@@ -43,6 +46,8 @@ class DriverBusSession {
         this.childDrenStatus.map((item) => item.toJson()).toList();
     data['childDrenRoute'] =
         this.childDrenRoute.map((item) => item.toJson()).toList();
+    data['listRouteBus'] =
+        this.listRouteBus.map((item) => item.toJson()).toList();
     return data;
   }
 
@@ -53,19 +58,21 @@ class DriverBusSession {
         type: 0,
         listChildren: Children.list,
         childDrenStatus: ChildDrenStatus.list,
-        childDrenRoute: ChildDrenRoute.list),
+        childDrenRoute: ChildDrenRoute.list,
+        listRouteBus: RouteBus.getListRouteBusByType(RouteBus.list, 0)),
     DriverBusSession(
         sessionID: "S02",
         busID: "52G-12345",
         type: 1,
         listChildren: Children.list,
         childDrenStatus: ChildDrenStatus.list,
-        childDrenRoute: ChildDrenRoute.list),
+        childDrenRoute: ChildDrenRoute.list,
+        listRouteBus: RouteBus.getListRouteBusByType(RouteBus.list, 1)),
   ];
 }
 
 class ChildDrenStatus {
-  int id;
+  int id; //map với field state cua picking transport info
   int childrenID;
   int statusID; //remove final to do change status 0->1 in code
   int routeBusID;
@@ -201,8 +208,8 @@ class RouteBus {
       routeName: "200 võ thị sáu, p10, q3",
       type: 0,
       status: true,
-      lat: 0,
-      lng: 0,
+      lat: 10.784144,
+      lng: 106.687781,
     ),
     RouteBus(
       id: 2,
@@ -211,8 +218,8 @@ class RouteBus {
       routeName: "285/94B cách mạng tháng tám, p12, q10",
       type: 0,
       status: true,
-      lat: 0,
-      lng: 0,
+      lat: 10.776573,
+      lng: 106.685157,
     ),
     RouteBus(
       id: 3,
@@ -221,8 +228,8 @@ class RouteBus {
       routeName: "Trường quốc tế việt úc",
       type: 0,
       status: false,
-      lat: 0,
-      lng: 0,
+      lat: 10.766937,
+      lng: 106.663168,
     ),
     RouteBus(
       id: 4,
@@ -231,8 +238,8 @@ class RouteBus {
       routeName: "Trường quốc tế việt úc",
       type: 1,
       status: false,
-      lat: 0,
-      lng: 0,
+      lat: 10.766937,
+      lng: 106.663168,
     ),
     RouteBus(
       id: 5,
@@ -241,8 +248,8 @@ class RouteBus {
       routeName: "285/94 cách mạng tháng 8, p12, q10",
       type: 1,
       status: false,
-      lat: 0,
-      lng: 0,
+      lat: 10.776573,
+      lng: 106.685157,
     ),
   ];
 

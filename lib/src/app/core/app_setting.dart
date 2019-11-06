@@ -14,6 +14,9 @@ const String client_secret = 'c665Xgd3mt3SLbPVLdVjRawJg4kzd5';
 const String password_client_id = 'jwLXOqcQ14QD68jUrVlnfQiYXgAPyn';
 const String password_client_secret = 'a2EEtXnVfjf1QPRy7CAzkdPpbiYP0m';
 
+const String admin_id = "bus2school";
+const String admin_password = "B@S#2019";
+
 final String ggKey = "AIzaSyCjB1Kh7OstaDns8ie6uPysWEWa_vwS3iw";
 
 const superKeyEncrypt = "b2s@#encrypt";

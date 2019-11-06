@@ -3,6 +3,7 @@ import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/childrenBusSession.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
+import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/parent.dart';
 import 'package:b2s_driver/src/app/models/picking-transport-info.dart';
 import 'package:b2s_driver/src/app/models/res-partner-title.dart';
@@ -331,6 +332,40 @@ class Api1 extends ApiMaster {
       return listResult[0];
     }).catchError((error) {
       return null;
+    });
+  }
+
+  ///Lấy lịch trình driver
+  Future<List<DriverBusSession>> getListDriverBusSession(
+      {int vehicleId, int driverId, String dateTime}) async {
+    await this.authorization();
+    Parent parent = Parent();
+    List<int> listChildrenId =
+        parent.listChildren.map((item) => item.id).toList();
+    var dateFrom = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    var dateTo =
+        DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(days: 1)));
+    List<DriverBusSession> listResult = new List();
+    body = new Map();
+    body["domain"] = [
+      ['vehicle_id', '=', 3],
+      ['vehicle_driver', '=', 15],
+      ["transport_date", '>=', dateFrom],
+      ["transport_date", '<', dateTo],
+      ['state', '!=', 'res']
+    ];
+    var params = convertSerialize(body);
+    return http
+        .get('${this.api}/search_read/picking.transport.info?$params',
+            headers: this.headers)
+        .then((http.Response response) async {
+      if (response.statusCode == 200) {
+        List list = json.decode(response.body);
+        if (list.length > 0) {}
+      }
+      return listResult;
+    }).catchError((error) {
+      return listResult;
     });
   }
 }

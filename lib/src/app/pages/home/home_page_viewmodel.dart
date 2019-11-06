@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:typed_data';
+import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/menu.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
-import 'dart:ui'as ui;
-
-import 'package:flutter/services.dart';
 
 class HomePageViewModel extends ViewModelBase {
   List<DriverBusSession> listDriverBusSession = DriverBusSession.list;
@@ -19,6 +16,8 @@ class HomePageViewModel extends ViewModelBase {
   HomePageViewModel();
   List<Children> listChildrenSS1 = new List();
   List<Children> listChildrenSS2 = new List();
+
+  String busId = "";
   List<Children> getListChildrenForTimeLine(
       DriverBusSession driverBusSession, int routeBusID) {
     List<Children> _listChildren = [];
@@ -32,43 +31,43 @@ class HomePageViewModel extends ViewModelBase {
 
   onTapPickUp(
       DriverBusSession driverBusSession, Children children, RouteBus routeBus) {
-    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
-        item.childrenID == children.id && item.routeBusID == routeBus.id);
-    switch (childrenStatus.statusID) {
-      case 0:
-        childrenStatus.statusID = 1;
-        break;
-      case 1:
-        childrenStatus.statusID = 0;
-        break;
-      default:
-    }
-    cloudSerivce.updateDriverBusSession(driverBusSession);
-    cloudSerivce.updateStatusChildrenBus(children, childrenStatus);
-    this.updateState();
+    // var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
+    //     item.childrenID == children.id && item.routeBusID == routeBus.id);
+    // switch (childrenStatus.statusID) {
+    //   case 0:
+    //     childrenStatus.statusID = 1;
+    //     break;
+    //   case 1:
+    //     childrenStatus.statusID = 0;
+    //     break;
+    //   default:
+    // }
+    // cloudSerivce.updateDriverBusSession(driverBusSession);
+    // cloudSerivce.updateStatusChildrenBus(children, childrenStatus);
+    // this.updateState();
+    api.getListDriverBusSession();
   }
 
-
-
-  onTapChangeChildrenStatus(DriverBusSession driverBusSession, Children children, RouteBus routeBus,int statusID) {
+  onTapChangeChildrenStatus(DriverBusSession driverBusSession,
+      Children children, RouteBus routeBus, int statusID) {
     var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
         item.childrenID == children.id && item.routeBusID == routeBus.id);
     childrenStatus.statusID = statusID;
-    cloudSerivce.updateDriverBusSession(driverBusSession);
-    cloudSerivce.updateStatusChildrenBus(children, childrenStatus);
+    cloudSerivce.busSession.updateDriverBusSession(driverBusSession);
+    cloudSerivce.busSession.updateStatusChildrenBus(children, childrenStatus);
     this.updateState();
   }
 
   listenData() {
-    if (streamCloud != null) streamCloud.cancel();
-    streamCloud = cloudSerivce.listenAllDriverBusSession().listen((onData) {
-      onData.documentChanges.forEach((item) {
-        var sessionUpdate = listDriverBusSession.singleWhere((_item) =>
-            _item.sessionID == item.document.data["sessionID"].toString());
-        if (sessionUpdate != null) sessionUpdate.fromJson(item.document.data);
-      });
-      this.updateState();
-    });
+    // if (streamCloud != null) streamCloud.cancel();
+    // streamCloud = cloudSerivce.listenAllDriverBusSession().listen((onData) {
+    //   onData.documentChanges.forEach((item) {
+    //     var sessionUpdate = listDriverBusSession.singleWhere((_item) =>
+    //         _item.sessionID == item.document.data["sessionID"].toString());
+    //     if (sessionUpdate != null) sessionUpdate.fromJson(item.document.data);
+    //   });
+    //   this.updateState();
+    // });
   }
 
   @override
@@ -113,12 +112,11 @@ class HomePageViewModel extends ViewModelBase {
     else
       return listChildrenSS2.length;
   }
+
   void listContentOnTap(Menu menu) {
     this.updateState();
     tabsPageViewModel = ViewModelProvider.of(context);
     if (tabsPageViewModel != null)
-     tabsPageViewModel.onSlideMenuTapped(menu.index);
+      tabsPageViewModel.onSlideMenuTapped(menu.index);
   }
-
-
 }

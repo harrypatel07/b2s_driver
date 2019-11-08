@@ -20,25 +20,27 @@ class Children {
   dynamic lat;
   dynamic lng;
   dynamic classes;
-
-  Children(
-      {this.id,
-      this.name,
-      this.photo,
-      this.gender,
-      this.age,
-      this.primary,
-      this.schoolName,
-      this.schoolId,
-      this.classes,
-      this.phone,
-      this.email,
-      this.parentId,
-      this.genderId,
-      this.paidTicket,
-      this.location = "HCM",
-      this.lat,
-      this.lng});
+  dynamic birthday;
+  Children({
+    this.id,
+    this.name,
+    this.photo,
+    this.gender,
+    this.age,
+    this.primary,
+    this.schoolName,
+    this.schoolId,
+    this.classes,
+    this.phone,
+    this.email,
+    this.parentId,
+    this.genderId,
+    this.paidTicket,
+    this.location = "HCM",
+    this.lat,
+    this.lng,
+    this.birthday,
+  });
 
   Children.fromResPartner(ResPartner resPartner, {bool primary}) {
     id = resPartner.id;
@@ -60,6 +62,7 @@ class Children {
 
     if (resPartner.parentId is List) parentId = resPartner.parentId[0];
     this.primary = primary;
+    birthday = resPartner.xDateOfBirth;
   }
 
   Children.fromJson(Map<dynamic, dynamic> json) {
@@ -84,6 +87,7 @@ class Children {
     paidTicket = json['paidTicket'];
     lat = json['lat'];
     lng = json['lng'];
+    birthday = json['birthday'];
   }
 
   Map<String, dynamic> toJson() {
@@ -105,6 +109,7 @@ class Children {
     data["paidTicket"] = this.paidTicket;
     data["lat"] = this.lat;
     data["lng"] = this.lng;
+    data["birthday"] = this.birthday;
     return data;
   }
 

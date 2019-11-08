@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/parent.dart';
 
@@ -147,153 +148,154 @@ class ResPartner {
   dynamic zip;
   dynamic xClass;
   dynamic xSchool;
+  dynamic xDateOfBirth;
 
-  ResPartner({
-    this.sLastUpdate,
-    this.active,
-    this.activityDateDeadline,
-    this.activityIds,
-    this.activityState,
-    this.activitySummary,
-    this.activityTypeId,
-    this.activityUserId,
-    this.additionalInfo,
-    this.bankAccountCount,
-    this.bankIds,
-    this.barcode,
-    this.calendarLastNotifAck,
-    this.categoryId,
-    this.channelIds,
-    this.childIds,
-    this.city,
-    this.color,
-    this.comment,
-    this.commercialCompanyName,
-    this.commercialPartnerId,
-    this.companyId,
-    this.companyName,
-    this.companyType,
-    this.contactAddress,
-    this.contractIds,
-    this.contractsCount,
-    this.countryId,
-    this.createDate,
-    this.createUid,
-    this.credit,
-    this.creditLimit,
-    this.currencyId,
-    this.customer,
-    this.date,
-    this.debit,
-    this.debitLimit,
-    this.displayName,
-    this.email,
-    this.emailFormatted,
-    this.employee,
-    this.eventCount,
-    this.function,
-    this.hasUnreconciledEntries,
-    this.id,
-    this.imStatus,
-    this.image,
-    this.imageMedium,
-    this.imageSmall,
-    this.industryId,
-    this.invoiceIds,
-    this.invoiceWarn,
-    this.invoiceWarnMsg,
-    this.isBlacklisted,
-    this.isCompany,
-    this.isPublished,
-    this.isSeoOptimized,
-    this.journalItemCount,
-    this.lang,
-    this.lastTimeEntriesChecked,
-    this.lastWebsiteSoId,
-    this.meetingCount,
-    this.meetingIds,
-    this.messageAttachmentCount,
-    this.messageBounce,
-    this.messageChannelIds,
-    this.messageFollowerIds,
-    this.messageHasError,
-    this.messageHasErrorCounter,
-    this.messageIds,
-    this.messageIsFollower,
-    this.messageMainAttachmentId,
-    this.messageNeedaction,
-    this.messageNeedactionCounter,
-    this.messagePartnerIds,
-    this.messageUnread,
-    this.messageUnreadCounter,
-    this.mobile,
-    this.name,
-    this.opportunityCount,
-    this.opportunityIds,
-    this.parentId,
-    this.parentName,
-    this.partnerGid,
-    this.partnerShare,
-    this.paymentTokenCount,
-    this.paymentTokenIds,
-    this.phone,
-    this.pickingWarn,
-    this.pickingWarnMsg,
-    this.propertyAccountPayableId,
-    this.propertyAccountPositionId,
-    this.propertyAccountReceivableId,
-    this.propertyDeliveryCarrierId,
-    this.propertyPaymentTermId,
-    this.propertyProductPricelist,
-    this.propertyStockCustomer,
-    this.propertyStockSupplier,
-    this.propertySupplierPaymentTermId,
-    this.ref,
-    this.refCompanyIds,
-    this.saleOrderCount,
-    this.saleOrderIds,
-    this.saleWarn,
-    this.saleWarnMsg,
-    this.self,
-    this.signupExpiration,
-    this.signupToken,
-    this.signupType,
-    this.signupUrl,
-    this.signupValid,
-    this.stateId,
-    this.street,
-    this.street2,
-    this.supplier,
-    this.teamId,
-    this.title,
-    this.totalInvoiced,
-    this.trust,
-    this.type,
-    this.tz,
-    this.tzOffset,
-    this.userId,
-    this.userIds,
-    this.vat,
-    this.vehicleCount,
-    this.vehicleIds,
-    this.website,
-    this.websiteDescription,
-    this.websiteId,
-    this.websiteMessageIds,
-    this.websiteMetaDescription,
-    this.websiteMetaKeywords,
-    this.websiteMetaOgImg,
-    this.websiteMetaTitle,
-    this.websitePublished,
-    this.websiteShortDescription,
-    this.websiteUrl,
-    this.wishlistIds,
-    this.writeDate,
-    this.writeUid,
-    this.zip,
-    this.xClass,
-    this.xSchool,
-  });
+  ResPartner(
+      {this.sLastUpdate,
+      this.active,
+      this.activityDateDeadline,
+      this.activityIds,
+      this.activityState,
+      this.activitySummary,
+      this.activityTypeId,
+      this.activityUserId,
+      this.additionalInfo,
+      this.bankAccountCount,
+      this.bankIds,
+      this.barcode,
+      this.calendarLastNotifAck,
+      this.categoryId,
+      this.channelIds,
+      this.childIds,
+      this.city,
+      this.color,
+      this.comment,
+      this.commercialCompanyName,
+      this.commercialPartnerId,
+      this.companyId,
+      this.companyName,
+      this.companyType,
+      this.contactAddress,
+      this.contractIds,
+      this.contractsCount,
+      this.countryId,
+      this.createDate,
+      this.createUid,
+      this.credit,
+      this.creditLimit,
+      this.currencyId,
+      this.customer,
+      this.date,
+      this.debit,
+      this.debitLimit,
+      this.displayName,
+      this.email,
+      this.emailFormatted,
+      this.employee,
+      this.eventCount,
+      this.function,
+      this.hasUnreconciledEntries,
+      this.id,
+      this.imStatus,
+      this.image,
+      this.imageMedium,
+      this.imageSmall,
+      this.industryId,
+      this.invoiceIds,
+      this.invoiceWarn,
+      this.invoiceWarnMsg,
+      this.isBlacklisted,
+      this.isCompany,
+      this.isPublished,
+      this.isSeoOptimized,
+      this.journalItemCount,
+      this.lang,
+      this.lastTimeEntriesChecked,
+      this.lastWebsiteSoId,
+      this.meetingCount,
+      this.meetingIds,
+      this.messageAttachmentCount,
+      this.messageBounce,
+      this.messageChannelIds,
+      this.messageFollowerIds,
+      this.messageHasError,
+      this.messageHasErrorCounter,
+      this.messageIds,
+      this.messageIsFollower,
+      this.messageMainAttachmentId,
+      this.messageNeedaction,
+      this.messageNeedactionCounter,
+      this.messagePartnerIds,
+      this.messageUnread,
+      this.messageUnreadCounter,
+      this.mobile,
+      this.name,
+      this.opportunityCount,
+      this.opportunityIds,
+      this.parentId,
+      this.parentName,
+      this.partnerGid,
+      this.partnerShare,
+      this.paymentTokenCount,
+      this.paymentTokenIds,
+      this.phone,
+      this.pickingWarn,
+      this.pickingWarnMsg,
+      this.propertyAccountPayableId,
+      this.propertyAccountPositionId,
+      this.propertyAccountReceivableId,
+      this.propertyDeliveryCarrierId,
+      this.propertyPaymentTermId,
+      this.propertyProductPricelist,
+      this.propertyStockCustomer,
+      this.propertyStockSupplier,
+      this.propertySupplierPaymentTermId,
+      this.ref,
+      this.refCompanyIds,
+      this.saleOrderCount,
+      this.saleOrderIds,
+      this.saleWarn,
+      this.saleWarnMsg,
+      this.self,
+      this.signupExpiration,
+      this.signupToken,
+      this.signupType,
+      this.signupUrl,
+      this.signupValid,
+      this.stateId,
+      this.street,
+      this.street2,
+      this.supplier,
+      this.teamId,
+      this.title,
+      this.totalInvoiced,
+      this.trust,
+      this.type,
+      this.tz,
+      this.tzOffset,
+      this.userId,
+      this.userIds,
+      this.vat,
+      this.vehicleCount,
+      this.vehicleIds,
+      this.website,
+      this.websiteDescription,
+      this.websiteId,
+      this.websiteMessageIds,
+      this.websiteMetaDescription,
+      this.websiteMetaKeywords,
+      this.websiteMetaOgImg,
+      this.websiteMetaTitle,
+      this.websitePublished,
+      this.websiteShortDescription,
+      this.websiteUrl,
+      this.wishlistIds,
+      this.writeDate,
+      this.writeUid,
+      this.zip,
+      this.xClass,
+      this.xSchool,
+      this.xDateOfBirth});
 
   ResPartner.fromJson(Map<String, dynamic> json) {
     sLastUpdate = json['__last_update'];
@@ -393,21 +395,24 @@ class ResPartner {
     hasUnreconciledEntries = json['has_unreconciled_entries'];
     id = json['id'];
     imStatus = json['im_status'];
-    // image = "$domainApi/web/image?model=res.partner&field=image&id=$id";
-    // imageMedium =
-    //     "$domainApi/web/image?model=res.partner&field=imageMedium&id=$id";
-    // imageSmall =
-    //     "$domainApi/web/image?model=res.partner&field=imageSmall&id=$id";
-    image = base64.decode(json['image']);
-    imageMedium = base64.decode(json['image_medium']);
-    imageSmall = base64.decode(json['image_small']);
-    industryId = json['industry_id'];
-    if (json["invoice_ids"] != null) {
-      invoiceIds = List<dynamic>.from(
-          json["invoice_ids"] != null && (json["invoice_ids"] is bool) == false
-              ? json["invoice_ids"]
-              : []);
-    }
+    image =
+        "$domainApi/web/image?model=res.partner&field=image&id=$id&${api.sessionId}";
+    imageMedium =
+        "$domainApi/web/image?model=res.partner&field=imageMedium&id=$id&${api.sessionId}";
+    imageSmall =
+        "$domainApi/web/image?model=res.partner&field=imageSmall&id=$id&${api.sessionId}";
+    // if (json['image'] != null) image = base64.decode(json['image']);
+    // if (json['image_medium'] != null)
+    //   imageMedium = base64.decode(json['image_medium']);
+    // if (json['image_small'] != null)
+    //   imageSmall = base64.decode(json['image_small']);
+    // industryId = json['industry_id'];
+    // if (json["invoice_ids"] != null) {
+    //   invoiceIds = List<dynamic>.from(
+    //       json["invoice_ids"] != null && (json["invoice_ids"] is bool) == false
+    //           ? json["invoice_ids"]
+    //           : []);
+    // }
     invoiceWarn = json['invoice_warn'];
     invoiceWarnMsg = json['invoice_warn_msg'];
     isBlacklisted = json['is_blacklisted'];
@@ -610,6 +615,7 @@ class ResPartner {
     zip = json['zip'];
     xClass = json['x_class'];
     xSchool = json['x_school'];
+    xDateOfBirth = json['x_date_of_birth'];
   }
 
   ResPartner.fromChildren(Children children) {
@@ -623,6 +629,7 @@ class ResPartner {
     parentId = children.parentId;
     xSchool = children.schoolId;
     xClass = children.classes;
+    xDateOfBirth = children.birthday;
   }
 
   ResPartner.fromParent(Parent parent) {
@@ -684,7 +691,7 @@ class ResPartner {
     if (this.id != null) data['id'] = this.id;
     // data['im_status'] = this.imStatus;
     if (!(this.image is bool)) if (this.image != null) {
-      data['image'] = base64.encode(this.image);
+      if (this.image is List) data['image'] = base64.encode(this.image);
     }
     // data['image_medium'] = this.imageMedium;
     // data['image_small'] = this.imageSmall;
@@ -760,6 +767,8 @@ class ResPartner {
       data['title'] = this.title;
     if (this.xClass != null) data['x_class'] = this.xClass;
     if (this.xSchool != null) data['x_school'] = this.xSchool;
+    if (!(this.xDateOfBirth is bool)) if (this.xDateOfBirth != null)
+      data['x_date_of_birth'] = this.xDateOfBirth;
     // data['total_invoiced'] = this.totalInvoiced;
     // data['trust'] = this.trust;
     // data['type'] = this.type;

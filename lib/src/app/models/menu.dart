@@ -1,5 +1,7 @@
+import 'package:b2s_driver/src/app/pages/historyTrip/historyTrip_page.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page.dart';
+import 'package:b2s_driver/src/app/pages/schedule/schedule_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -18,17 +20,17 @@ class Menu {
   static List<Menu> tabMenu = <Menu>[
     Menu(
       index: 0,
-      title: "Home",
+      title: "Lịch trình",
       iconData: Icons.home,
-      page: HomePage(),
-      routeChildName: HomePage.routeName,
+      page: SchedulePage(),
+      routeChildName: SchedulePage.routeName,
     ),
     Menu(
       index: 1,
-      title: "Locate bus",
+      title: "Lịch sử chuyến",
       iconData: FontAwesomeIcons.bus,
-      page: LocateBusPage(),
-      routeChildName: LocateBusPage.routeName,
+      page: HistoryTripPage(),
+      routeChildName: HistoryTripPage.routeName,
     ),
   ];
 }

@@ -7,6 +7,8 @@ class Driver {
   dynamic gender;
   dynamic genderId;
   dynamic phone;
+  dynamic vehicleId;
+  dynamic vehicleName;
   static dynamic aliasName = "Driver";
   static Driver _singleton;
 
@@ -20,12 +22,20 @@ class Driver {
   Driver._internal();
 
   Driver.newInstance(
-      {this.id, this.name, this.photo, this.gender, this.phone}) {
+      {this.id,
+      this.name,
+      this.photo,
+      this.gender,
+      this.phone,
+      this.vehicleId,
+      this.vehicleName}) {
     id = id;
     name = name;
     photo = photo;
     phone = phone;
     gender = gender;
+    vehicleId = vehicleId;
+    vehicleName = vehicleName;
   }
 
   Driver.fromResPartner(ResPartner resPartner) {
@@ -37,6 +47,7 @@ class Driver {
       genderId = resPartner.title[0];
     }
     phone = resPartner.phone;
+    if (resPartner.vehicleIds is List) vehicleId = resPartner.vehicleIds[0];
   }
 
   Driver.fromJson(Map<dynamic, dynamic> json) {

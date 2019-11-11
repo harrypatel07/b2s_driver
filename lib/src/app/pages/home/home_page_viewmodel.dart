@@ -2,13 +2,15 @@ import 'dart:async';
 import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
+import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/menu.dart';
+import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
 
 class HomePageViewModel extends ViewModelBase {
-  List<DriverBusSession> listDriverBusSession = DriverBusSession.list;
+  List<DriverBusSession> listDriverBusSession = [];
   StreamSubscription streamCloud;
   CloudFiresStoreService cloudSerivce = CloudFiresStoreService();
   bool isShowListButton = false;
@@ -31,21 +33,21 @@ class HomePageViewModel extends ViewModelBase {
 
   onTapPickUp(
       DriverBusSession driverBusSession, Children children, RouteBus routeBus) {
-    // var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
-    //     item.childrenID == children.id && item.routeBusID == routeBus.id);
-    // switch (childrenStatus.statusID) {
-    //   case 0:
-    //     childrenStatus.statusID = 1;
-    //     break;
-    //   case 1:
-    //     childrenStatus.statusID = 0;
-    //     break;
-    //   default:
-    // }
+    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
+        item.childrenID == children.id && item.routeBusID == routeBus.id);
+    switch (childrenStatus.statusID) {
+      case 0:
+        childrenStatus.statusID = 1;
+        break;
+      case 1:
+        childrenStatus.statusID = 0;
+        break;
+      default:
+    }
     // cloudSerivce.updateDriverBusSession(driverBusSession);
     // cloudSerivce.updateStatusChildrenBus(children, childrenStatus);
-    // this.updateState();
-    api.getListDriverBusSession();
+    this.updateState();
+    //api.getListDriverBusSession();
   }
 
   onTapChangeChildrenStatus(DriverBusSession driverBusSession,
@@ -118,5 +120,18 @@ class HomePageViewModel extends ViewModelBase {
     tabsPageViewModel = ViewModelProvider.of(context);
     if (tabsPageViewModel != null)
       tabsPageViewModel.onSlideMenuTapped(menu.index);
+  }
+
+  loadData() {
+    Driver driver = Driver();
+    api
+        .getListDriverBusSession(
+            vehicleId: driver.vehicleId, driverId: driver.id)
+        .then((onValue) {
+      if (onValue.length > 0) {
+        listDriverBusSession = onValue;
+        this.updateState();
+      }
+    });
   }
 }

@@ -42,6 +42,19 @@ class Children {
     this.birthday,
   });
 
+  Children.fromJsonController(Map<dynamic, dynamic> partner) {
+    this.id = partner["id"];
+    this.schoolName = partner["school"];
+    this.phone = partner["phone"];
+    this.name = partner["name"];
+    this.birthday = partner["date_of_birth"];
+    this.email = partner["email"];
+    this.photo = partner["image"];
+    this.classes = partner["class"];
+    // this.genderId = partner["title"]["id"];
+    // this.gender = partner["title"]["name"];
+  }
+
   Children.fromResPartner(ResPartner resPartner, {bool primary}) {
     id = resPartner.id;
     name = resPartner.name;

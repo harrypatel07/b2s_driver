@@ -1,5 +1,5 @@
 class RouteBus {
-  int id;
+  dynamic id; //map với route location
   String date;
   String time;
   String routeName;
@@ -7,15 +7,18 @@ class RouteBus {
   dynamic status; // hoàn thành
   double lat;
   double lng;
-  RouteBus(
-      {this.id,
-      this.date,
-      this.time,
-      this.routeName,
-      this.type,
-      this.status,
-      this.lat,
-      this.lng});
+  bool isSchool;
+  RouteBus({
+    this.id,
+    this.date,
+    this.time,
+    this.routeName,
+    this.type,
+    this.status,
+    this.lat,
+    this.lng,
+    this.isSchool,
+  });
 
   RouteBus.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
@@ -26,6 +29,7 @@ class RouteBus {
     status = json['status'];
     lat = json['lat'];
     lng = json['lng'];
+    isSchool = json['isSchool'];
   }
 
   Map<String, dynamic> toJson() {
@@ -38,6 +42,7 @@ class RouteBus {
     data["status"] = this.status;
     data["lat"] = this.lat;
     data["lng"] = this.lng;
+    data["isSchool"] = this.isSchool;
     return data;
   }
 
@@ -49,8 +54,8 @@ class RouteBus {
       routeName: "200 võ thị sáu, p10, q3",
       type: 0,
       status: true,
-      lat: 0,
-      lng: 0,
+      lat: 10.784144,
+      lng: 106.687781,
     ),
     RouteBus(
       id: 2,
@@ -59,8 +64,8 @@ class RouteBus {
       routeName: "285/94B cách mạng tháng tám, p12, q10",
       type: 0,
       status: true,
-      lat: 0,
-      lng: 0,
+      lat: 10.776573,
+      lng: 106.685157,
     ),
     RouteBus(
       id: 3,
@@ -69,8 +74,8 @@ class RouteBus {
       routeName: "Trường quốc tế việt úc",
       type: 0,
       status: false,
-      lat: 0,
-      lng: 0,
+      lat: 10.766937,
+      lng: 106.663168,
     ),
     RouteBus(
       id: 4,
@@ -79,8 +84,8 @@ class RouteBus {
       routeName: "Trường quốc tế việt úc",
       type: 1,
       status: false,
-      lat: 0,
-      lng: 0,
+      lat: 10.766937,
+      lng: 106.663168,
     ),
     RouteBus(
       id: 5,
@@ -89,8 +94,13 @@ class RouteBus {
       routeName: "285/94 cách mạng tháng 8, p12, q10",
       type: 1,
       status: false,
-      lat: 0,
-      lng: 0,
+      lat: 10.776573,
+      lng: 106.685157,
     ),
   ];
+
+  static List<RouteBus> getListRouteBusByType(
+      List<RouteBus> listRouteBus, int type) {
+    return listRouteBus.where((item) => item.type == type).toList();
+  }
 }

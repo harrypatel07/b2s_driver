@@ -12,5 +12,17 @@
         "QR_CODE": "QR Code",
         "SALE_TICKET": "Bán vé",
         "CHECK_TICKET": "Soát vé"
+    },
+    "WAITING_MESSAGE": {
+        "PERMISSION_CONNECT": "Đang kiểm tra quyền truy cập...",
+        "AUTH_ACCOUNT": "Đang xác thực tài khoản",
+        "INFO_DOMAIN": "Đang lấy thông tin domain..."
+    },
+    "ERROR_MESSAGE": {
+        "PERMISSION_APP": "Bạn không có quyền truy cập vào ứng dụng này.",
+        "WRONG_CLIENT": "Vui lòng kiểm tra lại thông tin Client ID và Client Secret",
+        "CONNECT_SERVER": "Không kết nối được máy chủ.Vui lòng kiểm tra lại thông tin domain.",
+        "WRONG_LOGIN": "Kiểm tra lại tên đăng nhập hoặc mật khẩu.",
+        "WRONG_DOMAIN": "Thông tin cấu hình domain chưa hợp lệ.Vui lòng kiểm tra lại."
     }
 }

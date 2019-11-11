@@ -20,7 +20,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  HomePageViewModel viewModel;
+  HomePageViewModel viewModel = HomePageViewModel();
   TabController _tabController;
   @override
   void initState() {
@@ -34,7 +34,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     //     viewModel.heightTimeline = [];
     // });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      viewModel.listenData();
+      //viewModel.listenData();
+      viewModel.loadData();
     });
     super.initState();
   }
@@ -242,8 +243,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   TabsPageViewModel tabsPageViewModel;
   @override
   Widget build(BuildContext context) {
-    tabsPageViewModel = ViewModelProvider.of(context);
-    viewModel = tabsPageViewModel.homePageViewModel;
+    //tabsPageViewModel = ViewModelProvider.of(context);
+    //viewModel = tabsPageViewModel.homePageViewModel;
     viewModel.context = context;
     return ViewModelProvider(
       viewmodel: viewModel,

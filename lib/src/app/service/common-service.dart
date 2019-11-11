@@ -5,6 +5,7 @@ import 'package:flutter/material.dart' hide Key;
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
+import 'package:type_helper/type_helper.dart';
 
 class Common {
   Common();
@@ -100,6 +101,27 @@ class Common {
   static String getValueEnum(enumValue) {
     if (enumValue != null) return enumValue.toString().split('.').last;
     return null;
+  }
+
+  //Distince array
+  static List<T> distinceArray<T>(List list, String id) {
+    List<T> listUnique = List();
+    list = list.cast<T>();
+    var uniqueIds = list
+        .map((item) =>
+            isTypeOf<T, List<dynamic>>() == true ? item['id'] : item.id)
+        .toSet();
+    if (uniqueIds.length > 0) {
+      uniqueIds.forEach((v) {
+        var item = list.firstWhere(
+            (item) =>
+                (isTypeOf<T, List<dynamic>>() == true ? item['id'] : item.id) ==
+                v,
+            orElse: () => null);
+        if (item != null) listUnique.add(item);
+      });
+    }
+    return listUnique;
   }
 }
 

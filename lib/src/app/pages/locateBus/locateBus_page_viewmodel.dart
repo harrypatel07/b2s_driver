@@ -4,6 +4,7 @@ import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/childrenBusSession.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

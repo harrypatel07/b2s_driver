@@ -148,7 +148,7 @@ class ResPartner {
   dynamic zip;
   dynamic xClass;
   dynamic xSchool;
-  dynamic xDateOfBirth;
+  dynamic wkDob;
 
   ResPartner(
       {this.sLastUpdate,
@@ -295,7 +295,7 @@ class ResPartner {
       this.zip,
       this.xClass,
       this.xSchool,
-      this.xDateOfBirth});
+      this.wkDob});
 
   ResPartner.fromJson(Map<String, dynamic> json) {
     sLastUpdate = json['__last_update'];
@@ -615,7 +615,7 @@ class ResPartner {
     zip = json['zip'];
     xClass = json['x_class'];
     xSchool = json['x_school'];
-    xDateOfBirth = json['x_date_of_birth'];
+    wkDob = json['wk_dob'];
   }
 
   ResPartner.fromChildren(Children children) {
@@ -629,7 +629,7 @@ class ResPartner {
     parentId = children.parentId;
     xSchool = children.schoolId;
     xClass = children.classes;
-    xDateOfBirth = children.birthday;
+    wkDob = children.birthday;
   }
 
   ResPartner.fromParent(Parent parent) {
@@ -767,8 +767,8 @@ class ResPartner {
       data['title'] = this.title;
     if (this.xClass != null) data['x_class'] = this.xClass;
     if (this.xSchool != null) data['x_school'] = this.xSchool;
-    if (!(this.xDateOfBirth is bool)) if (this.xDateOfBirth != null)
-      data['x_date_of_birth'] = this.xDateOfBirth;
+    if (!(this.wkDob is bool)) if (this.wkDob != null)
+      data['wk_dob'] = this.wkDob;
     // data['total_invoiced'] = this.totalInvoiced;
     // data['trust'] = this.trust;
     // data['type'] = this.type;

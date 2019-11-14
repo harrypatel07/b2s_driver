@@ -9,13 +9,13 @@ import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
 
-class HomePageViewModel extends ViewModelBase {
+class HomePageViewModelOld extends ViewModelBase {
   List<DriverBusSession> listDriverBusSession = [];
   StreamSubscription streamCloud;
   CloudFiresStoreService cloudSerivce = CloudFiresStoreService();
   bool isShowListButton = false;
   TabsPageViewModel tabsPageViewModel;
-  HomePageViewModel();
+  HomePageViewModelOld();
   List<Children> listChildrenSS1 = new List();
   List<Children> listChildrenSS2 = new List();
 
@@ -30,7 +30,7 @@ class HomePageViewModel extends ViewModelBase {
           driverBusSession.listChildren, _childrenRoute.listChildrenID);
     return _listChildren;
   }
-
+//
 //  onTapPickUp(
 //      DriverBusSession driverBusSession, Children children, RouteBus routeBus) {
 //    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
@@ -50,15 +50,15 @@ class HomePageViewModel extends ViewModelBase {
 //    //api.getListDriverBusSession();
 //  }
 
-//  onTapChangeChildrenStatus(DriverBusSession driverBusSession,
-//      Children children, RouteBus routeBus, int statusID) {
-//    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
-//        item.childrenID == children.id && item.routeBusID == routeBus.id);
-//    childrenStatus.statusID = statusID;
-//    cloudSerivce.busSession.updateDriverBusSession(driverBusSession);
-//    cloudSerivce.busSession.updateStatusChildrenBus(children, childrenStatus);
-//    this.updateState();
-//  }
+  onTapChangeChildrenStatus(DriverBusSession driverBusSession,
+      Children children, RouteBus routeBus, int statusID) {
+    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
+        item.childrenID == children.id && item.routeBusID == routeBus.id);
+    childrenStatus.statusID = statusID;
+    cloudSerivce.busSession.updateDriverBusSession(driverBusSession);
+    cloudSerivce.busSession.updateStatusChildrenBus(children, childrenStatus);
+    this.updateState();
+  }
 
   listenData() {
     // if (streamCloud != null) streamCloud.cancel();
@@ -74,7 +74,7 @@ class HomePageViewModel extends ViewModelBase {
 
   @override
   void dispose() {
-    //streamCloud.cancel();
+    streamCloud.cancel();
     super.dispose();
   }
 

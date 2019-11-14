@@ -61,7 +61,7 @@ class Api1 extends ApiMaster {
           Driver driver = Driver();
           driver.listVehicle = listFleetVehicle;
           driver.vehicleId = listFleetVehicle[0].id;
-          driver.name = listFleetVehicle[0].name;
+          driver.vehicleName = listFleetVehicle[0].name;
           await driver.saveLocal();
           return true;
         }
@@ -246,6 +246,73 @@ class Api1 extends ApiMaster {
         result = false;
       }
       return result;
+    });
+  }
+
+  ///Update thông tin khách hàng
+  ///
+  ///Success - Trả về true
+  ///
+  ///Fail - Trả về false
+  Future<bool> updatePickingTransportInfo(PickingTransportInfo picking) async {
+    await this.authorization();
+    body = new Map();
+    body["model"] = "picking.transport.info";
+    body["ids"] = json.encode([int.parse(picking.id.toString())]);
+    body["values"] = json.encode(picking.toJson());
+    return http
+        .put('${this.api}/write', headers: this.headers, body: body)
+        .then((http.Response response) {
+      var result = false;
+      if (response.statusCode == 200) {
+        print(response.body);
+        result = true;
+        //print(list);
+      } else {
+        result = false;
+      }
+      return result;
+    });
+  }
+
+  ///Update trang thai nghỉ theo id picking
+  ///listIdPicking
+  Future<bool> updateLeaveByIdPicking(List<int> listIdPicking) async {
+    await this.authorization();
+    var client = await this.authorizationOdoo();
+    return client.callKW("picking.transport.info", "picking_cancel",
+        [listIdPicking]).then((onValue) {
+      var error = onValue.getError();
+      if (error == null) return true;
+      return false;
+    });
+  }
+
+  ///Update trạng thái đón theo id picking
+  ///listIdPicking
+  Future<bool> updateStatusPickByIdPicking(List<int> listIdPicking) async {
+    await this.authorization();
+    var client = await this.authorizationOdoo();
+    return client
+        .callKW("picking.transport.info", "picking_hold", [listIdPicking]).then(
+            (onValue) {
+      var error = onValue.getError();
+      if (error == null) return true;
+      return false;
+    });
+  }
+
+  ///Update trạng thái trả theo id picking
+  ///listIdPicking
+  Future<bool> updateStatusDropByIdChildren(List<int> listIdPicking) async {
+    await this.authorization();
+    var client = await this.authorizationOdoo();
+    return client
+        .callKW("picking.transport.info", "picking_done", [listIdPicking]).then(
+            (onValue) {
+      var error = onValue.getError();
+      if (error == null) return true;
+      return false;
     });
   }
 

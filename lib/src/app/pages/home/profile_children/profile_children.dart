@@ -64,7 +64,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
         Hero(
             tag: heroTag,
             child: Container(
-              height: 350,
+              height: 250,
               child: Column(
                 children: <Widget>[
                   Flexible(
@@ -72,7 +72,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                     child: CachedNetworkImage(
                       imageUrl: children.photo,
                       imageBuilder: (context, imageProvider) => Container(
-                        height: 350.0,
+                        height: 250.0,
                         width: deviceWidth,
                         decoration: BoxDecoration(
                           image: DecorationImage(
@@ -110,32 +110,23 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
               ),
             ),
             Flexible(
-              flex: 2,
+              flex: 4,
               child: Container(
                 margin: EdgeInsets.only(left: 10),
                 padding: EdgeInsets.symmetric(horizontal: 3.0),
                 height: 30.0,
-                width: 60.0,
+//                width: 100.0,
                 decoration: BoxDecoration(
                     gradient: ThemePrimary.chatBubbleGradient,
                     borderRadius: BorderRadius.circular(30.0)),
                 child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Icon(
-                        children.gender == 'M' ? LineIcons.mars : LineIcons.venus,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        children.age.toString(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 18.0,
-                        ),
-                      )
-                    ],
+                  child: Text(
+                    children.gender.toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 18.0,
+                    ),
                   ),
                 ),
               ),
@@ -391,15 +382,15 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
             child: Column(
               children: <Widget>[
                 rowTitle('THÔNG TIN HỌC SINH'),
-                row1('Họ và tên :', 'Nguyên Văn Á'),
+                row1('Họ và tên :',children.name),
                 hr,
-                row1('Lớp :', '2A'),
+                row1('Lớp :', children.classes.toString()),
                 hr,
-                row1('Trường :', 'THPT Lê Văn Sỹ'),
+                row1('Trường :', children.schoolName.toString()),
                 hr,
-                row1('Địa chỉ :', '285 Cách mạng tháng 8'),
+                row1('Địa chỉ :', children.location.toString()),
                 hr,
-                rowIcon('Phụ huynh :', 'Nguyên Minh Long','0983932933'),
+                rowIcon('Phụ huynh :', children.parent.name,children.parent.phone.toString()),
                 Container(height: 1, margin: EdgeInsets.only(bottom: 10),)
               ],
             ),

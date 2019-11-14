@@ -11,10 +11,11 @@ class HomePageTimeLineV2 extends StatelessWidget {
   final List<TimeLineEvent> listTimeLine;
   final BusTimeLine busTimeLine;
   final Animation<double> animationBusController;
+  final int position;
 //  final ui.Image image;
 //  final bool isEnableIconBus;
   HomePageTimeLineV2(
-      {this.listTimeLine, this.busTimeLine, this.animationBusController});
+      {this.listTimeLine, this.busTimeLine, this.animationBusController,this.position});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class HomePageTimeLineV2 extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   _lineStyle(context, iconSize, index, listTimeLine.length,
-                      listTimeLine[index].isFinish, renderBox),
+                      listTimeLine[index].isFinish, renderBox,position),
                   // _displayTime(listTimeLine[index].time),
                   _displayContent(listTimeLine[index], context)
                 ],
@@ -79,7 +80,7 @@ class HomePageTimeLineV2 extends StatelessWidget {
                 ),
               ),
               Text(
-                event.time,
+                event.time.substring(0,event.time.length-3),
                 style: TextStyle(fontFamily: ThemePrimary.primaryFontFamily),
               ),
             ],
@@ -105,7 +106,7 @@ class HomePageTimeLineV2 extends StatelessWidget {
   }
 
   Widget _lineStyle(BuildContext context, double iconSize, int index,
-      int listLength, bool isFinish, RenderBox renderBox) {
+      int listLength, bool isFinish, RenderBox renderBox,int numberTitle) {
     return Stack(
       children: <Widget>[
         Container(
@@ -133,12 +134,12 @@ class HomePageTimeLineV2 extends StatelessWidget {
                           ? Icons.fiber_manual_record
                           : Icons.radio_button_unchecked,
                       size: iconSize,
-                      color: Theme.of(context).accentColor),
+                      color: ThemePrimary.primaryColor),
                   Container(
                     width: iconSize,
                     height: iconSize,
                     alignment: Alignment.center,
-                    child: Text(
+                    child: Text(numberTitle!=null?numberTitle.toString():
                       "${index + 1}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -169,12 +170,13 @@ class HomePageTimeLineV2 extends StatelessWidget {
 }
 
 class TimeLineEvent {
+  final int id;
   final String time;
   final String task;
   final List<HomePageCardTimeLine> content;
   final bool isFinish;
 
-  TimeLineEvent({this.time, this.task, this.content, this.isFinish});
+  TimeLineEvent({this.id,this.time, this.task, this.content, this.isFinish});
 }
 
 class CustomIconDecoration extends Decoration {

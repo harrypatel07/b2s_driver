@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/pages/home/popup_card_timeline/popup_card_timeline_viewmodel.dart';
+import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -52,17 +53,17 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
           },
           child: Container(
             decoration: new BoxDecoration(
-                color: Colors.green,
+                color: ThemePrimary.primaryColor,
                 borderRadius:
                     new BorderRadius.only(bottomLeft: Radius.circular(70))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(alignment: Alignment.center, child: Icon(Icons.call)),
+                Container(alignment: Alignment.center, child: Icon(Icons.call,color: Colors.white,)),
                 SizedBox(
                   width: 5,
                 ),
-                Container(alignment: Alignment.center, child: Text('Gọi'))
+                Container(alignment: Alignment.center, child: Text('Gọi',style: TextStyle(color: Colors.white),))
               ],
             ),
           ),
@@ -83,11 +84,11 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(alignment: Alignment.center, child: Icon(Icons.home)),
+                Container(alignment: Alignment.center, child: Icon(Icons.home,color: Colors.white,)),
                 SizedBox(
                   width: 5,
                 ),
-                Container(alignment: Alignment.center, child: Text('Nghỉ'))
+                Container(alignment: Alignment.center, child: Text('Nghỉ',style: TextStyle(color: Colors.white),))
               ],
             ),
           ),
@@ -100,15 +101,15 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
             launch('sms:0123456');
           },
           child: Container(
-            color: Colors.yellow,
+            color: Colors.orange,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(alignment: Alignment.center, child: Icon(Icons.sms)),
+                Container(alignment: Alignment.center, child: Icon(Icons.sms,color: Colors.white,)),
                 SizedBox(
                   width: 5,
                 ),
-                Container(alignment: Alignment.center, child: Text('SMS'))
+                Container(alignment: Alignment.center, child: Text('SMS',style: TextStyle(color: Colors.white),))
               ],
             ),
           ),

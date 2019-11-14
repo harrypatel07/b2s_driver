@@ -102,7 +102,7 @@ class LoginPageViewModel extends ViewModelBase {
         //     duration: Duration(milliseconds: 200),
         //     message: translation.text("WAITING_MESSAGE.PERMISSION_CONNECT"));
 
-        Navigator.pushNamed(context, TabsPage.routeName,
+        Navigator.pushReplacementNamed(context, TabsPage.routeName,
             arguments: TabsArgument(routeChildName: HomePage.routeName));
       } else {
         LoadingDialog.hideLoadingDialog(context);

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:b2s_driver/src/app/models/parent.dart';
 import 'package:b2s_driver/src/app/models/res-partner.dart';
 
 class Children {
@@ -21,26 +22,27 @@ class Children {
   dynamic lng;
   dynamic classes;
   dynamic birthday;
-  Children({
-    this.id,
-    this.name,
-    this.photo,
-    this.gender,
-    this.age,
-    this.primary,
-    this.schoolName,
-    this.schoolId,
-    this.classes,
-    this.phone,
-    this.email,
-    this.parentId,
-    this.genderId,
-    this.paidTicket,
-    this.location = "HCM",
-    this.lat,
-    this.lng,
-    this.birthday,
-  });
+  Parent parent;
+  Children(
+      {this.id,
+      this.name,
+      this.photo,
+      this.gender,
+      this.age,
+      this.primary,
+      this.schoolName,
+      this.schoolId,
+      this.classes,
+      this.phone,
+      this.email,
+      this.parentId,
+      this.genderId,
+      this.paidTicket,
+      this.location = "HCM",
+      this.lat,
+      this.lng,
+      this.birthday,
+      this.parent});
 
   Children.fromJsonController(Map<dynamic, dynamic> partner) {
     this.id = partner["id"];
@@ -51,8 +53,19 @@ class Children {
     this.email = partner["email"];
     this.photo = partner["image"];
     this.classes = partner["class"];
-    // this.genderId = partner["title"]["id"];
-    // this.gender = partner["title"]["name"];
+    if (this.birthday != null) if (!(this.birthday is bool)) {
+      var date = DateTime.parse(this.birthday);
+      var dateNow = DateTime.now();
+      this.age = dateNow.year - date.year;
+    }
+    this.genderId = partner["title"]["id"];
+    this.gender = partner["title"]["name"];
+    var _parent = partner["parent_id"];
+    this.parent = Parent.newInstance(
+        id: _parent["id"],
+        email: _parent["email"],
+        phone: _parent["phone"],
+        name: _parent["name"]);
   }
 
   Children.fromResPartner(ResPartner resPartner, {bool primary}) {
@@ -75,7 +88,12 @@ class Children {
 
     if (resPartner.parentId is List) parentId = resPartner.parentId[0];
     this.primary = primary;
-    birthday = resPartner.xDateOfBirth;
+    birthday = resPartner.wkDob;
+    if (this.birthday != null) if (!(this.birthday is bool)) {
+      var date = DateTime.parse(this.birthday);
+      var dateNow = DateTime.now();
+      this.age = dateNow.year - date.year;
+    }
   }
 
   Children.fromJson(Map<dynamic, dynamic> json) {

@@ -1,6 +1,7 @@
 import 'package:b2s_driver/src/app/pages/historyTrip/historyTrip_page.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
 import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
+import 'package:b2s_driver/src/app/pages/locateBus/bottomSheet/bottom_sheet_custom.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page.dart';
 
@@ -16,13 +17,14 @@ class Routes {
     LoginPage.routeName: (context) => LoginPage(),
     TabsPage.routeName: (context) =>
         TabsPage(ModalRoute.of(context).settings.arguments),
-    HomePage.routeName: (context) => HomePage(),
-    LocateBusPage.routeName: (context) => LocateBusPage(),
+    HomePage.routeName: (context) => HomePage(driverBusSession: ModalRoute.of(context).settings.arguments,),
+    LocateBusPage.routeName: (context) => LocateBusPage(driverBusSession: ModalRoute.of(context).settings.arguments,),
     EmergencyPage.routeName: (context) => EmergencyPage(),
     ProfileChildrenPage.routeName: (context) =>
         ProfileChildrenPage(args: ModalRoute.of(context).settings.arguments),
     HistoryTripPage.routeName: (context) => HistoryTripPage(),
     SchedulePage.routeName: (context) => SchedulePage(),
+    BottomSheetCustom.routeName:(context)=> BottomSheetCustom(arguments: ModalRoute.of(context).settings.arguments,)
   };
 }
 

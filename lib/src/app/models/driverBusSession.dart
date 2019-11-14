@@ -3,6 +3,7 @@ import 'dart:core';
 
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
+import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:crypto/crypto.dart';
 
 class DriverBusSession {
@@ -103,6 +104,60 @@ class DriverBusSession {
         childDrenRoute: ChildDrenRoute.list,
         listRouteBus: RouteBus.getListRouteBusByType(RouteBus.list, 1)),
   ];
+
+  //Cập nhật status trường hợp nhấn vào pick và drop
+  static updateChildrenStatusIdByPickDrop(
+      {DriverBusSession driverBusSession,
+      ChildDrenStatus childDrenStatus,
+      bool update = true}) {
+    if (update) {
+      switch (childDrenStatus.typePickDrop) {
+        case 0: //pick
+          childDrenStatus.statusID = 1;
+          driverBusSession.childDrenStatus.forEach((item) {
+            if (item.childrenID == childDrenStatus.childrenID)
+              item.statusID = 1;
+          });
+          break; //drop
+        case 1:
+          childDrenStatus.statusID = driverBusSession.type == 0 ? 2 : 4;
+          driverBusSession.childDrenStatus.forEach((item) {
+            if (item.childrenID == childDrenStatus.childrenID)
+              item.statusID = driverBusSession.type == 0 ? 2 : 4;
+          });
+          break;
+        default:
+      }
+    } else {
+      switch (childDrenStatus.typePickDrop) {
+        case 0: //pick
+          childDrenStatus.statusID = 0;
+          driverBusSession.childDrenStatus.forEach((item) {
+            if (item.childrenID == childDrenStatus.childrenID)
+              item.statusID = 0;
+          });
+          break; //drop
+        case 1:
+          childDrenStatus.statusID = 1;
+          driverBusSession.childDrenStatus.forEach((item) {
+            if (item.childrenID == childDrenStatus.childrenID &&
+                item.routeBusID == childDrenStatus.routeBusID)
+              item.statusID = 1;
+          });
+          break;
+        default:
+      }
+    }
+  }
+
+  //Cập nhật status trường hợp nghỉ
+  static updateChildrenStatusIdByLeave(
+      {DriverBusSession driverBusSession, ChildDrenStatus childDrenStatus}) {
+    childDrenStatus.statusID = 3;
+    driverBusSession.childDrenStatus.forEach((item) {
+      if (item.childrenID == childDrenStatus.childrenID) item.statusID = 3;
+    });
+  }
 }
 
 class ChildDrenStatus {
@@ -135,17 +190,26 @@ class ChildDrenStatus {
     return data;
   }
 
-  static int getStatusIDByChildrenID(
+  static ChildDrenStatus getStatusByChildrenID(
       List<ChildDrenStatus> list, int childrenID, int routeBusID) {
-    var statusID = 0;
+    ChildDrenStatus status=ChildDrenStatus();
     final _childrenStatus = list.firstWhere(
         (item) =>
             item.childrenID == childrenID && item.routeBusID == routeBusID,
         orElse: () => null);
+    if (_childrenStatus != null) status = _childrenStatus;
+    return status;
+  }
+  static int getStatusIDByChildrenID(
+      List<ChildDrenStatus> list, int childrenID, int routeBusID) {
+    var statusID = 0;
+    final _childrenStatus = list.firstWhere(
+            (item) =>
+        item.childrenID == childrenID && item.routeBusID == routeBusID,
+        orElse: () => null);
     if (_childrenStatus != null) statusID = _childrenStatus.statusID;
     return statusID;
   }
-
   static List<ChildDrenStatus> list = [
     ChildDrenStatus(id: 1, childrenID: 3, statusID: 0, routeBusID: 1),
     ChildDrenStatus(id: 2, childrenID: 4, statusID: 0, routeBusID: 1),

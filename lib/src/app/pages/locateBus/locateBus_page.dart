@@ -1,99 +1,74 @@
-import 'dart:async';
-
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
-import 'package:b2s_driver/src/app/models/busTimeLine.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
-import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';
-import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
-import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class LocateBusPage extends StatefulWidget {
   static const String routeName = "/locateBus";
+  final DriverBusSession driverBusSession;
 
+  const LocateBusPage({Key key, this.driverBusSession}) : super(key: key);
   @override
   _LocateBusPageState createState() => _LocateBusPageState();
 }
-
 class _LocateBusPageState extends State<LocateBusPage>
     with SingleTickerProviderStateMixin {
-  LocateBusPageViewModel viewModel;
-  BusTimeLine busTimeLine;
-  final double _initFabHeight = 100.0;
-  double _fabHeight;
-  double _panelHeightOpen = 0;
-  double _panelHeightClosed = 120.0;
-
-  ScrollController _sc = ScrollController();
-  PanelController _pc = PanelController();
-  bool disableScroll = true;
-  AnimationController animationController;
-  CurvedAnimation curvedAnimation;
-  Animation<double> animation;
-  @override
-  void dispose() {
-    _sc.dispose();
-    animationController.dispose();
-    super.dispose();
-  }
+  LocateBusPageViewModel viewModel = LocateBusPageViewModel();
 
   @override
   void initState() {
+    viewModel.driverBusSession = widget.driverBusSession;
     super.initState();
-    _fabHeight = _initFabHeight;
-    _sc.addListener(() {
-      // if (_pc.isPanelOpen()) {
-      //   setState(() {
-      //     disableScroll = _sc.offset <= 0;
-      //   });
-      // }
-    });
-    busTimeLine = new BusTimeLine();
-    busTimeLine.percent = 0.0;
-    busTimeLine.routBusIndex = 1;
-    animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 60));
-    animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        animationController.stop();
-      }
-      // else if (status == AnimationStatus.dismissed) {
-      //   animationController.forward();
-      // }
-    });
-    // curvedAnimation =
-    //     CurvedAnimation(parent: animationController, curve: Curves.easeIn);
-    // animation = Tween(begin: 0.0, end: 100.0).animate(curvedAnimation)
-    //   ..addListener(() {
-    //     setState(() {
-    //       busTimeLine.percent = animation.value;
-    //     });
-    //   });
-    // curvedAnimation.curve = Curves.ease;
-    Future.delayed(Duration(seconds: 2), () {
-      animationController.forward();
-    });
-    // Timer(const Duration(seconds: 30), () {
-    //   animationController.reset();
-    //   animationController.forward();
-    // });
-    // double percent = 0;
-    // Timer.periodic(new Duration(seconds: 2), (timer) {
-    //   if (percent == 100) timer.cancel();
-    //   percent += 1;
-    //   setState(() {
-    //     busTimeLine.percent = percent;
-    //   });
-    // });
   }
-
+  Widget _builBottomSheet(){
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      color: Colors.black26,
+      child: Positioned(
+        bottom: 0,
+        right: 0,
+        left: 0,
+        child: Stack(
+          children: <Widget>[
+            Container(
+              height: MediaQuery.of(context).size.height * 3 / 4,
+              color: Colors.transparent,
+              child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(18.0),
+                          topLeft: Radius.circular(18.0))),
+                  padding: EdgeInsets.only(top: 10),
+                  margin: EdgeInsets.only(right: 2, left: 2),
+                  child: HomePageTimeLineV2(
+                    listTimeLine: viewModel.listTimeLine,
+                    position: viewModel.position,
+                  )),
+            ),
+            Positioned(
+                bottom: -5,
+                right: 2,
+                left: 2,
+                child: FlatButton(
+                  color: ThemePrimary.primaryColor,
+                  child: Text(
+                    'HOÀN THÀNH',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ))
+          ],
+        ),
+      ),
+    );
+  }
   Widget _buildBody() {
     Widget __buildGoogleMap() {
       return GoogleMap(
@@ -173,7 +148,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                     child: Container(
                       padding: EdgeInsets.only(left: 20, right: 20, top: 5),
                       child: Text(
-                        "20",
+                        viewModel.driverBusSession.totalChildrenRegistered.toString(),
                         textAlign: TextAlign.center,
                         style: ___numberStyle,
                       ),
@@ -184,7 +159,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                     child: Container(
                       padding: EdgeInsets.only(left: 20, right: 20, top: 5),
                       child: Text(
-                        "10",
+                        viewModel.driverBusSession.totalChildrenInBus.toString(),
                         textAlign: TextAlign.center,
                         style: ___numberStyle,
                       ),
@@ -195,7 +170,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                     child: Container(
                       padding: EdgeInsets.only(left: 20, right: 20, top: 5),
                       child: Text(
-                        "02",
+                        viewModel.driverBusSession.totalChildrenLeave.toString(),
                         textAlign: TextAlign.center,
                         style: ___numberStyle,
                       ),
@@ -266,7 +241,24 @@ class _LocateBusPageState extends State<LocateBusPage>
         ),
       );
     }
-
+    Widget __buildIconLocation() {
+      return Positioned(
+        right: 10.0,
+        bottom: 100.0,
+        child: SizedBox(
+          width: 40,
+          height: 40,
+          child: FloatingActionButton(
+            child: Icon(
+              Icons.gps_fixed,
+              color: Theme.of(context).primaryColor,
+            ),
+            onPressed: viewModel.animateMyLocation,
+            backgroundColor: Colors.white,
+          ),
+        ),
+      );
+    }
     return Stack(
       children: <Widget>[
         viewModel.showGoolgeMap ? __buildGoogleMap() : Container(),
@@ -275,163 +267,33 @@ class _LocateBusPageState extends State<LocateBusPage>
                 context: context, loading: true, position: Alignment.topCenter)
             : Container(),
         __report(),
-        __sosButton()
+        __sosButton(),
+        __buildIconLocation(),
       ],
-    );
-  }
-
-  Widget _buildPanel() {
-    var driverBusSession =
-        DriverBusSession.list.length > 0 ? DriverBusSession.list[0] : null;
-    if (driverBusSession == null) return Container();
-    var listTimeLine = driverBusSession.listRouteBus
-        .map((item) => TimeLineEvent(
-            time: item.time,
-            task: item.routeName,
-            content: viewModel
-                .getListChildrenForTimeLine(driverBusSession, item.id)
-                .map((children) {
-              final statusID = ChildDrenStatus.getStatusIDByChildrenID(
-                  driverBusSession.childDrenStatus, children.id, item.id);
-              final statusBus =
-                  StatusBus.getStatusByID(StatusBus.list, statusID);
-              return HomePageCardTimeLine(
-                children: children,
-                isEnablePicked: statusID == 0 ? true : false,
-                status: statusBus,
-                isEnableTapChildrenContentCard: false,
-                onTapPickUp: () {
-                  viewModel.onTapPickUpChild(driverBusSession, children, item);
-                },
-              );
-            }).toList(),
-            isFinish: item.status))
-        .toList();
-    Widget __childrenCard() {
-      return Stack(
-        children: <Widget>[
-          Container(
-              margin: EdgeInsets.only(top: 25),
-              padding: EdgeInsets.only(top: 5),
-              decoration: new BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: new BorderRadius.only(
-                  topLeft: Radius.circular(35),
-                  topRight: Radius.circular(35),
-                ),
-              ),
-              height: 430,
-              child: HomePageTimeLineV2(
-                listTimeLine: listTimeLine,
-                busTimeLine: busTimeLine,
-                animationBusController: animationController,
-              )),
-          Positioned(
-            left: MediaQuery.of(context).size.width / 2 - 15,
-            top: 5,
-            child: GestureDetector(
-              // onTap: () {
-              //   _pc.close();
-              // },
-              // onLongPress: () {
-              //   _pc.close();
-              // },
-              onVerticalDragDown: (drag) {
-                _pc.close();
-              },
-              child: Align(
-                alignment: Alignment.center,
-                child: Container(
-                  width: 30,
-                  height: 5,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        __childrenCard(),
-      ],
-    );
-  }
-
-  Widget _buildIconLocation() {
-    return Positioned(
-      right: 20.0,
-      bottom: _fabHeight,
-      child: SizedBox(
-        width: 40,
-        height: 40,
-        child: FloatingActionButton(
-          child: Icon(
-            Icons.gps_fixed,
-            color: Theme.of(context).primaryColor,
-          ),
-          onPressed: viewModel.animateMyLocation,
-          backgroundColor: Colors.white,
-        ),
-      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    TabsPageViewModel tabsPageViewModel = ViewModelProvider.of(context);
-    viewModel = tabsPageViewModel.locateBusPageViewModel;
-    _panelHeightOpen = MediaQuery.of(context).size.height * 2 / 3;
-    return StatefulWrapper(
-      onInit: () {},
-      child: ViewModelProvider(
-        viewmodel: viewModel,
-        child: StreamBuilder<Object>(
-            stream: viewModel.stream,
-            builder: (context, snapshot) {
-              return Stack(
-                children: <Widget>[
-                  SlidingUpPanel(
-                    controller: _pc,
-                    parallaxEnabled: true,
-                    backdropEnabled: true,
-                    parallaxOffset: .5,
-                    maxHeight: _panelHeightOpen,
-                    minHeight: _panelHeightClosed,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(18.0),
-                        topRight: Radius.circular(18.0)),
-                    panel: _buildPanel(),
-                    onPanelOpened: () {
-                      setState(() {
-                        disableScroll = false;
-                      });
-                    },
-                    onPanelClosed: () {
-                      setState(() {
-                        disableScroll = true;
-                      });
-                    },
-                    onPanelSlide: (double pos) => setState(() {
-                      _fabHeight =
-                          pos * (_panelHeightOpen - _panelHeightClosed) +
-                              _initFabHeight;
-                    }),
-                    body: new Scaffold(
-                      body: _buildBody(),
-                      // body: Container()
-                    ),
-                  ),
-                  _buildIconLocation()
-                ],
-              );
-            }),
-      ),
+
+  viewModel.context = context;
+    return ViewModelProvider(
+      viewmodel: viewModel,
+      child: StreamBuilder<Object>(
+          stream: viewModel.stream,
+          builder: (context, snapshot) {
+            return MaterialApp(
+              home: new Scaffold(
+                body: Stack(
+                  children: <Widget>[
+                    _buildBody(),
+//                    if(viewModel.listTimeLine!=null)_builBottomSheet()
+                  ],
+                ),
+                 //body: Container()
+              ),
+            );
+          }),
     );
   }
 }

@@ -1,11 +1,17 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:b2s_driver/src/app/core/app_setting.dart';
+import 'package:b2s_driver/src/app/theme/theme_primary.dart';
+import 'package:b2s_driver/src/app/theme/theme_primary.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:ui' as ui;
+import 'package:android_intent/android_intent.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GoogleMapService {
   GoogleMapService();
@@ -97,6 +103,54 @@ class GoogleMapService {
         .toList();
 
     return list;
+  }
+
+  // Dẫn đường nhiều vị trí goole map app
+  static navigateMultiStepToGoogleMap(List<LatLng> listLatLng) async {
+    String strListLatLng = "", url = "";
+    for (var i = 0; i < listLatLng.length; i++) {
+      var item = listLatLng[i];
+      strListLatLng += "/";
+      strListLatLng += "${item.latitude},${item.longitude}";
+    }
+    print(strListLatLng);
+    url = "https://www.google.com/maps/dir$strListLatLng";
+    if (Platform.isAndroid) {
+      final AndroidIntent intent = new AndroidIntent(
+          action: 'action_view',
+          data: Uri.encodeFull(url),
+          package: 'com.google.android.apps.maps');
+      intent.launch();
+    } else {
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    }
+  }
+
+  //Lấy hình marker static map
+  static String getUrlImageFromMultiMarker(
+      {List<LatLng> listLatLng, int width = 400, int height = 400}) {
+    var url =
+        "http://maps.googleapis.com/maps/api/staticmap?size=${width}x$height&key=$ggKey";
+    var style =
+        "&style=feature:administrative.locality|element:labels.text|lightness:45&style=feature:water|element:labels.text|visibility:off&style=feature:road|element:labels|visibility:off&style=feature:poi|element:labels.text|visibility:off&style=feature:administrative.neighborhood|visibility:off&style=feature:all|element:labels.icon|visibility:off&style=feature:administrative.land_parcel|visibility:off";
+    url += style;
+    var markers = "";
+    for (var i = 0; i < listLatLng.length; i++) {
+      var item = listLatLng[i];
+      markers +=
+          "&markers=color:0x${ThemePrimary.primaryColor.value.toRadixString(16)}|label:";
+      markers = markers.replaceAll("0xff", "0x");
+      markers += (i + 1).toString();
+      markers += "|";
+      markers += "${item.latitude},${item.longitude}";
+    }
+    url += markers;
+    print(url);
+    return url;
   }
 }
 

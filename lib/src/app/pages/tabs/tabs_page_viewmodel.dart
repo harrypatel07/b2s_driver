@@ -10,9 +10,9 @@ class TabsPageViewModel extends ViewModelBase {
   LocateBusPageViewModel locateBusPageViewModel;
   HomePageViewModel homePageViewModel;
   TabsPageViewModel() {
-    locateBusPageViewModel = LocateBusPageViewModel();
-    homePageViewModel = HomePageViewModel();
-    cloudService.busSession.syncColectionDriverBusSession();
+    // locateBusPageViewModel = LocateBusPageViewModel();
+    // homePageViewModel = HomePageViewModel();
+    // cloudService.busSession.syncColectionDriverBusSession();
   }
   onTapped(int index) {
     currentTabIndex = index;

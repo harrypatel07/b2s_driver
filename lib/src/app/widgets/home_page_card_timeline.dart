@@ -14,6 +14,8 @@ class HomePageCardTimeLine extends StatelessWidget {
   final StatusBus status;
   final bool isEnablePicked;
   final bool isEnableTapChildrenContentCard;
+  final int typePickDrop;
+  final int cardType;
   const HomePageCardTimeLine(
       {Key key,
       this.onTapPickUp,
@@ -21,6 +23,8 @@ class HomePageCardTimeLine extends StatelessWidget {
       this.onTapShowChildrenProfile,
       this.heroTag,
       this.status,
+      this.cardType = 0,
+      this.typePickDrop = 0,
       @required this.children,
       this.isEnablePicked,
       this.isEnableTapChildrenContentCard})
@@ -62,11 +66,11 @@ class HomePageCardTimeLine extends StatelessWidget {
 
     Widget _status() {
       return new Container(
-        width: 200.0,
+        //width: 200.0,
         child: Row(
           children: <Widget>[
             new Container(
-              margin: EdgeInsets.only(left: 10, right: 5),
+              //margin: EdgeInsets.only(left: 10, right: 5),
               width: 10.0,
               height: 10.0,
               decoration: new BoxDecoration(
@@ -74,16 +78,21 @@ class HomePageCardTimeLine extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
             ),
-            Container(
-              width: 100.0,
-              child: new Text(status.statusName,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: ThemePrimary.primaryFontFamily,
-                      color: Colors.grey)),
+            SizedBox(
+              width: 5,
+            ),
+            Flexible(
+              child: Container(
+                //width: 100.0,
+                child: new Text(status.statusName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: ThemePrimary.primaryFontFamily,
+                        color: Colors.black87)),
+              ),
             ),
           ],
         ),
@@ -121,13 +130,13 @@ class HomePageCardTimeLine extends StatelessWidget {
       alignment: FractionalOffset.centerLeft,
       child: _avatar(),
     );
-    final childrenAvatar = new Positioned(
-      // margin: new EdgeInsets.symmetric(vertical: 16.0),
-      // alignment: Alignment(-0.80, 0.9),
-      top: 40,
-      left: 40,
-      child: _age(),
-    );
+    // final childrenAvatar = new Positioned(
+    //   // margin: new EdgeInsets.symmetric(vertical: 16.0),
+    //   // alignment: Alignment(-0.80, 0.9),
+    //   top: 40,
+    //   left: 40,
+    //   child: _age(),
+    // );
     final baseTextStyle =
         const TextStyle(fontFamily: ThemePrimary.primaryFontFamily);
     final regularTextStyle = baseTextStyle.copyWith(
@@ -140,13 +149,13 @@ class HomePageCardTimeLine extends StatelessWidget {
         fontSize: 18.0,
         fontWeight: FontWeight.w600);
 
-    Widget _childrenValue({String value}) {
-      return new Row(children: <Widget>[
-//            new Image(image: new NetworkImage(image),height: 12.0,),
-//            new Container(width: 8.0),
-        new Text(value, style: regularTextStyle),
-      ]);
-    }
+//     Widget _childrenValue({String value}) {
+//       return new Row(children: <Widget>[
+// //            new Image(image: new NetworkImage(image),height: 12.0,),
+// //            new Container(width: 8.0),
+//         new Text(value, style: regularTextStyle),
+//       ]);
+//     }
 
     final childrenCardContent = InkWell(
       onTap: () {
@@ -161,137 +170,154 @@ class HomePageCardTimeLine extends StatelessWidget {
               barrierDismissible: true,
               barrierLabel: '',
               context: context,
-              pageBuilder: (context, animation1, animation2) {});
+              pageBuilder: (context, animation1, animation2) {
+                return Container();
+              });
         }
       },
-      child: Stack(
-        children: <Widget>[
+      child:
+          // Stack(
+          //   children: <Widget>[
           Container(
-            margin: new EdgeInsets.fromLTRB(50.0, 5.0, 5.0, 5.0),
-            constraints: new BoxConstraints.expand(),
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                new Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Container(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            new Container(height: 4.0),
-                            new Text(children.name,
-                                overflow: TextOverflow.ellipsis,
-                                style: headerTextStyle),
-                            new Container(height: 4.0),
-                            new Text(children.gender == 'F' ? 'Girl' : 'Boy',
-                                style: subHeaderTextStyle),
-                          ],
-                        )),
-                      ),
-                      // Spacer(),
-                      Container(
-                        width: 70.0,
-                        height: 30.0,
-                        decoration: new BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black38,
-                              blurRadius:
-                                  5.0, // has the effect of softening the shadow
-                              spreadRadius:
-                                  1.0, // has the effect of extending the shadow
-                              offset: Offset(
-                                5.0, // horizontal, move right 10
-                                5.0, // vertical, move down 10
+//            color: Colors.blue,
+        margin: new EdgeInsets.fromLTRB(50.0, 2.0, 5.0, 5.0),
+        //constraints: new BoxConstraints.expand(),
+        child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            new Container(
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                //mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+//                          color: Colors.green,
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        (cardType == 1)
+                            ? SizedBox()
+                            : SizedBox(
+                                height: 8,
                               ),
-                            )
-                          ],
-                          color: (isEnablePicked == true)
-                              ? Colors.blueAccent
-                              : Colors.grey,
-                          //border: new Border.all(color: Colors.white, width: 2.0),
-                          borderRadius: new BorderRadius.circular(15.0),
+                        new Text(children.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: headerTextStyle),
+                        new Text(
+                          children.schoolName.toString(),
+                          style: subHeaderTextStyle,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: new InkWell(
-                            onTap: onTapPickUp,
-                            borderRadius: BorderRadius.circular(15.0),
-                            child: new Center(
-                              child: isEnablePicked == true
-                                  ? Text(
-                                      "Picked",
-                                      style: new TextStyle(
-                                          fontFamily:
-                                              ThemePrimary.primaryFontFamily,
-                                          fontSize: 14.0,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(Icons.undo,
-                                            size: 20,
-                                            color: Colors.grey.shade400),
-                                        Text(
-                                          "Undo",
-                                          style: new TextStyle(
+                        SizedBox(
+                          height: 2,
+                        ),
+                        new Text(children.gender.toString(),
+                            style: subHeaderTextStyle),
+                        (cardType == 1) ? _status() : Container(),
+                      ],
+                    )),
+                  ),
+                  // Spacer(),
+                  // Expanded(
+                  //   child:
+                  cardType == 1
+                      ? Container(
+                          width: 70.0,
+                          height: 30.0,
+                          decoration: new BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black38,
+                                blurRadius:
+                                    5.0, // has the effect of softening the shadow
+                                spreadRadius:
+                                    1.0, // has the effect of extending the shadow
+                                offset: Offset(
+                                  5.0, // horizontal, move right 10
+                                  5.0, // vertical, move down 10
+                                ),
+                              )
+                            ],
+                            color: (isEnablePicked == true)
+                                ? ThemePrimary.primaryColor
+                                : Colors.grey,
+                            //border: new Border.all(color: Colors.white, width: 2.0),
+                            borderRadius: new BorderRadius.circular(15.0),
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: new InkWell(
+                              onTap: onTapPickUp,
+                              borderRadius: BorderRadius.circular(15.0),
+                              child: new Center(
+                                child: isEnablePicked == true
+                                    ? Text(
+                                        "Đón",
+                                        style: new TextStyle(
                                             fontFamily:
                                                 ThemePrimary.primaryFontFamily,
                                             fontSize: 14.0,
                                             color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Icon(Icons.undo,
+                                              size: 20,
+                                              color: Colors.grey.shade400),
+                                          Text(
+                                            "Undo",
+                                            style: new TextStyle(
+                                              fontFamily: ThemePrimary
+                                                  .primaryFontFamily,
+                                              fontSize: 14.0,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                              ),
                             ),
                           ),
+                        )
+                      : Container(
+//                            color: Colors.yellow,
+                          padding: EdgeInsets.only(right: 20, top: 8),
+                          alignment: Alignment.center,
+                          child: Text(
+                            typePickDrop == 0 ? 'Đón' : 'Trả',
+                            style: new TextStyle(
+                                fontFamily: ThemePrimary.primaryFontFamily,
+                                fontSize: 14.0,
+                                color: ThemePrimary.primaryColor,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                new Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 20,
-                  child: new Row(
-                    children: <Widget>[
-                      Container(
-                          child: _childrenValue(value: children.location)),
-                      Spacer(),
-                      Container(
-                          child: Icon(
-                        Icons.location_on,
-                        color: Colors.grey.shade600,
-                      ))
-//              new Expanded(
-//                  child: _childrenValue(
-//                      value: children.age.toString(), image: children.photo))
-                    ],
-                  ),
-                ),
-              ],
+                  // ),
+                ],
+              ),
             ),
-          ),
-          Positioned(
-            top: 35,
-            left: 120,
-            child: _status(),
-          )
-        ],
+          ],
+        ),
       ),
+//          cardType==1?Positioned(
+//            top: 51,
+//            left: 100,
+//            child: _status(),
+//          ):Container()
+      //   ],
+      // ),
     );
 
     final childrenCard = new Container(
       key: _key,
       child: childrenCardContent,
-      height: 80.0,
+      // height: 85.0,
       margin: new EdgeInsets.only(left: 20.0),
       decoration: new BoxDecoration(
         color: Colors.white, //new Color(0xFF333366),
@@ -309,14 +335,14 @@ class HomePageCardTimeLine extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: new Container(
-          height: 80.0,
+          //height: 80.0,
           child: new Stack(
-            children: <Widget>[
-              childrenCard,
-              childrenThumbnail,
-              childrenAvatar,
-            ],
-          )),
+        children: <Widget>[
+          childrenCard,
+          childrenThumbnail,
+//              childrenAvatar,
+        ],
+      )),
     );
   }
 }

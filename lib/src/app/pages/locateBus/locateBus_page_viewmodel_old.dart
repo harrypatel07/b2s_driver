@@ -1,25 +1,19 @@
 import 'dart:async';
+
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/childrenBusSession.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/models/statusBus.dart';
-import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
-import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
-import 'package:b2s_driver/src/app/pages/locateBus/bottomSheet/bottom_sheet_custom.dart';
-import 'package:b2s_driver/src/app/pages/locateBus/widgets/icon_marker_custom.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
-import 'package:b2s_driver/src/app/theme/theme_primary.dart';
-import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
-class LocateBusPageViewModel extends ViewModelBase {
+class LocateBusPageViewModelOld extends ViewModelBase {
   bool showGoolgeMap = true;
   bool showSpinner = false;
   bool myLocationEnabled = false;
@@ -49,14 +43,17 @@ class LocateBusPageViewModel extends ViewModelBase {
   CloudFiresStoreService cloudSerivce = CloudFiresStoreService();
   StreamSubscription streamCloud;
   DriverBusSession driverBusSession;
-  List<TimeLineEvent> listTimeLine;
-  int position;
-  RouteBus routeBus;
-  LocateBusPageViewModel() {}
+  LocateBusPageViewModelOld() {
+    // childrenBus =
+    //     ChildrenBusSession.list.singleWhere((item) => item.child.id == 1);
+    // driverBusSession = DriverBusSession.list
+    //     .singleWhere((item) => item.sessionID == childrenBus.sessionID);
+    // listenData(childrenBus.sessionID);
+  }
 
   @override
   dispose() {
-    //streamCloud.cancel();
+    streamCloud.cancel();
     super.dispose();
   }
 
@@ -79,7 +76,7 @@ class LocateBusPageViewModel extends ViewModelBase {
     mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
         target: LatLng(myLoc.latitude, myLoc.longitude), zoom: 13.0)));
     myLocationEnabled = true;
-//    childrenBus.status = StatusBus.list[0];
+    childrenBus.status = StatusBus.list[0];
     final iconMy = await GoogleMapService.getMarkerIcon(
         'assets/images/icon_bus.png',
         width: 50);
@@ -94,62 +91,57 @@ class LocateBusPageViewModel extends ViewModelBase {
       markers[MarkerId("location")] = _marker.copyWith(
           rotationParam: onData.heading,
           positionParam: LatLng(onData.latitude, onData.longitude));
+      this.updateState();
     });
     this.updateState();
   }
 
   Future movingBus() async {
     markers.clear();
-//    final iconBus = await GoogleMapService.getMarkerIcon(
-//        'assets/images/pin.png',
-//        width: 100);
-//    final iconSchool =
-//        await GoogleMapService.getMarkerIcon('assets/images/school.png');
-//    final iconChild =
-//        await GoogleMapService.getMarkerIcon('assets/images/pin_child.png');
+    final iconBus = await GoogleMapService.getMarkerIcon(
+        'assets/images/pin.png',
+        width: 100);
+    final iconSchool =
+        await GoogleMapService.getMarkerIcon('assets/images/school.png');
+    final iconChild =
+        await GoogleMapService.getMarkerIcon('assets/images/pin_child.png');
     //Create marker bus
     // markers[markerBus] = Marker(
     //   markerId: markerBus,
     //   position: routes[0],
     //   icon: iconBus,
     // );
-//    //Create marker school
-//    markers[markerSchool] = Marker(
-//      markerId: markerSchool,
-//      position: pinTo,
-//      icon: await iconMarkerCustom(icon: Icons.school),
-//      infoWindow: InfoWindow(title: "VStar School"),
-//    );
-    for (int i = 0; i < driverBusSession.listRouteBus.length; i++) {
-      var route = driverBusSession.listRouteBus[i];
-      markers[MarkerId(route.id.toString())] = Marker(
-          markerId: MarkerId(route.id.toString()),
-          position: LatLng(route.lat, route.lng),
-          icon: await iconMarkerCustomText(
-              text: (i + 1).toString(),
-              backgroundColor: ThemePrimary.primaryColor),
-          onTap: () {
-//            position = i + 1;
-//            createListTimeLine(route);
-//            this.updateState();
-            onTapMaker(route, i + 1);
-          });
-    }
-//    this.updateState();
-//    //Draw polyline
-//    var step = await GoogleMapService.directionGetListStep(
-//        LatLng(10.777433, 106.677502), LatLng(10.743524, 106.699328));
-//    routes.addAll(step);
-//
-//    polyline.clear();
-//    polyline[selectedPolyline] = Polyline(
-//      polylineId: selectedPolyline,
-//      visible: true,
-//      color: Colors.blue.withOpacity(0.5),
-//      width: 5,
-//      zIndex: 2,
-//      points: routes,
-//    );
+
+    //Create marker school
+    markers[markerSchool] = Marker(
+      markerId: markerSchool,
+      position: pinTo,
+      icon: iconSchool,
+      infoWindow: InfoWindow(title: "VStar School"),
+    );
+
+    //Create marker child
+    // markers[markerChild] = Marker(
+    //   markerId: markerChild,
+    //   position: pinFrom,
+    //   icon: iconChild,
+    // );
+
+    this.updateState();
+    //Draw polyline
+    var step = await GoogleMapService.directionGetListStep(
+        LatLng(10.777433, 106.677502), LatLng(10.743524, 106.699328));
+    routes.addAll(step);
+
+    polyline.clear();
+    polyline[selectedPolyline] = Polyline(
+      polylineId: selectedPolyline,
+      visible: true,
+      color: Colors.blue.withOpacity(0.5),
+      width: 5,
+      zIndex: 2,
+      points: routes,
+    );
     // var index = 0;
     this.updateState();
 
@@ -308,94 +300,5 @@ class LocateBusPageViewModel extends ViewModelBase {
     cloudSerivce.busSession.updateDriverBusSession(driverBusSession);
     cloudSerivce.busSession.updateStatusChildrenBus(children, childrenStatus);
     this.updateState();
-  }
-
-  onTapChangeChildrenStatus(DriverBusSession driverBusSession,
-      Children children, RouteBus routeBus, int statusID) {
-    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
-        item.childrenID == children.id && item.routeBusID == routeBus.id);
-    childrenStatus.statusID = statusID;
-    cloudSerivce.busSession.updateDriverBusSession(driverBusSession);
-    cloudSerivce.busSession.updateStatusChildrenBus(children, childrenStatus);
-    this.updateState();
-  }
-
-  onTapPickUpLocateBus(
-      DriverBusSession driverBusSession, Children children, RouteBus routeBus) {
-    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
-        item.childrenID == children.id && item.routeBusID == routeBus.id);
-    switch (childrenStatus.statusID) {
-      case 0:
-        childrenStatus.statusID = 1;
-        break;
-      case 1:
-        childrenStatus.statusID = 0;
-        break;
-      default:
-    }
-    this.updateState();
-  }
-
-  onTapMaker(RouteBus _route, int _pos) {
-//    createListTimeLine(route);
-    this.position = _pos;
-    this.routeBus = _route;
-    showModalBottomSheet(
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (BuildContext bc) {
-          return BottomSheetCustom(
-              arguments: BottomSheetCustomArgs(viewModel: this));
-        });
-  }
-
-  createListTimeLine(RouteBus routeBus) {
-    listTimeLine = List();
-    listTimeLine.add(TimeLineEvent(
-        time: routeBus.time,
-        task: routeBus.routeName,
-        content: getListChildrenForTimeLine(driverBusSession, routeBus.id)
-            .map((children) {
-          final status = ChildDrenStatus.getStatusByChildrenID(
-              driverBusSession.childDrenStatus, children.id, routeBus.id);
-          final statusBus = StatusBus.getStatusByID(StatusBus.list, status.statusID);
-          var tag = children.id.toString() +
-              routeBus.id.toString() +
-              driverBusSession.busID.toString();
-          return HomePageCardTimeLine(
-            children: children,
-            isEnablePicked: status.statusID == 0 ? true : false,
-            status: statusBus,
-            isEnableTapChildrenContentCard: true,
-            heroTag: tag,
-            typePickDrop: status.typePickDrop,
-            cardType: 1,
-            onTapPickUp: () {
-              onTapPickUpLocateBus(driverBusSession, children, routeBus);
-            },
-            onTapChangeStatusLeave: () {
-              onTapChangeChildrenStatus(
-                  driverBusSession, children, routeBus, 3);
-              print("show button call");
-            },
-            onTapShowChildrenProfile: () {
-              Navigator.pushNamed(context, ProfileChildrenPage.routeName,
-                  arguments:
-                      ProfileChildrenArgs(children: children, heroTag: tag));
-            },
-          );
-        }).toList(),
-        isFinish: routeBus.status));
-  }
-  int getCountChildrenByStatus(
-      List<ChildDrenStatus> listChildDrenStatus, int statusId, int type) {
-//    driverBusSession.childDrenRoute
-//    int sum = 0;
-//
-//    return sum;
-  }
-  caculatorNumberChildren(){
-
   }
 }

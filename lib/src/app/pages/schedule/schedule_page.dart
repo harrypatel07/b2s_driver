@@ -7,6 +7,7 @@ import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/dash.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -311,8 +312,12 @@ class _SchedulePageState extends State<SchedulePage> {
               alignment: Alignment.center,
               width: MediaQuery.of(context).size.width - 25,
               height: 50,
-              color: Colors.black87,
-              child: Text(
+              color: driverBusSession.status?Colors.green[300]:Colors.black87,
+              child: driverBusSession.status?Text(
+                'ĐÃ HOÀN THÀNH',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+              ): Text(
                 'CHỌN',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),

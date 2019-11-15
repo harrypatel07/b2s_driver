@@ -175,3 +175,5 @@ class CollectionDriverBusSession extends InterfaceFireStore {
         .snapshots();
   }
 }
+
+class CollectionPickingTransportSession extends InterfaceFireStore {}

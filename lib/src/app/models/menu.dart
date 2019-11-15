@@ -1,9 +1,6 @@
-import 'package:b2s_driver/src/app/pages/historyTrip/historyTrip_page.dart';
-import 'package:b2s_driver/src/app/pages/home/home_page.dart';
-import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page.dart';
 import 'package:b2s_driver/src/app/pages/schedule/schedule_page.dart';
+import 'package:b2s_driver/src/app/pages/user/user_page.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Menu {
   Menu(
@@ -27,10 +24,10 @@ class Menu {
     ),
     Menu(
       index: 1,
-      title: "Lịch sử chuyến",
-      iconData: FontAwesomeIcons.bus,
-      page: HistoryTripPage(),
-      routeChildName: HistoryTripPage.routeName,
+      title: "Người dùng",
+      iconData: Icons.person,
+      page: UserPage(),
+      routeChildName: UserPage.routeName,
     ),
   ];
 }

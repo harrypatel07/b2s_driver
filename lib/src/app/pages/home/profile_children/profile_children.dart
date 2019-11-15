@@ -117,7 +117,8 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                 height: 30.0,
 //                width: 100.0,
                 decoration: BoxDecoration(
-                    gradient: ThemePrimary.chatBubbleGradient,
+                  color: ThemePrimary.primaryColor,
+                    //gradient: ThemePrimary.chatBubbleGradient,
                     borderRadius: BorderRadius.circular(30.0)),
                 child: Center(
                   child: Text(
@@ -153,7 +154,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
         padding: EdgeInsets.only(top:10,bottom: 10,left: 15.0,right: 15.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(topLeft: Radius.circular(12),topRight: Radius.circular(12)),
-          color: Colors.amber,
+          color: ThemePrimary.primaryColor,
         ),
         height: 40,
         child: Row(
@@ -338,7 +339,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                         //color: Colors.amber,
                         child: Align(
                           alignment: Alignment.center,
-                          child: Icon(Icons.call,color: Colors.amber,),
+                          child: Icon(Icons.call,color: ThemePrimary.primaryColor,),
                         ),
                       ),
                     ),
@@ -352,7 +353,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                         margin: EdgeInsets.only(left: 2),
                         child: Align(
                           alignment: Alignment.center,
-                          child: Icon(Icons.message,color: Colors.lightBlue,),
+                          child: Icon(Icons.message,color: ThemePrimary.primaryColor,),
                         ),
                       ),
                     ),

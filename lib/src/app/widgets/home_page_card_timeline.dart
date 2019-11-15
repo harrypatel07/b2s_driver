@@ -16,6 +16,7 @@ class HomePageCardTimeLine extends StatelessWidget {
   final bool isEnableTapChildrenContentCard;
   final int typePickDrop;
   final int cardType;
+  final PopupCardTimeLinePage popupCardTimeLinePage;
   const HomePageCardTimeLine(
       {Key key,
       this.onTapPickUp,
@@ -23,16 +24,18 @@ class HomePageCardTimeLine extends StatelessWidget {
       this.onTapShowChildrenProfile,
       this.heroTag,
       this.status,
+        this.popupCardTimeLinePage,
       this.cardType = 0,
       this.typePickDrop = 0,
       @required this.children,
       this.isEnablePicked,
-      this.isEnableTapChildrenContentCard})
+      this.isEnableTapChildrenContentCard=false})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     GlobalKey _key = GlobalKey();
     Offset _position = Offset(0, 0);
+
     _getPosition() {
       final RenderBox renderBox = _key.currentContext.findRenderObject();
       _position = renderBox.localToGlobal(Offset.zero);
@@ -158,12 +161,12 @@ class HomePageCardTimeLine extends StatelessWidget {
 //     }
 
     final childrenCardContent = InkWell(
-      onTap: () {
-        if (isEnableTapChildrenContentCard) {
+      onTap: (){
+        if(isEnableTapChildrenContentCard){
           _getPosition();
           showGeneralDialog(
               transitionBuilder: (context, a1, a2, widget) {
-                return HomePageCardTimeLineDetail(ProfileChildrenDetailArgs(
+                return PopupCardTimeLinePage(ProfileChildrenDetailArgs(
                     offset: _position, homePageCardTimeLine: this));
               },
               transitionDuration: Duration(milliseconds: 200),
@@ -215,89 +218,89 @@ class HomePageCardTimeLine extends StatelessWidget {
                         ),
                         new Text(children.gender.toString(),
                             style: subHeaderTextStyle),
-                        (cardType == 1) ? _status() : Container(),
+                        (cardType == 1) ? _status() : Container(height: 11,),
                       ],
                     )),
                   ),
                   // Spacer(),
                   // Expanded(
                   //   child:
-                  cardType == 1
-                      ? Container(
-                          width: 70.0,
-                          height: 30.0,
-                          decoration: new BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black38,
-                                blurRadius:
-                                    5.0, // has the effect of softening the shadow
-                                spreadRadius:
-                                    1.0, // has the effect of extending the shadow
-                                offset: Offset(
-                                  5.0, // horizontal, move right 10
-                                  5.0, // vertical, move down 10
-                                ),
-                              )
-                            ],
-                            color: (isEnablePicked == true)
-                                ? ThemePrimary.primaryColor
-                                : Colors.grey,
-                            //border: new Border.all(color: Colors.white, width: 2.0),
-                            borderRadius: new BorderRadius.circular(15.0),
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: new InkWell(
-                              onTap: onTapPickUp,
-                              borderRadius: BorderRadius.circular(15.0),
-                              child: new Center(
-                                child: isEnablePicked == true
-                                    ? Text(
-                                        "Đón",
-                                        style: new TextStyle(
-                                            fontFamily:
-                                                ThemePrimary.primaryFontFamily,
-                                            fontSize: 14.0,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Icon(Icons.undo,
-                                              size: 20,
-                                              color: Colors.grey.shade400),
-                                          Text(
-                                            "Undo",
-                                            style: new TextStyle(
-                                              fontFamily: ThemePrimary
-                                                  .primaryFontFamily,
-                                              fontSize: 14.0,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                  (status.statusID != 3)
+                      ? cardType == 1
+                          ? Container(
+                              width: 70.0,
+                              height: 30.0,
+                              decoration: new BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius:
+                                        5.0, // has the effect of softening the shadow
+                                    spreadRadius:
+                                        1.0, // has the effect of extending the shadow
+                                    offset: Offset(
+                                      5.0, // horizontal, move right 10
+                                      5.0, // vertical, move down 10
+                                    ),
+                                  )
+                                ],
+                                color: (typePickDrop == 0)
+                                    ? (status.statusID == 0)
+                                        ? ThemePrimary.primaryColor
+                                        : Colors.grey
+                                    : (status.statusID == 1)
+                                        ? ThemePrimary.primaryColor
+                                        : Colors.grey,
+//                                    : Colors.grey,
+                                //border: new Border.all(color: Colors.white, width: 2.0),
+                                borderRadius: new BorderRadius.circular(15.0),
                               ),
-                            ),
-                          ),
-                        )
-                      : Container(
+                              child: Material(
+                                color: Colors.transparent,
+                                child: new InkWell(
+                                  onTap: onTapPickUp,
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  child: new Center(
+                                    child: Text(
+                                            setTextButtonStatus(),
+                                            style: new TextStyle(
+                                                fontFamily: ThemePrimary
+                                                    .primaryFontFamily,
+                                                fontSize: 14.0,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                            textAlign: TextAlign.center,
+                                          )
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(
 //                            color: Colors.yellow,
-                          padding: EdgeInsets.only(right: 20, top: 8),
-                          alignment: Alignment.center,
-                          child: Text(
-                            typePickDrop == 0 ? 'Đón' : 'Trả',
-                            style: new TextStyle(
-                                fontFamily: ThemePrimary.primaryFontFamily,
-                                fontSize: 14.0,
-                                color: ThemePrimary.primaryColor,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                              padding: EdgeInsets.only(right: 20, top: 8),
+                              alignment: Alignment.center,
+                              child: Text(
+                                typePickDrop == 0 ? 'Đón' : 'Trả',
+                                style: new TextStyle(
+                                    fontFamily: ThemePrimary.primaryFontFamily,
+                                    fontSize: 14.0,
+                                    color: ThemePrimary.primaryColor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )
+                      :(cardType == 1)? Container():Container(
+//                            color: Colors.yellow,
+                    padding: EdgeInsets.only(right: 20, top: 8),
+                    alignment: Alignment.center,
+                    child: Text(
+                      typePickDrop == 0 ? 'Đón' : 'Trả',
+                      style: new TextStyle(
+                          fontFamily: ThemePrimary.primaryFontFamily,
+                          fontSize: 14.0,
+                          color: ThemePrimary.primaryColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
                   // ),
                 ],
               ),
@@ -344,5 +347,25 @@ class HomePageCardTimeLine extends StatelessWidget {
         ],
       )),
     );
+  }
+
+  String setTextButtonStatus() {
+    String str = "";
+    if (typePickDrop == 0) {
+      if (status.statusID == 0)
+        str = 'Đón';
+//      else if (status.statusID == 1)
+//        str = 'Đã đón';
+      else
+        str = 'Đã đón ';
+    } else {
+      if (status.statusID == 1 || status.statusID == 0)
+        str = 'Trả';
+//      else if (status.statusID == 2 || status.statusID == 4)
+//        str = 'Đã trả';
+      else
+        str = 'Đã trả';
+    }
+    return str;
   }
 }

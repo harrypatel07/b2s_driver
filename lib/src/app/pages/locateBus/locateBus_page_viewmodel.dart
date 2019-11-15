@@ -1,21 +1,16 @@
 import 'dart:async';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
-import 'package:b2s_driver/src/app/models/children.dart';
-import 'package:b2s_driver/src/app/models/childrenBusSession.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
-import 'package:b2s_driver/src/app/models/statusBus.dart';
-import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
-import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
+import 'package:b2s_driver/src/app/pages/home/home_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/bottomSheet/bottom_sheet_custom.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/widgets/icon_marker_custom.dart';
+import 'package:b2s_driver/src/app/pages/schedule/schedule_page.dart';
+import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
-import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
@@ -23,41 +18,29 @@ class LocateBusPageViewModel extends ViewModelBase {
   bool showGoolgeMap = true;
   bool showSpinner = false;
   bool myLocationEnabled = false;
-  //Completer<GoogleMapController> _mapController = Completer();
   GoogleMapController mapController;
   LatLng center = const LatLng(10.777317, 106.677513);
-
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
-  final MarkerId markerBus = MarkerId("MarkerBus");
-  final MarkerId markerSchool = MarkerId("MarkerSchool");
-  final MarkerId markerChild = MarkerId("NarkerChild");
-  //VStar school
-  final LatLng pinTo = LatLng(10.743524, 106.699328);
-  //TS24corp
-  final LatLng pinFrom = LatLng(10.777433, 106.677502);
-
   Map<PolylineId, Polyline> polyline = <PolylineId, Polyline>{};
-  PolylineId selectedPolyline = PolylineId("Polyline01");
-  List<LatLng> polylinePoint = [];
   Location location = Location();
-
-  ChildrenBusSession childrenBus;
-
-  Firestore firestore = Firestore.instance;
-  Geoflutterfire geo = Geoflutterfire();
-  DocumentReference docRef;
-  CloudFiresStoreService cloudSerivce = CloudFiresStoreService();
-  StreamSubscription streamCloud;
   DriverBusSession driverBusSession;
-  List<TimeLineEvent> listTimeLine;
   int position;
   RouteBus routeBus;
+  int countPick = 0;
+  int countDrop = 0;
+  //List<Children> listChildrenPaidTicket;
   LocateBusPageViewModel() {}
 
   @override
   dispose() {
     //streamCloud.cancel();
     super.dispose();
+  }
+
+  onCreateDriverBusSessionReport() {
+    //listChildrenPaidTicket = Children.getListChildrenPaidTicket(driverBusSession.listChildren);
+    driverBusSession.totalChildrenLeave = getCountChildrenByStatusBusId(3);
+    driverBusSession.totalChildrenInBus = getCountChildrenByStatusBusId(1);
   }
 
   void onMapCreated(GoogleMapController controller) async {
@@ -69,7 +52,8 @@ class LocateBusPageViewModel extends ViewModelBase {
     mapController.setMapStyle(_pathStyleMap);
 
     this.updateState();
-    animateMyLocation();
+//    animateMyLocation();
+    animateTheFirstPoint();
     movingBus();
   }
 
@@ -80,15 +64,15 @@ class LocateBusPageViewModel extends ViewModelBase {
         target: LatLng(myLoc.latitude, myLoc.longitude), zoom: 13.0)));
     myLocationEnabled = true;
 //    childrenBus.status = StatusBus.list[0];
-    final iconMy = await GoogleMapService.getMarkerIcon(
-        'assets/images/icon_bus.png',
-        width: 50);
-    markers[MarkerId("location")] = Marker(
-      markerId: MarkerId("location"),
-      position: LatLng(myLoc.latitude, myLoc.longitude),
-      rotation: myLoc.heading,
-      icon: iconMy,
-    );
+//    final iconMy = await GoogleMapService.getMarkerIcon(
+//        'assets/images/icon_bus.png',
+//        width: 50);
+//    markers[MarkerId("location")] = Marker(
+//      markerId: MarkerId("location"),
+//      position: LatLng(myLoc.latitude, myLoc.longitude),
+//      rotation: myLoc.heading,
+//      icon: iconMy,
+//    );
     location.onLocationChanged().listen((onData) {
       final _marker = markers[MarkerId("location")];
       markers[MarkerId("location")] = _marker.copyWith(
@@ -98,304 +82,95 @@ class LocateBusPageViewModel extends ViewModelBase {
     this.updateState();
   }
 
+  void animateTheFirstPoint() async {
+    var firstRoute = driverBusSession.listRouteBus[0];
+    center = LatLng(firstRoute.lat, firstRoute.lng);
+    mapController.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: center, zoom: 13.0)));
+    this.updateState();
+  }
+
   Future movingBus() async {
     markers.clear();
-//    final iconBus = await GoogleMapService.getMarkerIcon(
-//        'assets/images/pin.png',
-//        width: 100);
-//    final iconSchool =
-//        await GoogleMapService.getMarkerIcon('assets/images/school.png');
-//    final iconChild =
-//        await GoogleMapService.getMarkerIcon('assets/images/pin_child.png');
-    //Create marker bus
-    // markers[markerBus] = Marker(
-    //   markerId: markerBus,
-    //   position: routes[0],
-    //   icon: iconBus,
-    // );
-//    //Create marker school
-//    markers[markerSchool] = Marker(
-//      markerId: markerSchool,
-//      position: pinTo,
-//      icon: await iconMarkerCustom(icon: Icons.school),
-//      infoWindow: InfoWindow(title: "VStar School"),
-//    );
     for (int i = 0; i < driverBusSession.listRouteBus.length; i++) {
       var route = driverBusSession.listRouteBus[i];
       markers[MarkerId(route.id.toString())] = Marker(
           markerId: MarkerId(route.id.toString()),
+          consumeTapEvents: true,
           position: LatLng(route.lat, route.lng),
           icon: await iconMarkerCustomText(
               text: (i + 1).toString(),
               backgroundColor: ThemePrimary.primaryColor),
           onTap: () {
-//            position = i + 1;
-//            createListTimeLine(route);
-//            this.updateState();
             onTapMaker(route, i + 1);
           });
-    }
-//    this.updateState();
-//    //Draw polyline
-//    var step = await GoogleMapService.directionGetListStep(
-//        LatLng(10.777433, 106.677502), LatLng(10.743524, 106.699328));
-//    routes.addAll(step);
-//
-//    polyline.clear();
-//    polyline[selectedPolyline] = Polyline(
-//      polylineId: selectedPolyline,
-//      visible: true,
-//      color: Colors.blue.withOpacity(0.5),
-//      width: 5,
-//      zIndex: 2,
-//      points: routes,
-//    );
-    // var index = 0;
-    this.updateState();
-
-    // Timer.periodic(new Duration(seconds: 2), (timer) {
-    //   index++;
-    //   if (index == routes.length)
-    //     timer.cancel();
-    //   else {
-    //     final Marker _marker = markers[markerBus];
-    //     markers[markerBus] = _marker.copyWith(positionParam: routes[index]);
-    //     //if (index >= 1) polyline[selectedPolyline].points.add(routes[index]);
-    //     //Chuyển status children
-    //     if (index == 36) {
-    //       childrenBus.status = StatusBus.list[1];
-    //       childrenBus.notification = "Xe đang di chuyển,tốc độ 40km/h";
-    //       cloudSerivce.updateChildrenBusSession(childrenBus);
-    //     }
-    //     if (index == routes.length - 1) {
-    //       childrenBus.status = StatusBus.list[2];
-    //       childrenBus.notification = "Xe đã tới trường.";
-    //       cloudSerivce.updateChildrenBusSession(childrenBus);
-    //     }
-
-    //     var childrenStatus = driverBusSession.childDrenStatus.singleWhere(
-    //         (item) =>
-    //             item.childrenID == childrenBus.child.id &&
-    //             item.routeBusID == 2);
-    //     childrenStatus.statusID = childrenBus.status.statusID;
-    //     cloudSerivce.updateDriverBusSession(driverBusSession);
-    //     this.updateState();
-    //   }
-    // });
-  }
-
-  listenData(sessionID) {
-    if (streamCloud != null) streamCloud.cancel();
-    streamCloud = cloudSerivce.busSession
-        .listenChildrenBusSession(childrenBus.sessionID)
-        .listen((onData) {
-      childrenBus.fromJson(onData.data);
-      this.updateState();
-    });
-  }
-
-  onTapPickUp() {
-    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
-        item.childrenID == childrenBus.child.id && item.routeBusID == 2);
-    switch (childrenStatus.statusID) {
-      case 0:
-        childrenStatus.statusID = 1;
-        break;
-      case 1:
-        childrenStatus.statusID = 0;
-        break;
-      default:
-    }
-    cloudSerivce.busSession.updateDriverBusSession(driverBusSession);
-    cloudSerivce.busSession
-        .updateStatusChildrenBus(childrenBus.child, childrenStatus);
-    this.updateState();
-  }
-
-  Future<DocumentReference> addGeoPoint() async {
-    GeoFirePoint point =
-        geo.point(latitude: center.latitude, longitude: center.longitude);
-    return firestore
-        .collection('locations')
-        .add({'position': point.data, 'session_driver_id': 'S0001'});
-  }
-
-  final List<LatLng> routes = [
-    LatLng(10.7851902757137, 106.68906357139349),
-    LatLng(10.784724239877542, 106.68867129832506),
-    LatLng(10.78433955392249, 106.68834440410137),
-    LatLng(10.784017774282574, 106.68809898197651),
-    LatLng(10.783455894167915, 106.68752700090408),
-    LatLng(10.78270101020468, 106.68680749833584),
-    LatLng(10.781994539858356, 106.68603904545307),
-    LatLng(10.781239652228427, 106.68531987816095),
-    LatLng(10.780914575689206, 106.68506607413292),
-    LatLng(10.780725853281915, 106.68485350906849),
-    LatLng(10.780481139757285, 106.68467380106449),
-    LatLng(10.780280230792883, 106.68445721268654),
-    LatLng(10.780043092170487, 106.68427750468254),
-    LatLng(10.779841524194518, 106.6840347647667),
-    LatLng(10.779640614803082, 106.68376889079809),
-    LatLng(10.779383714074353, 106.68351978063583),
-    LatLng(10.779018124197686, 106.6831724345684),
-    LatLng(10.778793500287424, 106.68298032134771),
-    LatLng(10.778793500287424, 106.68298032134771),
-    LatLng(10.77852441247921, 106.6827268525958),
-    LatLng(10.77852441247921, 106.6827268525958),
-    LatLng(10.778347874937001, 106.68253473937511),
-    LatLng(10.778171007929872, 106.68234262615442),
-    LatLng(10.778374223830479, 106.67896840721369),
-    LatLng(10.778257959320666, 106.67886212468147),
-    LatLng(10.778125226695073, 106.67869046330452),
-    LatLng(10.77796087529841, 106.67853523045778),
-    LatLng(10.777880511055743, 106.67835552245378),
-    LatLng(10.777715830163576, 106.67819995433092),
-    LatLng(10.777514919353116, 106.6781184822321),
-    LatLng(10.777290294321, 106.67817547917366),
-    LatLng(10.777174029392498, 106.67803265154362),
-    LatLng(10.777033062223484, 106.67788948863745),
-    LatLng(10.776900658420502, 106.67775873094797),
-    LatLng(10.77685652380657, 106.67768497020006),
-    LatLng(10.776936888322625, 106.67757902294397),
-  ];
-
-  Future getFireCollection() async {
-    if (docRef == null)
-      docRef = await addGeoPoint();
-    else {
-      var querysnapshot = await firestore
-          .collection('locations')
-          .where("session_driver_id", isEqualTo: 'S0001')
-          .getDocuments();
-      querysnapshot.documents.forEach((doc) {
-        GeoPoint pos = doc.data['position']['geopoint'];
-        print(pos.latitude);
-      });
-      // GeoFirePoint point =
-      //     geo.point(latitude: 10.322223, longitude: 10.3321321);
-      // docRef.updateData({'position': point.data});
-      // docRef.snapshots().listen((onData) {
-      //   GeoPoint pos = onData.data['position']['geopoint'];
-      //   print(pos.latitude);
-      // });
-    }
-  }
-
-  List<Children> getListChildrenForTimeLine(
-      DriverBusSession driverBusSession, int routeBusID) {
-    List<Children> _listChildren = [];
-    var _childrenRoute = ChildDrenRoute.getChilDrenRouteByRouteID(
-        driverBusSession.childDrenRoute, routeBusID);
-    if (_childrenRoute != null)
-      _listChildren = Children.getChildrenByListID(
-          driverBusSession.listChildren, _childrenRoute.listChildrenID);
-    return _listChildren;
-  }
-
-  onTapPickUpChild(
-      DriverBusSession driverBusSession, Children children, RouteBus routeBus) {
-    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
-        item.childrenID == children.id && item.routeBusID == routeBus.id);
-    switch (childrenStatus.statusID) {
-      case 0:
-        childrenStatus.statusID = 1;
-        break;
-      case 1:
-        childrenStatus.statusID = 0;
-        break;
-      default:
-    }
-    cloudSerivce.busSession.updateDriverBusSession(driverBusSession);
-    cloudSerivce.busSession.updateStatusChildrenBus(children, childrenStatus);
-    this.updateState();
-  }
-
-  onTapChangeChildrenStatus(DriverBusSession driverBusSession,
-      Children children, RouteBus routeBus, int statusID) {
-    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
-        item.childrenID == children.id && item.routeBusID == routeBus.id);
-    childrenStatus.statusID = statusID;
-    cloudSerivce.busSession.updateDriverBusSession(driverBusSession);
-    cloudSerivce.busSession.updateStatusChildrenBus(children, childrenStatus);
-    this.updateState();
-  }
-
-  onTapPickUpLocateBus(
-      DriverBusSession driverBusSession, Children children, RouteBus routeBus) {
-    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
-        item.childrenID == children.id && item.routeBusID == routeBus.id);
-    switch (childrenStatus.statusID) {
-      case 0:
-        childrenStatus.statusID = 1;
-        break;
-      case 1:
-        childrenStatus.statusID = 0;
-        break;
-      default:
     }
     this.updateState();
   }
 
   onTapMaker(RouteBus _route, int _pos) {
-//    createListTimeLine(route);
     this.position = _pos;
     this.routeBus = _route;
-    showModalBottomSheet(
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (BuildContext bc) {
-          return BottomSheetCustom(
-              arguments: BottomSheetCustomArgs(viewModel: this));
-        });
+    if (_pos >= 2) {
+      if (driverBusSession.listRouteBus[_pos - 2].status)
+        showModalBottomSheet(
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (BuildContext bc) {
+              return BottomSheetCustom(
+                  arguments: BottomSheetCustomArgs(viewModel: this));
+            });
+      else {
+        LoadingDialog.showMsgDialog(
+            context, 'Bạn cần hoàn thành điểm ${_pos - 1}');
+      }
+    } else
+      showModalBottomSheet(
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          context: context,
+          builder: (BuildContext bc) {
+            return BottomSheetCustom(
+                arguments: BottomSheetCustomArgs(viewModel: this));
+          });
   }
 
-  createListTimeLine(RouteBus routeBus) {
-    listTimeLine = List();
-    listTimeLine.add(TimeLineEvent(
-        time: routeBus.time,
-        task: routeBus.routeName,
-        content: getListChildrenForTimeLine(driverBusSession, routeBus.id)
-            .map((children) {
-          final status = ChildDrenStatus.getStatusByChildrenID(
-              driverBusSession.childDrenStatus, children.id, routeBus.id);
-          final statusBus = StatusBus.getStatusByID(StatusBus.list, status.statusID);
-          var tag = children.id.toString() +
-              routeBus.id.toString() +
-              driverBusSession.busID.toString();
-          return HomePageCardTimeLine(
-            children: children,
-            isEnablePicked: status.statusID == 0 ? true : false,
-            status: statusBus,
-            isEnableTapChildrenContentCard: true,
-            heroTag: tag,
-            typePickDrop: status.typePickDrop,
-            cardType: 1,
-            onTapPickUp: () {
-              onTapPickUpLocateBus(driverBusSession, children, routeBus);
-            },
-            onTapChangeStatusLeave: () {
-              onTapChangeChildrenStatus(
-                  driverBusSession, children, routeBus, 3);
-              print("show button call");
-            },
-            onTapShowChildrenProfile: () {
-              Navigator.pushNamed(context, ProfileChildrenPage.routeName,
-                  arguments:
-                      ProfileChildrenArgs(children: children, heroTag: tag));
-            },
-          );
-        }).toList(),
-        isFinish: routeBus.status));
+  int getCountChildrenByStatus() {
+    return driverBusSession.listChildren.length;
   }
-  int getCountChildrenByStatus(
-      List<ChildDrenStatus> listChildDrenStatus, int statusId, int type) {
-//    driverBusSession.childDrenRoute
-//    int sum = 0;
-//
-//    return sum;
-  }
-  caculatorNumberChildren(){
 
+  int getCountChildrenByStatusBusId(statusBusId) {
+    int sum = 0;
+    driverBusSession.listChildren.forEach((child) {
+      List<ChildDrenStatus> checkConstraint = driverBusSession.childDrenStatus
+          .where((status) =>
+              status.childrenID == child.id && status.statusID == statusBusId)
+          .toList();
+      if (checkConstraint.length > 0) sum++;
+    });
+    return sum;
+  }
+
+  onTapGoogleMaps() {
+    List<LatLng> listLatLng = driverBusSession.listRouteBus
+        .map((routeBus) => LatLng(routeBus.lat, routeBus.lng))
+        .toList();
+    location.getLocation().then((location) {
+      listLatLng.insert(0, LatLng(location.latitude, location.longitude));
+      GoogleMapService.navigateMultiStepToGoogleMap(listLatLng);
+    });
+  }
+
+  onTapFinish() {
+    if (countPick == countDrop &&
+        (countPick + driverBusSession.totalChildrenLeave) ==
+            driverBusSession.totalChildrenRegistered) {
+      driverBusSession.status = true;
+      Navigator.pushReplacementNamed(context, TabsPage.routeName,
+          arguments: TabsArgument(routeChildName: HomePage.routeName));
+    } else
+      LoadingDialog.showMsgDialog(context,
+          'Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.');
   }
 }

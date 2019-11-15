@@ -7,28 +7,36 @@ import 'package:flutter/material.dart';
 
 class PopupCardTimeLineViewModel extends ViewModelBase {
   HomePageCardTimeLine homePageCardTimeLine;
-  Children children;
   StatusBus status;
   Offset position;
-  bool isEnablePicked;
   PopupCardTimeLineViewModel(ProfileChildrenDetailArgs arguments) {
-    position = arguments.offset;
-    children = arguments.homePageCardTimeLine.children;
+    homePageCardTimeLine = arguments.homePageCardTimeLine;
     status = arguments.homePageCardTimeLine.status;
-    isEnablePicked = arguments.homePageCardTimeLine.isEnablePicked;
+    position = arguments.offset;
   }
   onTapPicked() {
-    switch (status.statusID) {
-      case 0:
-        //status.statusID = 1;
-        status = StatusBus.list[1];
-        break;
-      case 1:
-        //status.statusID = 0;
-        status = StatusBus.list[0];
-        break;
-      default:
+    if (homePageCardTimeLine.typePickDrop == 0 && status.statusID != 0) return;
+    if (homePageCardTimeLine.typePickDrop == 1 && status.statusID != 1) return;
+    if (status.statusID == 0)
+      status = StatusBus.list[1];
+    else if (status.statusID == 1) {
+      if (homePageCardTimeLine.typePickDrop == 0)
+        status = StatusBus.list[2];
+      else
+        status = StatusBus.list[4];
     }
+
+//    switch (status.statusID) {
+//      case 0:
+//        //status.statusID = 1;
+//        status = StatusBus.list[1];
+//        break;
+//      case 1:
+//        //status.statusID = 0;
+//        status = StatusBus.list[0];
+//        break;
+//      default:
+//    }
     this.updateState();
   }
 

@@ -5,19 +5,24 @@ import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class HomePageCardTimeLineDetail extends StatefulWidget {
+class PopupCardTimeLinePage extends StatefulWidget {
   static const String routeName = "/popupProfile";
   final ProfileChildrenDetailArgs arguments;
-  HomePageCardTimeLineDetail(this.arguments);
+  PopupCardTimeLinePage(this.arguments);
 
   @override
-  _HomePageCardTimeLineDetailState createState() =>
-      _HomePageCardTimeLineDetailState();
+  _PopupCardTimeLinePageState createState() =>
+      _PopupCardTimeLinePageState();
 }
-
-class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
+class ProfileChildrenDetailArgs {
+  final Offset offset;
+  final HomePageCardTimeLine homePageCardTimeLine;
+  ProfileChildrenDetailArgs({this.offset, this.homePageCardTimeLine});
+}
+class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
   CurvedAnimation animation;
@@ -49,7 +54,7 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
       Widget _buttonCall() {
         return GestureDetector(
           onTap: () {
-            launch('tel:0123456');
+            launch('tel:${viewModel.homePageCardTimeLine.children.parent.phone}');
           },
           child: Container(
             decoration: new BoxDecoration(
@@ -59,11 +64,11 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(alignment: Alignment.center, child: Icon(Icons.call,color: Colors.white,)),
+                Container(alignment: Alignment.center, child: Icon(Icons.call,color: Colors.white,size: 15,)),
                 SizedBox(
                   width: 5,
                 ),
-                Container(alignment: Alignment.center, child: Text('Gọi',style: TextStyle(color: Colors.white),))
+                Container(alignment: Alignment.center, child: Text('Gọi',style: TextStyle(color: Colors.white,fontSize: 12),))
               ],
             ),
           ),
@@ -77,6 +82,7 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
             widget.arguments.homePageCardTimeLine.onTapChangeStatusLeave();
           },
           child: Container(
+            padding: EdgeInsets.only(right: 10),
             decoration: new BoxDecoration(
                 color: Colors.deepOrange,
                 borderRadius:
@@ -84,11 +90,11 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(alignment: Alignment.center, child: Icon(Icons.home,color: Colors.white,)),
+                Container(alignment: Alignment.center, child: Icon(Icons.home,color: Colors.white,size: 15,)),
                 SizedBox(
                   width: 5,
                 ),
-                Container(alignment: Alignment.center, child: Text('Nghỉ',style: TextStyle(color: Colors.white),))
+                Container(alignment: Alignment.center, child: Text('Nghỉ',style: TextStyle(color: Colors.white,fontSize: 12),))
               ],
             ),
           ),
@@ -98,29 +104,48 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
       Widget _buttonSms() {
         return GestureDetector(
           onTap: () {
-            launch('sms:0123456');
+            launch('sms:${viewModel.homePageCardTimeLine.children.parent.phone}');
           },
           child: Container(
             color: Colors.orange,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(alignment: Alignment.center, child: Icon(Icons.sms,color: Colors.white,)),
+                Container(alignment: Alignment.center, child: Icon(Icons.sms,color: Colors.white,size: 15,)),
                 SizedBox(
                   width: 5,
                 ),
-                Container(alignment: Alignment.center, child: Text('SMS',style: TextStyle(color: Colors.white),))
+                Container(alignment: Alignment.center, child: Text('SMS',style: TextStyle(color: Colors.white,fontSize: 12),))
               ],
             ),
           ),
         );
       }
-
+      Widget _buttonChat() {
+        return GestureDetector(
+          onTap: () {
+            //launch('sms:0123456');
+          },
+          child: Container(
+            color: ThemePrimary.primaryColor,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(alignment: Alignment.center, child: Icon(FontAwesomeIcons.facebookMessenger,color: Colors.white,size: 15,)),
+                SizedBox(
+                  width: 5,
+                ),
+                Container(alignment: Alignment.center, child: Text('Chat',style: TextStyle(color: Colors.white,fontSize: 12),))
+              ],
+            ),
+          ),
+        );
+      }
       return Transform.translate(
         offset: Offset(0, _animation.value * 50),
         child: Container(
           height: 100,
-          width: MediaQuery.of(context).size.width - 80,
+          width: MediaQuery.of(context).size.width - 84,
           margin: EdgeInsets.only(left: 25),
           decoration: new BoxDecoration(
               color: Colors.white,
@@ -143,11 +168,9 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: null,
-                            child: new CachedNetworkImage(
-                              imageUrl:
-                                  "https://shalimarbphotography.com/wp-content/uploads/2018/06/SBP-2539.jpg",
-                              imageBuilder: (context, imageProvider) =>
-                                  CircleAvatar(
+                            child: CachedNetworkImage(
+                              imageUrl: viewModel.homePageCardTimeLine.children.parent.photo,
+                              imageBuilder: (context, imageProvider) => CircleAvatar(
                                 radius: 35.0,
                                 backgroundImage: imageProvider,
                                 backgroundColor: Colors.transparent,
@@ -158,7 +181,7 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
                       ),
                       SizedBox(width: 10,),
                       Expanded(
-                        child: Text('Nguyễn Văn Cao',
+                        child: Text(viewModel.homePageCardTimeLine.children.parent.name,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 color: Colors.grey.shade600,
@@ -183,6 +206,10 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
                     Expanded(
                       flex: 1,
                       child: _buttonSms(),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: _buttonChat(),
                     ),
                     Expanded(
                       flex: 1,
@@ -231,19 +258,35 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
                       top: viewModel.position.dy - 5,
                       left: viewModel.position.dx - 5,
                       child: Container(
-                        height: 90,
-                        width: MediaQuery.of(context).size.width - 50,
-                        child: HomePageCardTimeLine(
-                          children: viewModel.children,
-                          isEnablePicked:
-                              viewModel.status.statusID == 0 ? true : false,
-                          status: viewModel.status,
-                          isEnableTapChildrenContentCard: false,
-                          onTapPickUp: () {
-                            viewModel.onTapPicked();
-                            widget.arguments.homePageCardTimeLine.onTapPickUp();
-                          },
+                        height: 92,
+                        width: MediaQuery.of(context).size.width - 54,
+                        child:
+                        HomePageCardTimeLine(
+                            children: viewModel.homePageCardTimeLine.children,
+                            //isEnablePicked: status.statusID == 0 ? true : false,
+                            status: viewModel.status,
+                            heroTag: viewModel.homePageCardTimeLine.heroTag,
+                            typePickDrop: viewModel.homePageCardTimeLine.typePickDrop,
+                            isEnableTapChildrenContentCard: false,
+                            cardType: viewModel.homePageCardTimeLine.cardType,
+                            onTapPickUp: () {
+                              viewModel.onTapPicked();
+                              viewModel.homePageCardTimeLine.onTapPickUp();
+                            },
+                            onTapChangeStatusLeave: (){
+                              viewModel.onTapChangeStatus(3);
+                            },
                         ),
+//                        HomePageCardTimeLine(
+//                          children: viewModel.children,
+//                          isEnablePicked:
+//                              viewModel.status.statusID == 0 ? true : false,
+//                          status: viewModel.status,
+//                          onTapPickUp: () {
+//                            viewModel.onTapPicked();
+//                            widget.arguments.homePageCardTimeLine.onTapPickUp();
+//                          },
+//                        ),
                       ),
                     ),
                   ],
@@ -255,8 +298,3 @@ class _HomePageCardTimeLineDetailState extends State<HomePageCardTimeLineDetail>
   }
 }
 
-class ProfileChildrenDetailArgs {
-  final Offset offset;
-  final HomePageCardTimeLine homePageCardTimeLine;
-  ProfileChildrenDetailArgs({this.offset, this.homePageCardTimeLine});
-}

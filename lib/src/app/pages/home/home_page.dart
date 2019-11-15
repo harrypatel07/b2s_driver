@@ -62,7 +62,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 children: children,
                 isEnablePicked: status.statusID == 0 ? true : false,
                 status: statusBus,
-                isEnableTapChildrenContentCard: false,
                 heroTag: tag,
                 typePickDrop: status.typePickDrop,
                 onTapPickUp: () {

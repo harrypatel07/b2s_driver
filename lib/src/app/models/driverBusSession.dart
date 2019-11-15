@@ -19,18 +19,20 @@ class DriverBusSession {
   List<ChildDrenStatus> childDrenStatus;
   List<ChildDrenRoute> childDrenRoute;
   List<RouteBus> listRouteBus;
-
-  DriverBusSession(
-      {this.childDrenRoute,
-      this.sessionID,
-      this.busID,
-      this.type,
-      this.listChildren,
-      this.childDrenStatus,
-      this.listRouteBus,
-      this.totalChildrenRegistered,
-      this.totalChildrenInBus,
-      this.totalChildrenLeave});
+  bool status; // false: chưa hoàn thành, true: hoàn thành
+  DriverBusSession({
+    this.childDrenRoute,
+    this.sessionID,
+    this.busID,
+    this.type,
+    this.listChildren,
+    this.childDrenStatus,
+    this.listRouteBus,
+    this.totalChildrenRegistered,
+    this.totalChildrenInBus,
+    this.totalChildrenLeave,
+    this.status,
+  });
 
   DriverBusSession.fromJsonController({
     String busID,
@@ -53,6 +55,7 @@ class DriverBusSession {
     this.childDrenStatus = childDrenStatus;
     this.childDrenRoute = childDrenRoute;
     this.listRouteBus = listRouteBus;
+    this.status = false;
   }
   fromJson(Map<dynamic, dynamic> json) {
     List list = [];
@@ -68,6 +71,10 @@ class DriverBusSession {
     childDrenRoute = list.map((item) => ChildDrenRoute.fromJson(item)).toList();
     list = json['listRouteBus'];
     listRouteBus = list.map((item) => RouteBus.fromJson(item)).toList();
+    totalChildrenRegistered = json['totalChildrenRegistered'];
+    totalChildrenInBus = json['totalChildrenInBus'];
+    totalChildrenLeave = json['totalChildrenLeave'];
+    status = json['status'];
   }
 
   Map<dynamic, dynamic> toJson() {
@@ -83,6 +90,10 @@ class DriverBusSession {
         this.childDrenRoute.map((item) => item.toJson()).toList();
     data['listRouteBus'] =
         this.listRouteBus.map((item) => item.toJson()).toList();
+    data['totalChildrenRegistered'] = this.totalChildrenRegistered;
+    data['totalChildrenInBus'] = this.totalChildrenInBus;
+    data['totalChildrenLeave'] = this.totalChildrenLeave;
+    data['status'] = this.status;
     return data;
   }
 
@@ -192,7 +203,7 @@ class ChildDrenStatus {
 
   static ChildDrenStatus getStatusByChildrenID(
       List<ChildDrenStatus> list, int childrenID, int routeBusID) {
-    ChildDrenStatus status=ChildDrenStatus();
+    ChildDrenStatus status = ChildDrenStatus();
     final _childrenStatus = list.firstWhere(
         (item) =>
             item.childrenID == childrenID && item.routeBusID == routeBusID,
@@ -200,16 +211,18 @@ class ChildDrenStatus {
     if (_childrenStatus != null) status = _childrenStatus;
     return status;
   }
+
   static int getStatusIDByChildrenID(
       List<ChildDrenStatus> list, int childrenID, int routeBusID) {
     var statusID = 0;
     final _childrenStatus = list.firstWhere(
-            (item) =>
-        item.childrenID == childrenID && item.routeBusID == routeBusID,
+        (item) =>
+            item.childrenID == childrenID && item.routeBusID == routeBusID,
         orElse: () => null);
     if (_childrenStatus != null) statusID = _childrenStatus.statusID;
     return statusID;
   }
+
   static List<ChildDrenStatus> list = [
     ChildDrenStatus(id: 1, childrenID: 3, statusID: 0, routeBusID: 1),
     ChildDrenStatus(id: 2, childrenID: 4, statusID: 0, routeBusID: 1),

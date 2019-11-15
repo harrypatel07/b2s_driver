@@ -6,8 +6,10 @@ import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/menu.dart';
+import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
+import 'package:b2s_driver/src/app/service/cloudFirestore-service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -21,15 +23,12 @@ class ScheduleViewModel extends ViewModelBase {
   String busId = "";
 //  DriverBusSession driverBusSession;
   Driver driver = Driver();
-  ScheduleViewModel() {
+  ScheduleViewModel(){
     onLoad(DateFormat('yyyy-MM-dd').format(DateTime.now()));
   }
-  onLoad(String day) {
+  onLoad(String day){
     loading = true;
-    api
-        .getListDriverBusSession(
-            vehicleId: driver.vehicleId, driverId: driver.id, date: day)
-        .then((value) {
+    api.getListDriverBusSession(vehicleId: driver.vehicleId,driverId: driver.id,date: day).then((value){
       listDriverBusSession = value;
       busId = value[0].busID;
       loading = false;
@@ -48,6 +47,8 @@ class ScheduleViewModel extends ViewModelBase {
           driverBusSession.listChildren, _childrenRoute.listChildrenID);
     return _listChildren;
   }
+
+
 
   @override
   void dispose() {
@@ -98,9 +99,8 @@ class ScheduleViewModel extends ViewModelBase {
     if (tabsPageViewModel != null)
       tabsPageViewModel.onSlideMenuTapped(menu.index);
   }
-
-  reloadData(bool isToday) {
-    if (isToday) {
+  reloadData(bool isToday){
+    if(isToday){
 //      listenData();
       isLoadingData = true;
       listChildrenSS1 = List();
@@ -108,7 +108,8 @@ class ScheduleViewModel extends ViewModelBase {
       listDriverBusSession[0].type = 0;
       listDriverBusSession[1].type = 1;
       isLoadingData = false;
-    } else {
+    }
+    else{
 //      listenData();
       isLoadingData = true;
       listChildrenSS1 = List();

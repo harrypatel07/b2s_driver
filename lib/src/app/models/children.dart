@@ -65,7 +65,8 @@ class Children {
         id: _parent["id"],
         email: _parent["email"],
         phone: _parent["phone"],
-        name: _parent["name"]);
+        name: _parent["name"],
+        photo: _parent["image"]);
   }
 
   Children.fromResPartner(ResPartner resPartner, {bool primary}) {

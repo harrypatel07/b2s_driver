@@ -9,6 +9,7 @@ import 'package:b2s_driver/src/app/pages/login/login_page.dart';
 import 'package:b2s_driver/src/app/pages/schedule/schedule_page.dart';
 
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
+import 'package:b2s_driver/src/app/pages/user/user_page.dart';
 import 'package:flutter/material.dart';
 
 class Routes {
@@ -17,14 +18,21 @@ class Routes {
     LoginPage.routeName: (context) => LoginPage(),
     TabsPage.routeName: (context) =>
         TabsPage(ModalRoute.of(context).settings.arguments),
-    HomePage.routeName: (context) => HomePage(driverBusSession: ModalRoute.of(context).settings.arguments,),
-    LocateBusPage.routeName: (context) => LocateBusPage(driverBusSession: ModalRoute.of(context).settings.arguments,),
+    HomePage.routeName: (context) => HomePage(
+          driverBusSession: ModalRoute.of(context).settings.arguments,
+        ),
+    LocateBusPage.routeName: (context) => LocateBusPage(
+          driverBusSession: ModalRoute.of(context).settings.arguments,
+        ),
     EmergencyPage.routeName: (context) => EmergencyPage(),
     ProfileChildrenPage.routeName: (context) =>
         ProfileChildrenPage(args: ModalRoute.of(context).settings.arguments),
     HistoryTripPage.routeName: (context) => HistoryTripPage(),
     SchedulePage.routeName: (context) => SchedulePage(),
-    BottomSheetCustom.routeName:(context)=> BottomSheetCustom(arguments: ModalRoute.of(context).settings.arguments,)
+    BottomSheetCustom.routeName: (context) => BottomSheetCustom(
+          arguments: ModalRoute.of(context).settings.arguments,
+        ),
+    UserPage.routeName: (context) => UserPage(),
   };
 }
 

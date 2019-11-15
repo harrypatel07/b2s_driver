@@ -40,34 +40,33 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
           content: viewModel
               .getListChildrenForTimeLine(driverBusSession, routeBus.id)
               .map((children) {
-            final status = ChildDrenStatus.getStatusByChildrenID(
+               var status = ChildDrenStatus.getStatusByChildrenID(
                 driverBusSession.childDrenStatus, children.id, routeBus.id);
+               viewModel.listChildrenStatus.add(status);
             final statusBus = StatusBus.getStatusByID(StatusBus.list, status.statusID);
             var tag = children.id.toString() +
                 routeBus.id.toString() +
                 driverBusSession.busID.toString();
             return HomePageCardTimeLine(
               children: children,
-              isEnablePicked: status.statusID == 0 ? true : false,
+              //isEnablePicked: status.statusID == 0 ? true : false,
               status: statusBus,
-              isEnableTapChildrenContentCard: true,
               heroTag: tag,
               typePickDrop: status.typePickDrop,
+              isEnableTapChildrenContentCard: true,
               cardType: 1,
               onTapPickUp: () {
                 viewModel.onTapPickUpLocateBus(
                     driverBusSession, children, routeBus);
               },
               onTapChangeStatusLeave: () {
-//              onTapChangeChildrenStatus(
-//                  driverBusSession, children, routeBus, 3);
-//              print("show button call");
+                viewModel.onTapLeave(driverBusSession, children, routeBus);
               },
               onTapShowChildrenProfile: () {
                 Navigator.pushNamed(context, ProfileChildrenPage.routeName,
                     arguments:
                         ProfileChildrenArgs(children: children, heroTag: tag));
-              },
+              }
             );
           }).toList(),
           isFinish: routeBus.status));
@@ -105,17 +104,20 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                       )),
                 ),
                 Positioned(
-                    bottom: -5,
+                    bottom: -6,
                     right: 2,
                     left: 2,
                     child: FlatButton(
-                      color: ThemePrimary.primaryColor,
-                      child: Text(
-                        'HOÀN THÀNH',
+                      color:(viewModel.localBusViewModel.routeBus.status)?Colors.grey:ThemePrimary.primaryColor,
+                      child: (viewModel.localBusViewModel.routeBus.status)?Text('ĐÃ HOÀN THÀNH',style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)):Text(
+                        'HOÀN THÀNH ĐIỂM ${viewModel.localBusViewModel.position}',
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        viewModel.onTapFinishRoute();
+                      },
                     ))
               ],
             ),

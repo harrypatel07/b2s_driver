@@ -3,13 +3,15 @@ import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
-import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
+import 'package:b2s_driver/src/app/pages/home/popup_card_timeline/popup_card_timeline.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';
-
+import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
+import 'package:b2s_driver/src/app/widgets/index.dart';
+import 'package:flutter/cupertino.dart';
 
 class BottomSheetCustomViewModel extends ViewModelBase {
-  List<TimeLineEvent> listTimeLine;
   LocateBusPageViewModel localBusViewModel;
+  List<ChildDrenStatus> listChildrenStatus = List();
   BottomSheetCustomViewModel();
 
   List<Children> getListChildrenForTimeLine(
@@ -23,54 +25,103 @@ class BottomSheetCustomViewModel extends ViewModelBase {
     return _listChildren;
   }
 
+  onTapLeave(
+      DriverBusSession driverBusSession, Children children, RouteBus routeBus) {
+    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
+        item.childrenID == children.id && item.routeBusID == routeBus.id);
+    DriverBusSession.updateChildrenStatusIdByLeave(
+        driverBusSession: driverBusSession, childDrenStatus: childrenStatus);
+//    updateStatusLeaveChildren(childrenStatus.id);
+    this.updateState();
+    if (localBusViewModel != null) {
+      localBusViewModel.onCreateDriverBusSessionReport();
+      localBusViewModel.updateState();
+    }
+  }
+
   onTapPickUpLocateBus(
       DriverBusSession driverBusSession, Children children, RouteBus routeBus) {
     var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
         item.childrenID == children.id && item.routeBusID == routeBus.id);
-    if(childrenStatus.typePickDrop==0) {
-//      var childrenStatusDrop = driverBusSession.childDrenStatus.singleWhere((item)=>item.childrenID==children.id&&item.id!=childrenStatus.id);
-      switch (childrenStatus.statusID) {
-        case 0:
-          childrenStatus.statusID = 1;
-//          childrenStatusDrop.statusID = 1;
-          updateStatusPickChildren(childrenStatus.id);
-          break;
-        default:
-      }
+    if (childrenStatus.typePickDrop == 0 && childrenStatus.statusID != 0)
+      return;
+    if (childrenStatus.typePickDrop == 1 && childrenStatus.statusID != 1)
+      return;
+    if (childrenStatus.typePickDrop == 0 && childrenStatus.statusID == 0) {
+      localBusViewModel.countPick++;
+//      updateStatusPickChildren(childrenStatus.id);
     }
-    else
-      switch (childrenStatus.statusID){
-        case 1:
-          childrenStatus.statusID = 2;
-          updateStatusDropChildren(childrenStatus.id);
-          break;
-        default:
-      }
+    if (childrenStatus.typePickDrop == 1 && childrenStatus.statusID == 1) {
+      localBusViewModel.countDrop++;
+//      updateStatusDropChildren(childrenStatus.id);
+    }
+    DriverBusSession.updateChildrenStatusIdByPickDrop(
+        driverBusSession: driverBusSession, childDrenStatus: childrenStatus);
     this.updateState();
     if (localBusViewModel != null) {
 //      localBusViewModel.driverBusSession.totalChildrenInBus += 1;
+      localBusViewModel.onCreateDriverBusSessionReport();
       localBusViewModel.updateState();
     }
   }
-  updateStatusPickChildren(int childrenStatusId){
-    List<int> listIdPicking = List();
-    listIdPicking.add(childrenStatusId);
-    api.updateStatusPickByIdPicking(listIdPicking).then((r){
-      if(r)
+
+  updateStatusLeaveChildren(int childrenStatusId) {
+    // List<int> listIdPicking = List();
+    // listIdPicking.add(childrenStatusId);
+    api.updateLeaveByIdPicking([childrenStatusId]).then((r) {
+      if (r)
         print('Success');
       else
         print('fails');
     });
   }
-  updateStatusDropChildren(int childrenStatusId){
-    List<int> listIdDroping = List();
-    listIdDroping.add(childrenStatusId);
-    api.updateStatusDropByIdChildren(listIdDroping).then((r){
-      if(r)
+
+  updateStatusPickChildren(int childrenStatusId) {
+    // List<int> listIdPicking = List();
+    // listIdPicking.add(childrenStatusId);
+    api.updateStatusPickByIdPicking([childrenStatusId]).then((r) {
+      if (r)
         print('Success');
       else
         print('fails');
     });
+  }
+
+  updateStatusDropChildren(int childrenStatusId) {
+    List<int> listIdDropping = List();
+    listIdDropping.add(childrenStatusId);
+    api.updateStatusDropByIdChildren(listIdDropping).then((r) {
+      if (r)
+        print('Success');
+      else
+        print('fails');
+    });
+  }
+
+  onTapFinishRoute() {
+    if (!localBusViewModel.routeBus.status) {
+      var listPick = listChildrenStatus
+          .where((statusBus) =>
+              statusBus.statusID == 0 && statusBus.typePickDrop == 0)
+          .toList();
+      var listDrop = listChildrenStatus
+          .where((statusBus) =>
+              statusBus.statusID == 1 && statusBus.typePickDrop == 1)
+          .toList();
+      if ((listChildrenStatus[0].typePickDrop == 0 && listPick.length > 0) ||
+          (listChildrenStatus[0].typePickDrop == 1 && listDrop.length > 0))
+        ToastController.show(
+            context: context,
+            message: 'Vẫn còn học sinh, ban chưa thể hoàn thành.',
+            duration: Duration(milliseconds: 1000));
+      else {
+        localBusViewModel.routeBus.status = true;
+        var route = localBusViewModel.driverBusSession.listRouteBus.singleWhere(
+            (routeBus) => routeBus.id == localBusViewModel.routeBus.id);
+        route.status = true;
+        Navigator.pop(context);
+      }
+    }
   }
 //  onTapChangeChildrenStatus(DriverBusSession driverBusSession,
 //      Children children, RouteBus routeBus, int statusID) {

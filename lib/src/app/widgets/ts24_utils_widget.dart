@@ -2,6 +2,7 @@ library ts24_utils;
 
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
+import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -73,14 +74,16 @@ class LoadingDialog {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Thông báo"),
+        title: Text("Thông báo",style: TextStyle(color: ThemePrimary.primaryColor),),
         content: Text(msg),
         actions: [
-          new FlatButton(
-            child: Text("OK"),
-            onPressed: () {
-              Navigator.of(context).pop(LoadingDialog);
-            },
+          OutlineButton(
+            borderSide: BorderSide(color:ThemePrimary.primaryColor ),
+              child: new Text("OK",style: TextStyle(fontSize: 16,color: ThemePrimary.primaryColor),),
+              onPressed:() {
+            Navigator.of(context).pop(LoadingDialog);
+          },
+              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(0.0))
           ),
         ],
       ),
@@ -131,7 +134,7 @@ class ToastController {
     Flushbar(
       message: message,
       duration: duration,
-      animationDuration: Duration(milliseconds: 300),
+      animationDuration: Duration(milliseconds: 100),
       //leftBarIndicatorColor: Colors.blue[300],
       icon: Icon(
         Icons.info_outline,
@@ -139,7 +142,7 @@ class ToastController {
         color: Colors.white,
       ),
       backgroundGradient: LinearGradient(
-        colors: [Theme.of(context).primaryColor, Colors.teal],
+        colors: [Colors.orange, Colors.orangeAccent],
       ),
       backgroundColor: Colors.red,
       boxShadows: [

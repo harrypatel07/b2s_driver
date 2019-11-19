@@ -21,8 +21,8 @@ class SchedulePage extends StatefulWidget {
 class _SchedulePageState extends State<SchedulePage> {
   ScheduleViewModel viewModel = ScheduleViewModel();
   List<CustomPopupMenu> choices = <CustomPopupMenu>[
-    CustomPopupMenu(id: 0, title: 'Hôm nay', icon: Icons.today),
-    CustomPopupMenu(id: 1, title: 'Ngày mai', icon: Icons.next_week)
+    CustomPopupMenu(id:0,title:'Hôm nay',subTitle: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString()),
+    CustomPopupMenu(id:1,title:'Ngày mai',subTitle: DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(days: 1))).toString())
   ];
   CustomPopupMenu _selectedChoices;
 //  GlobalKey _key = GlobalKey();
@@ -41,21 +41,39 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   void _select(CustomPopupMenu choice) {
-//    setState(() {
     _selectedChoices = choice;
-    if (choice.id == 0)
       viewModel
-          .onLoad(DateFormat('yyyy-MM-dd').format(DateTime.now()).toString());
-    else
-      viewModel.onLoad(DateFormat('yyyy-MM-dd')
-          .format(DateTime.now().add(Duration(days: 1)))
-          .toString());
-//    });
+          .onLoad(_selectedChoices.subTitle);
+  }
+  void _selectVehicle(CustomPopupMenu choice) {
+    viewModel.selectedVehicle = choice;
+    viewModel
+        .onChangeVehicle(_selectedChoices.subTitle);
   }
 
   Widget _appBar() {
     return TS24AppBar(
-      title: Text(viewModel.busId),
+      title: PopupMenuButton<CustomPopupMenu>(
+        child: Container(
+          child: Row(
+            children: <Widget>[
+              Text(viewModel.driver.vehicleName),
+              Icon(Icons.arrow_drop_down)
+            ],
+          ),
+        ),
+//          elevation:  30.2,
+        initialValue: viewModel.selectedVehicle,
+        onSelected: _selectVehicle,
+        itemBuilder: (BuildContext context) {
+          return viewModel.choicesVehicle.map((CustomPopupMenu vehicle) {
+            return PopupMenuItem<CustomPopupMenu>(
+              value: vehicle,
+              child: Text(vehicle.title),
+            );
+          }).toList();
+        },
+      ),
 //      leading: IconButton(
 //        icon: Icon(Icons.arrow_back),
 //        onPressed: () => Navigator.pop(context),
@@ -73,7 +91,7 @@ class _SchedulePageState extends State<SchedulePage> {
               );
             }).toList();
           },
-        )
+        ),
       ],
     );
   }
@@ -312,16 +330,19 @@ class _SchedulePageState extends State<SchedulePage> {
               alignment: Alignment.center,
               width: MediaQuery.of(context).size.width - 25,
               height: 50,
-              color: driverBusSession.status?Colors.green[300]:Colors.black87,
-              child: driverBusSession.status?Text(
-                'ĐÃ HOÀN THÀNH',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white),
-              ): Text(
-                'CHỌN',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white),
-              ),
+              color:
+                  driverBusSession.status ? Colors.green[300] : Colors.black87,
+              child: driverBusSession.status
+                  ? Text(
+                      'ĐÃ HOÀN THÀNH',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                    )
+                  : Text(
+                      'CHỌN',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                    ),
             ),
           ),
         ),
@@ -399,32 +420,39 @@ class _SchedulePageState extends State<SchedulePage> {
               context: context,
               loading: viewModel.loading,
             )
-          : SingleChildScrollView(
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    _item(
-                        driverBusSession: viewModel.listDriverBusSession[0],
-                        title: _selectedChoices.title,
-                        onTap: () {
-                          viewModel.onTapItemPick();
-                        }),
-                    SizedBox(
-                      height: 20,
+          : (viewModel.listDriverBusSession.length == 0)
+              ? (Center(
+                  child: Text('Không có dữ liệu để hiển thị.'),
+                ))
+              : SingleChildScrollView(
+                  child: Container(
+                    child: Column(
+                      children: <Widget>[
+                          _item(
+                              driverBusSession:
+                                  viewModel.listDriverBusSession[0],
+                              title: _selectedChoices.title,
+                              onTap: () {
+                                viewModel.onTapItemPick();
+                              }),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        if (viewModel.listDriverBusSession.length > 1)
+                          _item(
+                              driverBusSession:
+                                  viewModel.listDriverBusSession[1],
+                              title: _selectedChoices.title,
+                              onTap: () {
+                                viewModel.onTapItemDrop();
+                              }),
+                        SizedBox(
+                          height: 35,
+                        )
+                      ],
                     ),
-                    _item(
-                        driverBusSession: viewModel.listDriverBusSession[1],
-                        title: _selectedChoices.title,
-                        onTap: () {
-                          viewModel.onTapItemDrop();
-                        }),
-                    SizedBox(
-                      height: 35,
-                    )
-                  ],
+                  ),
                 ),
-              ),
-            ),
     );
   }
 
@@ -450,6 +478,6 @@ class _SchedulePageState extends State<SchedulePage> {
 class CustomPopupMenu {
   int id;
   String title;
-  IconData icon;
-  CustomPopupMenu({this.id, this.title, this.icon});
+  String subTitle;
+  CustomPopupMenu({this.id,this.title,this.subTitle});
 }

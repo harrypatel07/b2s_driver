@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/parent.dart';
 import 'package:b2s_driver/src/app/models/res-partner.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
@@ -81,9 +82,12 @@ class Chatting {
       this.listMessage});
 
   ///Get from collection Chat on FireStore
-  Chatting.fromDocumentSnapShot(DocumentSnapshot document) {
+
+  Chatting.fromDocumentSnapShot(DocumentSnapshot document, [String id]) {
     Parent parent = Parent();
-    if (parent.id.toString() == document['receiverId'])
+    var _id = parent.id.toString();
+    if (id != null) _id = id;
+    if (_id == document['receiverId'])
       peerId = document['senderId'];
     else
       peerId = document['receiverId'];

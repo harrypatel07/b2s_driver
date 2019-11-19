@@ -55,8 +55,9 @@ class HomePageViewModelOld extends ViewModelBase {
     var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
         item.childrenID == children.id && item.routeBusID == routeBus.id);
     childrenStatus.statusID = statusID;
-    cloudSerivce.busSession.updateDriverBusSession(driverBusSession);
-    cloudSerivce.busSession.updateStatusChildrenBus(children, childrenStatus);
+    cloudSerivce.driverBusSession.updateDriverBusSession(driverBusSession);
+    cloudSerivce.driverBusSession
+        .updateStatusChildrenBus(children, childrenStatus);
     this.updateState();
   }
 

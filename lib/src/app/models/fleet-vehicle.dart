@@ -1,14 +1,16 @@
+import 'package:location/location.dart';
+
 class FleetVehicle {
   dynamic sLastUpdate;
   dynamic acquisitionDate;
   dynamic active;
   dynamic activityDateDeadline;
-  List<dynamic> activityIds;
+  dynamic activityIds;
   dynamic activityState;
   dynamic activitySummary;
   dynamic activityTypeId;
   dynamic activityUserId;
-  List<dynamic> brandId;
+  dynamic brandId;
   dynamic carValue;
   dynamic co2;
   dynamic color;
@@ -20,10 +22,10 @@ class FleetVehicle {
   dynamic contractRenewalTotal;
   dynamic costCount;
   dynamic createDate;
-  List<dynamic> createUid;
+  dynamic createUid;
   dynamic displayName;
   dynamic doors;
-  List<dynamic> driverId;
+  dynamic driverId;
   dynamic firstContractDate;
   dynamic fuelLogsCount;
   dynamic fuelType;
@@ -35,24 +37,24 @@ class FleetVehicle {
   dynamic imageSmall;
   dynamic licensePlate;
   dynamic location;
-  List<dynamic> logContracts;
-  List<dynamic> logDrivers;
-  List<dynamic> logFuel;
-  List<dynamic> logServices;
+  dynamic logContracts;
+  dynamic logDrivers;
+  dynamic logFuel;
+  dynamic logServices;
   dynamic messageAttachmentCount;
-  List<dynamic> messageChannelIds;
-  List<dynamic> messageFollowerIds;
+  dynamic messageChannelIds;
+  dynamic messageFollowerIds;
   dynamic messageHasError;
   dynamic messageHasErrorCounter;
-  List<dynamic> messageIds;
+  dynamic messageIds;
   dynamic messageIsFollower;
   dynamic messageMainAttachmentId;
   dynamic messageNeedaction;
   dynamic messageNeedactionCounter;
-  List<dynamic> messagePartnerIds;
+  dynamic messagePartnerIds;
   dynamic messageUnread;
   dynamic messageUnreadCounter;
-  List<dynamic> modelId;
+  dynamic modelId;
   dynamic modelYear;
   dynamic name;
   dynamic odometer;
@@ -62,15 +64,18 @@ class FleetVehicle {
   dynamic residualValue;
   dynamic seats;
   dynamic serviceCount;
-  List<dynamic> stateId;
-  List<dynamic> tagIds;
+  dynamic stateId;
+  dynamic tagIds;
   dynamic transmission;
-  List<dynamic> transporterId;
+  dynamic transporterId;
   dynamic vinSn;
-  List<dynamic> websiteMessageIds;
+  dynamic websiteMessageIds;
   dynamic writeDate;
-  List<dynamic> writeUid;
-  List<dynamic> xManagerShuttle;
+  dynamic writeUid;
+  dynamic xManagerShuttle;
+  dynamic xPosx;
+  dynamic xPosy;
+  dynamic xPosz;
 
   FleetVehicle(
       {this.sLastUpdate,
@@ -144,7 +149,16 @@ class FleetVehicle {
       this.websiteMessageIds,
       this.writeDate,
       this.writeUid,
-      this.xManagerShuttle});
+      this.xManagerShuttle,
+      this.xPosx,
+      this.xPosy,
+      this.xPosz});
+
+  FleetVehicle.fromLocationData(LocationData data) {
+    xPosx = data.latitude;
+    xPosy = data.longitude;
+    xPosz = data.heading;
+  }
 
   FleetVehicle.fromJson(Map<String, dynamic> json) {
     sLastUpdate = json['__last_update'];
@@ -221,82 +235,88 @@ class FleetVehicle {
     writeDate = json['write_date'];
     writeUid = json['write_uid'];
     xManagerShuttle = json['x_manager_shuttle'];
+    xPosx = json['x_posx'];
+    xPosy = json['x_posy'];
+    xPosz = json['x_posz'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['__last_update'] = this.sLastUpdate;
-    data['acquisition_date'] = this.acquisitionDate;
-    data['active'] = this.active;
-    data['activity_date_deadline'] = this.activityDateDeadline;
-    data['activity_ids'] = this.activityIds;
-    data['activity_state'] = this.activityState;
-    data['activity_summary'] = this.activitySummary;
-    data['activity_type_id'] = this.activityTypeId;
-    data['activity_user_id'] = this.activityUserId;
-    data['brand_id'] = this.brandId;
-    data['car_value'] = this.carValue;
-    data['co2'] = this.co2;
-    data['color'] = this.color;
-    data['company_id'] = this.companyId;
-    data['contract_count'] = this.contractCount;
-    data['contract_renewal_due_soon'] = this.contractRenewalDueSoon;
-    data['contract_renewal_name'] = this.contractRenewalName;
-    data['contract_renewal_overdue'] = this.contractRenewalOverdue;
-    data['contract_renewal_total'] = this.contractRenewalTotal;
-    data['cost_count'] = this.costCount;
-    data['create_date'] = this.createDate;
-    data['create_uid'] = this.createUid;
-    data['display_name'] = this.displayName;
-    data['doors'] = this.doors;
-    data['driver_id'] = this.driverId;
-    data['first_contract_date'] = this.firstContractDate;
-    data['fuel_logs_count'] = this.fuelLogsCount;
-    data['fuel_type'] = this.fuelType;
-    data['horsepower'] = this.horsepower;
-    data['horsepower_tax'] = this.horsepowerTax;
+    // data['__last_update'] = this.sLastUpdate;
+    // data['acquisition_date'] = this.acquisitionDate;
+    // data['active'] = this.active;
+    // data['activity_date_deadline'] = this.activityDateDeadline;
+    // data['activity_ids'] = this.activityIds;
+    // data['activity_state'] = this.activityState;
+    // data['activity_summary'] = this.activitySummary;
+    // data['activity_type_id'] = this.activityTypeId;
+    // data['activity_user_id'] = this.activityUserId;
+    // data['brand_id'] = this.brandId;
+    // data['car_value'] = this.carValue;
+    // data['co2'] = this.co2;
+    // data['color'] = this.color;
+    // data['company_id'] = this.companyId;
+    // data['contract_count'] = this.contractCount;
+    // data['contract_renewal_due_soon'] = this.contractRenewalDueSoon;
+    // data['contract_renewal_name'] = this.contractRenewalName;
+    // data['contract_renewal_overdue'] = this.contractRenewalOverdue;
+    // data['contract_renewal_total'] = this.contractRenewalTotal;
+    // data['cost_count'] = this.costCount;
+    // data['create_date'] = this.createDate;
+    // data['create_uid'] = this.createUid;
+    // data['display_name'] = this.displayName;
+    // data['doors'] = this.doors;
+    // data['driver_id'] = this.driverId;
+    // data['first_contract_date'] = this.firstContractDate;
+    // data['fuel_logs_count'] = this.fuelLogsCount;
+    // data['fuel_type'] = this.fuelType;
+    // data['horsepower'] = this.horsepower;
+    // data['horsepower_tax'] = this.horsepowerTax;
     data['id'] = this.id;
-    data['image'] = this.image;
-    data['image_medium'] = this.imageMedium;
-    data['image_small'] = this.imageSmall;
-    data['license_plate'] = this.licensePlate;
-    data['location'] = this.location;
-    data['log_contracts'] = this.logContracts;
-    data['log_drivers'] = this.logDrivers;
-    data['log_fuel'] = this.logFuel;
-    data['log_services'] = this.logServices;
-    data['message_attachment_count'] = this.messageAttachmentCount;
-    data['message_channel_ids'] = this.messageChannelIds;
-    data['message_follower_ids'] = this.messageFollowerIds;
-    data['message_has_error'] = this.messageHasError;
-    data['message_has_error_counter'] = this.messageHasErrorCounter;
-    data['message_ids'] = this.messageIds;
-    data['message_is_follower'] = this.messageIsFollower;
-    data['message_main_attachment_id'] = this.messageMainAttachmentId;
-    data['message_needaction'] = this.messageNeedaction;
-    data['message_needaction_counter'] = this.messageNeedactionCounter;
-    data['message_partner_ids'] = this.messagePartnerIds;
-    data['message_unread'] = this.messageUnread;
-    data['message_unread_counter'] = this.messageUnreadCounter;
-    data['model_id'] = this.modelId;
-    data['model_year'] = this.modelYear;
-    data['name'] = this.name;
-    data['odometer'] = this.odometer;
-    data['odometer_count'] = this.odometerCount;
-    data['odometer_unit'] = this.odometerUnit;
-    data['power'] = this.power;
-    data['residual_value'] = this.residualValue;
-    data['seats'] = this.seats;
-    data['service_count'] = this.serviceCount;
-    data['state_id'] = this.stateId;
-    data['tag_ids'] = this.tagIds;
-    data['transmission'] = this.transmission;
-    data['transporter_id'] = this.transporterId;
-    data['vin_sn'] = this.vinSn;
-    data['website_message_ids'] = this.websiteMessageIds;
-    data['write_date'] = this.writeDate;
-    data['write_uid'] = this.writeUid;
-    data['x_manager_shuttle'] = this.xManagerShuttle;
+    // data['image'] = this.image;
+    // data['image_medium'] = this.imageMedium;
+    // data['image_small'] = this.imageSmall;
+    // data['license_plate'] = this.licensePlate;
+    // data['location'] = this.location;
+    // data['log_contracts'] = this.logContracts;
+    // data['log_drivers'] = this.logDrivers;
+    // data['log_fuel'] = this.logFuel;
+    // data['log_services'] = this.logServices;
+    // data['message_attachment_count'] = this.messageAttachmentCount;
+    // data['message_channel_ids'] = this.messageChannelIds;
+    // data['message_follower_ids'] = this.messageFollowerIds;
+    // data['message_has_error'] = this.messageHasError;
+    // data['message_has_error_counter'] = this.messageHasErrorCounter;
+    // data['message_ids'] = this.messageIds;
+    // data['message_is_follower'] = this.messageIsFollower;
+    // data['message_main_attachment_id'] = this.messageMainAttachmentId;
+    // data['message_needaction'] = this.messageNeedaction;
+    // data['message_needaction_counter'] = this.messageNeedactionCounter;
+    // data['message_partner_ids'] = this.messagePartnerIds;
+    // data['message_unread'] = this.messageUnread;
+    // data['message_unread_counter'] = this.messageUnreadCounter;
+    // data['model_id'] = this.modelId;
+    // data['model_year'] = this.modelYear;
+    // data['name'] = this.name;
+    // data['odometer'] = this.odometer;
+    // data['odometer_count'] = this.odometerCount;
+    // data['odometer_unit'] = this.odometerUnit;
+    // data['power'] = this.power;
+    // data['residual_value'] = this.residualValue;
+    // data['seats'] = this.seats;
+    // data['service_count'] = this.serviceCount;
+    // data['state_id'] = this.stateId;
+    // data['tag_ids'] = this.tagIds;
+    // data['transmission'] = this.transmission;
+    // data['transporter_id'] = this.transporterId;
+    // data['vin_sn'] = this.vinSn;
+    // data['website_message_ids'] = this.websiteMessageIds;
+    // data['write_date'] = this.writeDate;
+    // data['write_uid'] = this.writeUid;
+    // data['x_manager_shuttle'] = this.xManagerShuttle;
+    data['x_posx'] = this.xPosx;
+    data['x_posy'] = this.xPosy;
+    data['x_posz'] = this.xPosz;
     return data;
   }
 }

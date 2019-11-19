@@ -15,6 +15,7 @@ import 'package:b2s_driver/src/app/models/sale-order.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:location/location.dart';
 
 import 'api_master.dart';
 
@@ -145,6 +146,60 @@ class Api1 extends ApiMaster {
     body["domain"] = [
       ['id', '=', id],
     ];
+    body["fields"] = [
+      "company_id",
+      "company_name",
+      "company_type",
+      "contact_address",
+      "contract_ids",
+      "contracts_count",
+      "country_id",
+      "create_date",
+      "create_uid",
+      "credit",
+      "credit_limit",
+      "currency_id",
+      "customer",
+      "date",
+      "debit",
+      "debit_limit",
+      "display_name",
+      "email",
+      "email_formatted",
+      "employee",
+      "id",
+      "im_status",
+      "is_company",
+      "is_published",
+      "is_seo_optimized",
+      "journal_item_count",
+      "lang",
+      "mobile",
+      "name",
+      "parent_id",
+      "parent_name",
+      "partner_gid",
+      "partner_share",
+      "phone",
+      "state_id",
+      "street",
+      "street2",
+      "supplier",
+      "team_id",
+      "title",
+      "total_invoiced",
+      "trust",
+      "type",
+      "user_id",
+      "user_ids",
+      "vat",
+      "vehicle_count",
+      "vehicle_ids",
+      "x_class",
+      "x_company_type",
+      "x_date_of_birth",
+      "x_school",
+    ];
     var params = convertSerialize(body);
     List<ResPartner> listResult = new List();
     return http
@@ -208,9 +263,95 @@ class Api1 extends ApiMaster {
   ///Lấy danh sách contact for user to chat
   Future<List<ResPartner>> getListContact() async {
     await this.authorization();
+    body = new Map();
+    body["fields"] = [
+      "additional_info",
+      "bank_account_count",
+      "bank_ids",
+      "barcode",
+      "calendar_last_notif_ack",
+      "category_id",
+      "channel_ids",
+      "child_ids",
+      "city",
+      "color",
+      "comment",
+      "commercial_company_name",
+      "commercial_partner_id",
+      "company_id",
+      "company_name",
+      "company_type",
+      "contact_address",
+      "contract_ids",
+      "contracts_count",
+      "country_id",
+      "create_date",
+      "create_uid",
+      "credit",
+      "credit_limit",
+      "currency_id",
+      "customer",
+      "date",
+      "debit",
+      "debit_limit",
+      "display_name",
+      "email",
+      "email_formatted",
+      "employee",
+      "event_count",
+      "function",
+      "has_unreconciled_entries",
+      "id",
+      "im_status",
+      "industry_id",
+      "is_blacklisted",
+      "is_company",
+      "is_published",
+      "is_seo_optimized",
+      "journal_item_count",
+      "lang",
+      "last_time_entries_checked",
+      "last_website_so_id",
+      "meeting_count",
+      "meeting_ids",
+      "mobile",
+      "name",
+      "opportunity_count",
+      "opportunity_ids",
+      "parent_id",
+      "parent_name",
+      "partner_gid",
+      "partner_share",
+      "payment_token_count",
+      "payment_token_ids",
+      "phone",
+      "state_id",
+      "street",
+      "street2",
+      "supplier",
+      "team_id",
+      "title",
+      "total_invoiced",
+      "trust",
+      "type",
+      "tz",
+      "tz_offset",
+      "user_id",
+      "user_ids",
+      "vat",
+      "vehicle_count",
+      "vehicle_ids",
+      "x_class",
+      "x_company_type",
+      "x_date_of_birth",
+      "x_school",
+      "zip"
+    ];
+    var params = convertSerialize(body);
     List<ResPartner> listResult = List();
     return http
-        .get('${this.api}/search_read/res.partner', headers: this.headers)
+        .get('${this.api}/search_read/res.partner?$params',
+            headers: this.headers)
         .then((http.Response response) async {
       if (response.statusCode == 200) {
         List list = json.decode(response.body);
@@ -220,124 +361,6 @@ class Api1 extends ApiMaster {
       return listResult;
     }).catchError((error) {
       return listResult;
-    });
-  }
-
-  ///Update thông tin khách hàng
-  ///
-  ///Success - Trả về true
-  ///
-  ///Fail - Trả về false
-  Future<bool> updateCustomer(ResPartner partner) async {
-    await this.authorization();
-    body = new Map();
-    body["model"] = "res.partner";
-    body["ids"] = json.encode([partner.id]);
-    body["values"] = json.encode(partner.toJson());
-    return http
-        .put('${this.api}/write', headers: this.headers, body: body)
-        .then((http.Response response) {
-      var result = false;
-      if (response.statusCode == 200) {
-        print(response.body);
-        result = true;
-        //print(list);
-      } else {
-        result = false;
-      }
-      return result;
-    });
-  }
-
-  ///Update thông tin khách hàng
-  ///
-  ///Success - Trả về true
-  ///
-  ///Fail - Trả về false
-  Future<bool> updatePickingTransportInfo(PickingTransportInfo picking) async {
-    await this.authorization();
-    body = new Map();
-    body["model"] = "picking.transport.info";
-    body["ids"] = json.encode([int.parse(picking.id.toString())]);
-    body["values"] = json.encode(picking.toJson());
-    return http
-        .put('${this.api}/write', headers: this.headers, body: body)
-        .then((http.Response response) {
-      var result = false;
-      if (response.statusCode == 200) {
-        print(response.body);
-        result = true;
-        //print(list);
-      } else {
-        result = false;
-      }
-      return result;
-    });
-  }
-
-  ///Update trang thai nghỉ theo id picking
-  ///listIdPicking
-  Future<bool> updateLeaveByIdPicking(List<int> listIdPicking) async {
-    await this.authorization();
-    var client = await this.authorizationOdoo();
-    return client.callKW("picking.transport.info", "picking_cancel",
-        [listIdPicking]).then((onValue) {
-      var error = onValue.getError();
-      if (error == null) return true;
-      return false;
-    });
-  }
-
-  ///Update trạng thái đón theo id picking
-  ///listIdPicking
-  Future<bool> updateStatusPickByIdPicking(List<int> listIdPicking) async {
-    await this.authorization();
-    var client = await this.authorizationOdoo();
-    return client
-        .callKW("picking.transport.info", "picking_hold", [listIdPicking]).then(
-            (onValue) {
-      var error = onValue.getError();
-      if (error == null) return true;
-      return false;
-    });
-  }
-
-  ///Update trạng thái trả theo id picking
-  ///listIdPicking
-  Future<bool> updateStatusDropByIdChildren(List<int> listIdPicking) async {
-    await this.authorization();
-    var client = await this.authorizationOdoo();
-    return client
-        .callKW("picking.transport.info", "picking_done", [listIdPicking]).then(
-            (onValue) {
-      var error = onValue.getError();
-      if (error == null) return true;
-      return false;
-    });
-  }
-
-  ///Insert thông tin khách hàng
-  ///
-  ///Success - Trả về new id
-  ///
-  ///Fail - Trả về null
-  Future<dynamic> insertCustomer(ResPartner partner) async {
-    await this.authorization();
-    body = new Map();
-    body["model"] = "res.partner";
-    body["values"] = json.encode(partner.toJson());
-    return http
-        .post('${this.api}/create', headers: this.headers, body: body)
-        .then((http.Response response) {
-      var result;
-      if (response.statusCode == 200) {
-        var list = json.decode(response.body);
-        if (list is List) result = list[0];
-        //print(list);
-      } else {
-        result = null;
-      }
-      return result;
     });
   }
 
@@ -569,6 +592,153 @@ class Api1 extends ApiMaster {
       }
 
       return listResult;
+    });
+  }
+
+  ///Update thông tin khách hàng
+  ///
+  ///Success - Trả về true
+  ///
+  ///Fail - Trả về false
+  Future<bool> updateCustomer(ResPartner partner) async {
+    await this.authorization();
+    body = new Map();
+    body["model"] = "res.partner";
+    body["ids"] = json.encode([partner.id]);
+    body["values"] = json.encode(partner.toJson());
+    return http
+        .put('${this.api}/write', headers: this.headers, body: body)
+        .then((http.Response response) {
+      var result = false;
+      if (response.statusCode == 200) {
+        print(response.body);
+        result = true;
+        //print(list);
+      } else {
+        result = false;
+      }
+      return result;
+    });
+  }
+
+  ///Update thông tin khách hàng
+  ///
+  ///Success - Trả về true
+  ///
+  ///Fail - Trả về false
+  Future<bool> updatePickingTransportInfo(PickingTransportInfo picking) async {
+    await this.authorization();
+    body = new Map();
+    body["model"] = "picking.transport.info";
+    body["ids"] = json.encode([int.parse(picking.id.toString())]);
+    body["values"] = json.encode(picking.toJson());
+    return http
+        .put('${this.api}/write', headers: this.headers, body: body)
+        .then((http.Response response) {
+      var result = false;
+      if (response.statusCode == 200) {
+        print(response.body);
+        result = true;
+        //print(list);
+      } else {
+        result = false;
+      }
+      return result;
+    });
+  }
+
+  ///Update trang thai nghỉ theo id picking
+  ///listIdPicking
+  Future<bool> updateLeaveByIdPicking(List<int> listIdPicking) async {
+    await this.authorization();
+    var client = await this.authorizationOdoo();
+    return client.callKW("picking.transport.info", "picking_cancel",
+        [listIdPicking]).then((onValue) {
+      var error = onValue.getError();
+      if (error == null) return true;
+      return false;
+    });
+  }
+
+  ///Update trạng thái đón theo id picking
+  ///listIdPicking
+  Future<bool> updateStatusPickByIdPicking(List<int> listIdPicking) async {
+    await this.authorization();
+    var client = await this.authorizationOdoo();
+    return client
+        .callKW("picking.transport.info", "picking_hold", [listIdPicking]).then(
+            (onValue) {
+      var error = onValue.getError();
+      if (error == null) return true;
+      return false;
+    });
+  }
+
+  ///Update tọa độ vehicle
+  ///
+  ///Success - Trả về true
+  ///
+  ///Fail - Trả về false
+  Future<bool> updateCoordinateVehicle(
+      int vehicleId, LocationData location) async {
+    await this.authorization();
+    FleetVehicle fleetVehicle = FleetVehicle.fromLocationData(location);
+    fleetVehicle.id = vehicleId;
+    body = new Map();
+    body["model"] = "fleet.vehicle";
+    body["ids"] = json.encode(vehicleId);
+    body["values"] = json.encode(fleetVehicle.toJson());
+    return http
+        .put('${this.api}/write', headers: this.headers, body: body)
+        .then((http.Response response) {
+      var result = false;
+      if (response.statusCode == 200) {
+        print(response.body);
+        result = true;
+        //print(list);
+      } else {
+        result = false;
+      }
+      return result;
+    });
+  }
+
+  ///Update trạng thái trả theo id picking
+  ///listIdPicking
+  Future<bool> updateStatusDropByIdChildren(List<int> listIdPicking) async {
+    await this.authorization();
+    var client = await this.authorizationOdoo();
+    return client
+        .callKW("picking.transport.info", "picking_done", [listIdPicking]).then(
+            (onValue) {
+      var error = onValue.getError();
+      if (error == null) return true;
+      return false;
+    });
+  }
+
+  ///Insert thông tin khách hàng
+  ///
+  ///Success - Trả về new id
+  ///
+  ///Fail - Trả về null
+  Future<dynamic> insertCustomer(ResPartner partner) async {
+    await this.authorization();
+    body = new Map();
+    body["model"] = "res.partner";
+    body["values"] = json.encode(partner.toJson());
+    return http
+        .post('${this.api}/create', headers: this.headers, body: body)
+        .then((http.Response response) {
+      var result;
+      if (response.statusCode == 200) {
+        var list = json.decode(response.body);
+        if (list is List) result = list[0];
+        //print(list);
+      } else {
+        result = null;
+      }
+      return result;
     });
   }
 }

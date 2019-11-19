@@ -6,9 +6,15 @@ import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page.dart';
 
 import 'package:b2s_driver/src/app/pages/login/login_page.dart';
+import 'package:b2s_driver/src/app/pages/message/ContactsPage/contacts_page.dart';
+import 'package:b2s_driver/src/app/pages/message/messageDetail/message_detail_page.dart';
+import 'package:b2s_driver/src/app/pages/message/messageUser/message_user_page.dart';
+import 'package:b2s_driver/src/app/pages/message/message_page.dart';
+import 'package:b2s_driver/src/app/pages/message/profileMessageUser/profile_message_user_page.dart';
 import 'package:b2s_driver/src/app/pages/schedule/schedule_page.dart';
 
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
+import 'package:b2s_driver/src/app/pages/user/edit_profile_driver/edit_profile_driver.dart';
 import 'package:b2s_driver/src/app/pages/user/user_page.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +39,14 @@ class Routes {
           arguments: ModalRoute.of(context).settings.arguments,
         ),
     UserPage.routeName: (context) => UserPage(),
+    MessagePage.routeName: (context) => MessagePage(),
+    MessageDetailPage.routeName: (context) =>
+        MessageDetailPage(chatting: ModalRoute.of(context).settings.arguments),
+    MessageUserPage.routeName: (context) =>
+        MessageUserPage(userId:ModalRoute.of(context).settings.arguments),
+    ContactsPage.routeName: (context)=>ContactsPage(),
+    ProfileMessageUserPage.routeName: (context) => ProfileMessageUserPage(userModel:ModalRoute.of(context).settings.arguments),
+    EditProfileDriver.routeName: (context)=>EditProfileDriver(driver:ModalRoute.of(context).settings.arguments)
   };
 }
 

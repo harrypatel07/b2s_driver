@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
+import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
@@ -29,11 +31,12 @@ class LocateBusPageViewModel extends ViewModelBase {
   int countPick = 0;
   int countDrop = 0;
   //List<Children> listChildrenPaidTicket;
+  //StreamSubscription streamCloud;
   LocateBusPageViewModel() {}
 
   @override
   dispose() {
-    //streamCloud.cancel();
+    //  if (streamCloud != null) streamCloud.cancel();
     super.dispose();
   }
 
@@ -53,7 +56,7 @@ class LocateBusPageViewModel extends ViewModelBase {
 
     this.updateState();
 //    animateMyLocation();
-    animateTheFirstPoint();
+    animateThePoint(0);
     movingBus();
   }
 
@@ -74,16 +77,18 @@ class LocateBusPageViewModel extends ViewModelBase {
 //      icon: iconMy,
 //    );
     location.onLocationChanged().listen((onData) {
-      final _marker = markers[MarkerId("location")];
-      markers[MarkerId("location")] = _marker.copyWith(
-          rotationParam: onData.heading,
-          positionParam: LatLng(onData.latitude, onData.longitude));
+      // final _marker = markers[MarkerId("location")];
+      // markers[MarkerId("location")] = _marker.copyWith(
+      //     rotationParam: onData.heading,
+      //     positionParam: LatLng(onData.latitude, onData.longitude));
+      Driver driver = Driver();
+      api.updateCoordinateVehicle(driver.vehicleId, onData);
     });
     this.updateState();
   }
 
-  void animateTheFirstPoint() async {
-    var firstRoute = driverBusSession.listRouteBus[0];
+  void animateThePoint(int point) async {
+    var firstRoute = driverBusSession.listRouteBus[point];
     center = LatLng(firstRoute.lat, firstRoute.lng);
     mapController.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: center, zoom: 13.0)));
@@ -120,7 +125,11 @@ class LocateBusPageViewModel extends ViewModelBase {
             builder: (BuildContext bc) {
               return BottomSheetCustom(
                   arguments: BottomSheetCustomArgs(viewModel: this));
-            });
+            }).then((result) {
+          if (result == true && driverBusSession.listRouteBus.length > _pos) {
+            animateThePoint(_pos);
+          }
+        });
       else {
         LoadingDialog.showMsgDialog(
             context, 'Bạn cần hoàn thành điểm ${_pos - 1}');
@@ -133,7 +142,11 @@ class LocateBusPageViewModel extends ViewModelBase {
           builder: (BuildContext bc) {
             return BottomSheetCustom(
                 arguments: BottomSheetCustomArgs(viewModel: this));
-          });
+          }).then((result) {
+        if (result == true && driverBusSession.listRouteBus.length > _pos) {
+          animateThePoint(_pos);
+        }
+      });
   }
 
   int getCountChildrenByStatus() {
@@ -173,4 +186,13 @@ class LocateBusPageViewModel extends ViewModelBase {
       LoadingDialog.showMsgDialog(context,
           'Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.');
   }
+
+  // listenData() async {
+  //   if (streamCloud != null) streamCloud.cancel();
+  //   streamCloud = await cloudService.busSession
+  //       .listenBusSessionForDriver(driverBusSession, () {
+  //     onCreateDriverBusSessionReport();
+  //     this.updateState();
+  //   });
+  // }
 }

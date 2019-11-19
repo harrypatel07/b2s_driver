@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:core';
-
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
-import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:crypto/crypto.dart';
 
 class DriverBusSession {
@@ -45,7 +43,7 @@ class DriverBusSession {
   }) {
     this.busID = busID;
     this.type = type;
-    this.sessionID = md5.convert(utf8.encode("$busID$date")).toString();
+    this.sessionID = md5.convert(utf8.encode("$busID$date$type")).toString();
     this.totalChildrenRegistered = listChildren.length;
     this.totalChildrenInBus = 0;
     this.totalChildrenLeave = 0;

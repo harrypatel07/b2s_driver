@@ -28,6 +28,8 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
   BottomSheetCustomViewModel viewModel = BottomSheetCustomViewModel();
   @override
   void initState() {
+    viewModel.localBusViewModel = widget.arguments.viewModel;
+    viewModel.listenData();
     super.initState();
   }
 
@@ -40,34 +42,37 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
           content: viewModel
               .getListChildrenForTimeLine(driverBusSession, routeBus.id)
               .map((children) {
-               var status = ChildDrenStatus.getStatusByChildrenID(
+            var status = ChildDrenStatus.getStatusByChildrenID(
                 driverBusSession.childDrenStatus, children.id, routeBus.id);
-               viewModel.listChildrenStatus.add(status);
-            final statusBus = StatusBus.getStatusByID(StatusBus.list, status.statusID);
+            viewModel.listChildrenStatus.add(status);
+            final statusBus =
+                StatusBus.getStatusByID(StatusBus.list, status.statusID);
             var tag = children.id.toString() +
                 routeBus.id.toString() +
                 driverBusSession.busID.toString();
             return HomePageCardTimeLine(
-              children: children,
-              //isEnablePicked: status.statusID == 0 ? true : false,
-              status: statusBus,
-              heroTag: tag,
-              typePickDrop: status.typePickDrop,
-              isEnableTapChildrenContentCard: true,
-              cardType: 1,
-              onTapPickUp: () {
-                viewModel.onTapPickUpLocateBus(
-                    driverBusSession, children, routeBus);
-              },
-              onTapChangeStatusLeave: () {
-                viewModel.onTapLeave(driverBusSession, children, routeBus);
-              },
-              onTapShowChildrenProfile: () {
-                Navigator.pushNamed(context, ProfileChildrenPage.routeName,
-                    arguments:
-                        ProfileChildrenArgs(children: children, heroTag: tag));
-              }
-            );
+                children: children,
+                //isEnablePicked: status.statusID == 0 ? true : false,
+                status: statusBus,
+                heroTag: tag,
+                typePickDrop: status.typePickDrop,
+                isEnableTapChildrenContentCard: true,
+                cardType: 1,
+                onTapPickUp: () {
+                  viewModel.onTapPickUpLocateBus(
+                      driverBusSession, children, routeBus);
+                },
+                onTapChangeStatusLeave: () {
+                  viewModel.onTapLeave(driverBusSession, children, routeBus);
+                },
+                onTapShowChildrenProfile: () {
+                  Navigator.pushNamed(context, ProfileChildrenPage.routeName,
+                      arguments: ProfileChildrenArgs(
+                          children: children, heroTag: tag));
+                },
+                onTapScan: () {
+                  viewModel.onTapScanQRCode();
+                });
           }).toList(),
           isFinish: routeBus.status));
   }
@@ -75,7 +80,6 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
   @override
   Widget build(BuildContext context) {
     viewModel.context = context;
-    viewModel.localBusViewModel = widget.arguments.viewModel;
     return ViewModelProvider(
       viewmodel: viewModel,
       child: StreamBuilder<Object>(
@@ -108,13 +112,20 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                     right: 2,
                     left: 2,
                     child: FlatButton(
-                      color:(viewModel.localBusViewModel.routeBus.status)?Colors.grey:ThemePrimary.primaryColor,
-                      child: (viewModel.localBusViewModel.routeBus.status)?Text('ĐÃ HOÀN THÀNH',style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold)):Text(
-                        'HOÀN THÀNH ĐIỂM ${viewModel.localBusViewModel.position}',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
+                      color: (viewModel.localBusViewModel.routeBus.status)
+                          ? Colors.grey
+                          : ThemePrimary.primaryColor,
+                      child: (viewModel.localBusViewModel.routeBus.status)
+                          ? Text('ĐÃ HOÀN THÀNH',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold))
+                          : Text(
+                              'HOÀN THÀNH ĐIỂM ${viewModel.localBusViewModel.position}',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
                       onPressed: () {
                         viewModel.onTapFinishRoute();
                       },

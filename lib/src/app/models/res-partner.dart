@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
+import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/parent.dart';
 
 class ResPartner {
@@ -640,6 +641,15 @@ class ResPartner {
     title = parent.genderId;
     email = parent.email;
     phone = parent.phone;
+  }
+  ResPartner.fromDriver(Driver driver) {
+    if (driver.id != null) id = driver.id;
+    name = driver.name;
+    image = driver.photo;
+//    contactAddress = driver.contactAddress;
+    title = driver.genderId;
+//    email = driver.email;
+    phone = driver.phone;
   }
 
   Map<String, dynamic> toJson() {

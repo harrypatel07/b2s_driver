@@ -1,5 +1,6 @@
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/models/message.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -81,16 +82,19 @@ class ChatBubble extends StatelessWidget {
           ? _content()
           : Row(
               children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(left: 8.0, bottom: 10.0),
-                  height: 50.0,
-                  width: 50.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: MemoryImage(message.avatarUrl),
-                      fit: BoxFit.cover,
+                CachedNetworkImage(
+                  imageUrl: message.avatarUrl,
+                  imageBuilder: (context, imageProvider) => Container(
+                    margin: EdgeInsets.only(left: 8.0, bottom: 10.0),
+                    height: 50.0,
+                    width: 50.0,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                      shape: BoxShape.circle,
                     ),
-                    shape: BoxShape.circle,
                   ),
                 ),
                 _content(),

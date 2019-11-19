@@ -1,18 +1,26 @@
+import 'dart:async';
+
 import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
-import 'package:b2s_driver/src/app/pages/home/popup_card_timeline/popup_card_timeline.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';
-import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
+import 'package:b2s_driver/src/app/service/barcode-service.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:flutter/cupertino.dart';
 
 class BottomSheetCustomViewModel extends ViewModelBase {
   LocateBusPageViewModel localBusViewModel;
   List<ChildDrenStatus> listChildrenStatus = List();
+  StreamSubscription streamCloud;
   BottomSheetCustomViewModel();
+
+  @override
+  dispose() {
+    if (streamCloud != null) streamCloud.cancel();
+    super.dispose();
+  }
 
   List<Children> getListChildrenForTimeLine(
       DriverBusSession driverBusSession, int routeBusID) {
@@ -31,6 +39,8 @@ class BottomSheetCustomViewModel extends ViewModelBase {
         item.childrenID == children.id && item.routeBusID == routeBus.id);
     DriverBusSession.updateChildrenStatusIdByLeave(
         driverBusSession: driverBusSession, childDrenStatus: childrenStatus);
+    //Đồng bộ firestore
+    cloudService.busSession.updateBusSessionFromChildrenStatus(childrenStatus);
 //    updateStatusLeaveChildren(childrenStatus.id);
     this.updateState();
     if (localBusViewModel != null) {
@@ -57,6 +67,10 @@ class BottomSheetCustomViewModel extends ViewModelBase {
     }
     DriverBusSession.updateChildrenStatusIdByPickDrop(
         driverBusSession: driverBusSession, childDrenStatus: childrenStatus);
+
+    //Đồng bộ firestore
+    cloudService.busSession.updateBusSessionFromChildrenStatus(childrenStatus);
+
     this.updateState();
     if (localBusViewModel != null) {
 //      localBusViewModel.driverBusSession.totalChildrenInBus += 1;
@@ -119,9 +133,13 @@ class BottomSheetCustomViewModel extends ViewModelBase {
         var route = localBusViewModel.driverBusSession.listRouteBus.singleWhere(
             (routeBus) => routeBus.id == localBusViewModel.routeBus.id);
         route.status = true;
-        Navigator.pop(context);
+        Navigator.pop(context, true);
       }
     }
+  }
+
+  Future onTapScanQRCode() async {
+    BarCodeService.scan();
   }
 //  onTapChangeChildrenStatus(DriverBusSession driverBusSession,
 //      Children children, RouteBus routeBus, int statusID) {
@@ -132,4 +150,14 @@ class BottomSheetCustomViewModel extends ViewModelBase {
 //    cloudSerivce.busSession.updateStatusChildrenBus(children, childrenStatus);
 //    this.updateState();
 //  }
+
+  listenData() async {
+    if (streamCloud != null) streamCloud.cancel();
+    streamCloud = await cloudService.busSession
+        .listenBusSessionForDriver(localBusViewModel.driverBusSession, () {
+      this.updateState();
+      localBusViewModel.onCreateDriverBusSessionReport();
+      localBusViewModel.updateState();
+    });
+  }
 }

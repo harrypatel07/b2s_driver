@@ -1,28 +1,28 @@
-//import 'dart:async';
-//
-//import 'package:b2s_driver/src/app/core/baseViewModel.dart';
-//import 'package:b2s_driver/src/app/models/busTimeLine.dart';
-//import 'package:b2s_driver/src/app/models/driverBusSession.dart';
-//import 'package:b2s_driver/src/app/models/statusBus.dart';
-//import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
-//import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart';
-//import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';
-//import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
-//import 'package:b2s_driver/src/app/theme/theme_primary.dart';
-//import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
-//import 'package:b2s_driver/src/app/widgets/index.dart';
-//import 'package:flutter/material.dart';
-//import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:sliding_up_panel/sliding_up_panel.dart';
-//
-//class LocateBusPageOld extends StatefulWidget {
+// import 'dart:async';
+
+// import 'package:b2s_driver/src/app/core/baseViewModel.dart';
+// import 'package:b2s_driver/src/app/models/busTimeLine.dart';
+// import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+// import 'package:b2s_driver/src/app/models/statusBus.dart';
+// import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
+// import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart';
+// import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';
+// import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
+// import 'package:b2s_driver/src/app/theme/theme_primary.dart';
+// import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
+// import 'package:b2s_driver/src/app/widgets/index.dart';
+// import 'package:flutter/material.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+// class LocateBusPageOld extends StatefulWidget {
 //  static const String routeName = "/locateBus";
-//
+
 //  @override
 //  _LocateBusPageOldState createState() => _LocateBusPageOldState();
-//}
-//
-//class _LocateBusPageOldState extends State<LocateBusPageOld>
+// }
+
+// class _LocateBusPageOldState extends State<LocateBusPageOld>
 //    with SingleTickerProviderStateMixin {
 //  LocateBusPageViewModel viewModel = LocateBusPageViewModel();
 //  BusTimeLine busTimeLine;
@@ -30,7 +30,7 @@
 //  double _fabHeight;
 //  double _panelHeightOpen = 0;
 //  double _panelHeightClosed = 120.0;
-//
+
 //  ScrollController _sc = ScrollController();
 //  PanelController _pc = PanelController();
 //  bool disableScroll = true;
@@ -43,7 +43,7 @@
 //    animationController.dispose();
 //    super.dispose();
 //  }
-//
+
 //  @override
 //  void initState() {
 //    super.initState();
@@ -93,7 +93,7 @@
 //    //   });
 //    // });
 //  }
-//
+
 //  Widget _buildBody() {
 //    Widget __buildGoogleMap() {
 //      return GoogleMap(
@@ -113,7 +113,7 @@
 //        ),
 //      );
 //    }
-//
+
 //    Widget __report() {
 //      final ___textStyle =
 //          TextStyle(fontSize: 16, color: ThemePrimary.primaryColor);
@@ -208,7 +208,7 @@
 //        ),
 //      );
 //    }
-//
+
 //    Widget __sosButton() {
 //      return Positioned(
 //        bottom: MediaQuery.of(context).size.height / 2,
@@ -266,7 +266,7 @@
 //        ),
 //      );
 //    }
-//
+
 //    return Stack(
 //      children: <Widget>[
 //        viewModel.showGoolgeMap ? __buildGoogleMap() : Container(),
@@ -279,7 +279,7 @@
 //      ],
 //    );
 //  }
-//
+
 //  Widget _buildPanel() {
 //    var driverBusSession =
 //        DriverBusSession.list.length > 0 ? DriverBusSession.list[0] : null;
@@ -354,7 +354,7 @@
 //        ],
 //      );
 //    }
-//
+
 //    return Column(
 //      crossAxisAlignment: CrossAxisAlignment.start,
 //      children: <Widget>[
@@ -362,7 +362,7 @@
 //      ],
 //    );
 //  }
-//
+
 //  Widget _buildIconLocation() {
 //    return Positioned(
 //      right: 20.0,
@@ -381,11 +381,11 @@
 //      ),
 //    );
 //  }
-//
+
 //  @override
 //  Widget build(BuildContext context) {
-////    TabsPageViewModel tabsPageViewModel = ViewModelProvider.of(context);
-////    viewModel = tabsPageViewModel.locateBusPageViewModel;
+// //    TabsPageViewModel tabsPageViewModel = ViewModelProvider.of(context);
+// //    viewModel = tabsPageViewModel.locateBusPageViewModel;
 //    _panelHeightOpen = MediaQuery.of(context).size.height * 2 / 3;
 //    return StatefulWrapper(
 //      onInit: () {},
@@ -436,4 +436,4 @@
 //      ),
 //    );
 //  }
-//}
+// }

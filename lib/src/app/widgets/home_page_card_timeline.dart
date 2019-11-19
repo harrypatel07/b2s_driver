@@ -1,11 +1,14 @@
 import 'package:b2s_driver/src/app/models/children.dart';
+import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/pages/home/popup_card_timeline/popup_card_timeline.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class HomePageCardTimeLine extends StatelessWidget {
+  final Function onTapScan;
   final Function onTapPickUp;
   final Function onTapChangeStatusLeave;
   final Function onTapShowChildrenProfile;
@@ -19,17 +22,19 @@ class HomePageCardTimeLine extends StatelessWidget {
   final PopupCardTimeLinePage popupCardTimeLinePage;
   const HomePageCardTimeLine(
       {Key key,
+      this.onTapScan,
       this.onTapPickUp,
       this.onTapChangeStatusLeave,
       this.onTapShowChildrenProfile,
       this.heroTag,
       this.status,
-        this.popupCardTimeLinePage,
+      this.popupCardTimeLinePage,
       this.cardType = 0,
       this.typePickDrop = 0,
       @required this.children,
       this.isEnablePicked,
-      this.isEnableTapChildrenContentCard=false})
+      this.isEnableTapChildrenContentCard = false,
+      })
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -161,8 +166,8 @@ class HomePageCardTimeLine extends StatelessWidget {
 //     }
 
     final childrenCardContent = InkWell(
-      onTap: (){
-        if(isEnableTapChildrenContentCard){
+      onTap: () {
+        if (isEnableTapChildrenContentCard) {
           _getPosition();
           showGeneralDialog(
               transitionBuilder: (context, a1, a2, widget) {
@@ -218,7 +223,11 @@ class HomePageCardTimeLine extends StatelessWidget {
                         ),
                         new Text(children.gender.toString(),
                             style: subHeaderTextStyle),
-                        (cardType == 1) ? _status() : Container(height: 11,),
+                        (cardType == 1)
+                            ? _status()
+                            : Container(
+                                height: 11,
+                              ),
                       ],
                     )),
                   ),
@@ -227,53 +236,163 @@ class HomePageCardTimeLine extends StatelessWidget {
                   //   child:
                   (status.statusID != 3)
                       ? cardType == 1
-                          ? Container(
-                              width: 70.0,
-                              height: 30.0,
-                              decoration: new BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius:
-                                        5.0, // has the effect of softening the shadow
-                                    spreadRadius:
-                                        1.0, // has the effect of extending the shadow
-                                    offset: Offset(
-                                      5.0, // horizontal, move right 10
-                                      5.0, // vertical, move down 10
-                                    ),
-                                  )
-                                ],
-                                color: (typePickDrop == 0)
-                                    ? (status.statusID == 0)
-                                        ? ThemePrimary.primaryColor
-                                        : Colors.grey
-                                    : (status.statusID == 1)
-                                        ? ThemePrimary.primaryColor
-                                        : Colors.grey,
+                          ? Column(
+                              children: <Widget>[
+                                Container(
+                                  width: 70.0,
+                                  height: 30.0,
+                                  decoration: new BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius:
+                                            5.0, // has the effect of softening the shadow
+                                        spreadRadius:
+                                            1.0, // has the effect of extending the shadow
+                                        offset: Offset(
+                                          5.0, // horizontal, move right 10
+                                          5.0, // vertical, move down 10
+                                        ),
+                                      )
+                                    ],
+                                    color: (typePickDrop == 0)
+                                        ? (status.statusID == 0)
+                                            ? ThemePrimary.primaryColor
+                                            : Colors.grey
+                                        : (status.statusID == 1)
+                                            ? ThemePrimary.primaryColor
+                                            : Colors.grey,
 //                                    : Colors.grey,
-                                //border: new Border.all(color: Colors.white, width: 2.0),
-                                borderRadius: new BorderRadius.circular(15.0),
-                              ),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: new InkWell(
-                                  onTap: onTapPickUp,
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  child: new Center(
-                                    child: Text(
-                                            setTextButtonStatus(),
-                                            style: new TextStyle(
-                                                fontFamily: ThemePrimary
-                                                    .primaryFontFamily,
-                                                fontSize: 14.0,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
-                                            textAlign: TextAlign.center,
-                                          )
+                                    //border: new Border.all(color: Colors.white, width: 2.0),
+                                    borderRadius:
+                                        new BorderRadius.circular(15.0),
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: new InkWell(
+                                        onTap: onTapPickUp,
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        child: new Row(
+//                                          mainAxisAlignment:
+//                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Expanded(
+                                              flex: 1,
+                                              child: Container(
+//                                              color: Colors.red,
+                                                alignment: Alignment.center,
+//                                                width: 20,
+                                                child: typePickDrop == 0
+                                                    ? Icon(
+                                                        Icons.arrow_drop_up,
+                                                        color: Colors.white,
+                                                        size: 20,
+                                                      )
+                                                    : Icon(
+                                                        Icons.arrow_drop_down,
+                                                        color: Colors.white,
+                                                        size: 20,
+                                                      ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 5,
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  setTextButtonStatus(),
+                                                  style: new TextStyle(
+                                                      fontFamily: ThemePrimary
+                                                          .primaryFontFamily,
+                                                      fontSize: 14.0,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                              ),
+                                            )
+////                                          if(!setTextButtonStatus().contains('Đã đón'))
+////                                            SizedBox(width: 4,),
+//
+                                          ],
+                                        )),
                                   ),
                                 ),
-                              ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                new Container(
+                                  width: 70.0,
+                                  height: 30.0,
+                                  decoration: new BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius:
+                                            5.0, // has the effect of softening the shadow
+                                        spreadRadius:
+                                            1.0, // has the effect of extending the shadow
+                                        offset: Offset(
+                                          5.0, // horizontal, move right 10
+                                          5.0, // vertical, move down 10
+                                        ),
+                                      )
+                                    ],
+                                    color: ThemePrimary.primaryColor,
+//                                    border: new Border.all(color: Colors.white, width: 2.0),
+                                    borderRadius:
+                                        new BorderRadius.circular(15.0),
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: new InkWell(
+                                        onTap: onTapScan,
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Expanded(
+                                              flex: 2,
+                                              child: Container(
+                                                alignment: Alignment.center,
+//                                                color: Colors.green,
+                                                child: QrImage(
+                                                  padding: EdgeInsets.only(left: 1.0),
+                                                  foregroundColor: Colors.white,
+                                                  backgroundColor:
+                                                  Colors.transparent,
+                                                  data: "ts24Corp",
+                                                  version: 1,
+                                                  size: 10.0,
+//                                            gapless: false,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 5,
+                                              child: Container(
+                                                alignment: Alignment.center,
+//                                                color: Colors.red,
+                                                child: Text(
+                                                  'Quét',
+                                                  style: new TextStyle(
+                                                      fontFamily: ThemePrimary
+                                                          .primaryFontFamily,
+                                                      fontSize: 14.0,
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.bold),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                  ),
+                                )
+                              ],
                             )
                           : Container(
 //                            color: Colors.yellow,
@@ -288,19 +407,21 @@ class HomePageCardTimeLine extends StatelessWidget {
                                     fontWeight: FontWeight.bold),
                               ),
                             )
-                      :(cardType == 1)? Container():Container(
+                      : (cardType == 1)
+                          ? Container()
+                          : Container(
 //                            color: Colors.yellow,
-                    padding: EdgeInsets.only(right: 20, top: 8),
-                    alignment: Alignment.center,
-                    child: Text(
-                      typePickDrop == 0 ? 'Đón' : 'Trả',
-                      style: new TextStyle(
-                          fontFamily: ThemePrimary.primaryFontFamily,
-                          fontSize: 14.0,
-                          color: ThemePrimary.primaryColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                              padding: EdgeInsets.only(right: 20, top: 8),
+                              alignment: Alignment.center,
+                              child: Text(
+                                typePickDrop == 0 ? 'Đón' : 'Trả',
+                                style: new TextStyle(
+                                    fontFamily: ThemePrimary.primaryFontFamily,
+                                    fontSize: 14.0,
+                                    color: ThemePrimary.primaryColor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
                   // ),
                 ],
               ),
@@ -367,5 +488,37 @@ class HomePageCardTimeLine extends StatelessWidget {
         str = 'Đã trả';
     }
     return str;
+//    new Container(
+//      width: 70.0,
+//      height: 30.0,
+//      decoration: new BoxDecoration(
+//        boxShadow: [
+//          BoxShadow(
+//            color: Colors.black12,
+//            blurRadius:
+//            5.0, // has the effect of softening the shadow
+//            spreadRadius:
+//            1.0, // has the effect of extending the shadow
+//            offset: Offset(
+//              5.0, // horizontal, move right 10
+//              5.0, // vertical, move down 10
+//            ),
+//          )
+//        ],
+//        color: ThemePrimary.primaryColor,
+//        //border: new Border.all(color: Colors.white, width: 2.0),
+//        borderRadius: new BorderRadius.circular(15.0),
+//      ),
+//      child: Material(
+//        color: Colors.transparent,
+//        child: new InkWell(
+//          onTap: onTapPickUp,
+//          borderRadius: BorderRadius.circular(15.0),
+//          child: new Center(
+//              child: Icon(FontAwesomeIcons.qrcode, color: Colors.white,)
+//          ),
+//        ),
+//      ),
+//    )
   }
 }

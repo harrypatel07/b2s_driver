@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:b2s_driver/src/app/models/busSession.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/childrenBusSession.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
@@ -6,11 +10,15 @@ import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/service/encrypt-service.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:async/async.dart';
+import 'package:crypto/crypto.dart';
 
 class CloudFiresStoreService {
   //final Geoflutterfire _geo = Geoflutterfire();
   final CollectionChat chat = CollectionChat();
-  final CollectionDriverBusSession busSession = CollectionDriverBusSession();
+  final CollectionBusSession busSession = CollectionBusSession();
+  final CollectionDriverBusSession driverBusSession =
+      CollectionDriverBusSession();
   static final CloudFiresStoreService _singleton =
       new CloudFiresStoreService._internal();
 
@@ -176,4 +184,181 @@ class CollectionDriverBusSession extends InterfaceFireStore {
   }
 }
 
-class CollectionPickingTransportSession extends InterfaceFireStore {}
+class CollectionBusSession extends InterfaceFireStore {
+  final _collectionName = "bus_session";
+
+  List<BusSession> _convertUniqueChildrenStatus(
+      DriverBusSession driverBusSession) {
+    Map<int, ChildDrenStatus> uniqueChildrenStatus = Map();
+    List<ChildDrenStatus> _listChildrenStatus = List();
+    for (var i = 0; i < driverBusSession.childDrenStatus.length; i++) {
+      var item = driverBusSession.childDrenStatus[i];
+      if (!uniqueChildrenStatus.containsKey(item.id)) {
+        uniqueChildrenStatus[item.id] = item;
+      }
+    }
+    uniqueChildrenStatus.forEach((i, item) {
+      _listChildrenStatus.add(item);
+    });
+    List<BusSession> listBusSession = _listChildrenStatus
+        .map((item) => BusSession.fromChildrenStatus(item))
+        .toList();
+    return listBusSession;
+  }
+
+  Future createListBusSessionFromDriverBusSession(
+      DriverBusSession driverBusSession) async {
+    try {
+      List<BusSession> listBusSession =
+          _convertUniqueChildrenStatus(driverBusSession);
+      if (listBusSession.length > 0) {
+        listBusSession.forEach((item) {
+          _firestore
+              .collection(_collectionName)
+              .document(item.id)
+              .setData(item.toJson())
+              .then((onValue) {})
+              .catchError((onError) {
+            print("Error adding document: " + onError);
+          });
+        });
+      }
+    } catch (ex) {
+      print(ex);
+    }
+  }
+
+  Future<StreamSubscription> listenBusSessionForDriver(
+      DriverBusSession driverBusSession,
+      [Function callBack]) async {
+    try {
+      List<BusSession> listBusSession =
+          _convertUniqueChildrenStatus(driverBusSession);
+      if (listBusSession.length > 0) {
+        List<Stream<DocumentSnapshot>> listStream = List();
+        //Tạo stream snapshot
+        for (var i = 0; i < listBusSession.length; i++) {
+          var item = listBusSession[i];
+          listStream.add(_firestore
+              .collection(_collectionName)
+              .document(item.id)
+              .snapshots());
+        }
+        var streamGroup = StreamGroup.merge(listStream).asBroadcastStream();
+        return streamGroup.listen((onData) {
+          driverBusSession.childDrenStatus.forEach((item) {
+            var genId = md5
+                .convert(utf8.encode("${item.id}${item.childrenID}"))
+                .toString();
+            if (genId == onData.documentID) {
+              item.statusID = onData.data["statusId"];
+            }
+          });
+          if (callBack is Function) {
+            callBack();
+          }
+        });
+        // var streamZip = StreamZip(listStream).asBroadcastStream();
+        // return streamZip.listen((onData) {
+        //   Map<dynamic, BusSession> _map = Map();
+        //   if (onData.length > 0) {
+        //     onData.forEach((item) {
+        //       DocumentSnapshot snap = item;
+        //       _map[snap.documentID] = BusSession.fromJson(snap.data);
+        //     });
+
+        //     driverBusSession.childDrenStatus.forEach((item) {
+        //       var genId = md5
+        //           .convert(utf8.encode("${item.id}${item.childrenID}"))
+        //           .toString();
+        //       if (_map.containsKey(genId)) {
+        //         item.statusID = _map[genId].statusId;
+        //       }
+        //     });
+        //     if (callBack is Function) {
+        //       callBack();
+        //     }
+        //   }
+        // });
+      }
+      return null;
+    } catch (ex) {
+      print(ex);
+      return null;
+    }
+  }
+
+  Future<StreamSubscription> listenBusSessionForChildren(
+      List<ChildrenBusSession> listChildrenBusSession,
+      [Function callBack]) async {
+    try {
+      List<BusSession> listBusSession = listChildrenBusSession
+          .map((item) => BusSession.fromChildrenBusSession(item))
+          .toList();
+      if (listBusSession.length > 0) {
+        List<Stream<DocumentSnapshot>> listStream = List();
+        //Tạo stream snapshot
+        for (var i = 0; i < listBusSession.length; i++) {
+          var item = listBusSession[i];
+          listStream.add(_firestore
+              .collection(_collectionName)
+              .document(item.id)
+              .snapshots());
+        }
+        var streamGroup = StreamGroup.merge(listStream).asBroadcastStream();
+        return streamGroup.listen((onData) {
+          listChildrenBusSession.forEach((item) {
+            var genId = md5
+                .convert(utf8.encode("${item.sessionID}${item.child.id}"))
+                .toString();
+            if (genId == onData.documentID) {
+              item.status = StatusBus.list[onData.data["statusId"]];
+            }
+          });
+          if (callBack is Function) {
+            callBack();
+          }
+        });
+      }
+      return null;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future createListBusSessionFromChildrenBusSession(
+      List<ChildrenBusSession> listChildrenBusSession) async {
+    try {
+      List<BusSession> listBusSession = listChildrenBusSession
+          .map((item) => BusSession.fromChildrenBusSession(item))
+          .toList();
+      if (listBusSession.length > 0) {
+        listBusSession.forEach((item) {
+          _firestore
+              .collection(_collectionName)
+              .document(item.id)
+              .setData(item.toJson())
+              .then((onValue) {})
+              .catchError((onError) {
+            print("Error adding document: " + onError);
+          });
+        });
+      }
+    } catch (ex) {
+      print(ex);
+    }
+  }
+
+  updateBusSessionFromChildrenStatus(ChildDrenStatus childrenStatus) {
+    var busSession = BusSession.fromChildrenStatus(childrenStatus);
+    _firestore
+        .collection(_collectionName)
+        .document(busSession.id)
+        .updateData(busSession.toJson())
+        .then((onValue) {})
+        .catchError((onError) {
+      print("Error adding document: " + onError);
+    });
+  }
+}

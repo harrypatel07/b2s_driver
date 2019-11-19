@@ -73,9 +73,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 //                  print("show button call");
                 },
                 onTapShowChildrenProfile: () {
-                  Navigator.pushNamed(context, ProfileChildrenPage.routeName,
-                      arguments: ProfileChildrenArgs(
-                          children: children, heroTag: tag));
+                  viewModel.onTapShowChildrenProfile(children,tag);
                 },
               );
             }).toList(),

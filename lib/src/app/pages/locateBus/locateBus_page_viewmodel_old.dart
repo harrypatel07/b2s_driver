@@ -178,7 +178,7 @@ class LocateBusPageViewModelOld extends ViewModelBase {
 
   listenData(sessionID) {
     if (streamCloud != null) streamCloud.cancel();
-    streamCloud = cloudSerivce.busSession
+    streamCloud = cloudSerivce.driverBusSession
         .listenChildrenBusSession(childrenBus.sessionID)
         .listen((onData) {
       childrenBus.fromJson(onData.data);
@@ -198,8 +198,8 @@ class LocateBusPageViewModelOld extends ViewModelBase {
         break;
       default:
     }
-    cloudSerivce.busSession.updateDriverBusSession(driverBusSession);
-    cloudSerivce.busSession
+    cloudSerivce.driverBusSession.updateDriverBusSession(driverBusSession);
+    cloudSerivce.driverBusSession
         .updateStatusChildrenBus(childrenBus.child, childrenStatus);
     this.updateState();
   }
@@ -297,8 +297,9 @@ class LocateBusPageViewModelOld extends ViewModelBase {
         break;
       default:
     }
-    cloudSerivce.busSession.updateDriverBusSession(driverBusSession);
-    cloudSerivce.busSession.updateStatusChildrenBus(children, childrenStatus);
+    cloudSerivce.driverBusSession.updateDriverBusSession(driverBusSession);
+    cloudSerivce.driverBusSession
+        .updateStatusChildrenBus(children, childrenStatus);
     this.updateState();
   }
 }

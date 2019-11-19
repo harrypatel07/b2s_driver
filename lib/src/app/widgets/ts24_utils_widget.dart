@@ -75,7 +75,7 @@ class LoadingDialog {
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Thông báo",style: TextStyle(color: ThemePrimary.primaryColor),),
-        content: Text(msg),
+        content: Text(msg,style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold),),
         actions: [
           OutlineButton(
             borderSide: BorderSide(color:ThemePrimary.primaryColor ),
@@ -132,14 +132,14 @@ class ToastController {
     Duration duration,
   }) {
     Flushbar(
-      message: message,
+      messageText: Text(message,style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold),),
       duration: duration,
       animationDuration: Duration(milliseconds: 100),
       //leftBarIndicatorColor: Colors.blue[300],
       icon: Icon(
         Icons.info_outline,
         size: 28.0,
-        color: Colors.white,
+        color: Colors.black,
       ),
       backgroundGradient: LinearGradient(
         colors: [Colors.orange, Colors.orangeAccent],

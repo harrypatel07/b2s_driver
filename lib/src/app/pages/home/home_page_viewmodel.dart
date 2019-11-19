@@ -6,8 +6,10 @@ import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/menu.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
+import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
+import 'package:flutter/material.dart';
 
 class HomePageViewModel extends ViewModelBase {
   List<DriverBusSession> listDriverBusSession = [];
@@ -133,5 +135,10 @@ class HomePageViewModel extends ViewModelBase {
         this.updateState();
       }
     });
+  }
+  onTapShowChildrenProfile(Children children, String heroTag){
+    Navigator.pushNamed(context, ProfileChildrenPage.routeName,
+        arguments: ProfileChildrenArgs(
+            children: children, heroTag: heroTag));
   }
 }

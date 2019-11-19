@@ -124,7 +124,7 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
       Widget _buttonChat() {
         return GestureDetector(
           onTap: () {
-            //launch('sms:0123456');
+            viewModel.onTapChat();
           },
           child: Container(
             color: ThemePrimary.primaryColor,
@@ -144,7 +144,7 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
       return Transform.translate(
         offset: Offset(0, _animation.value * 50),
         child: Container(
-          height: 100,
+          height: 120,
           width: MediaQuery.of(context).size.width - 84,
           margin: EdgeInsets.only(left: 25),
           decoration: new BoxDecoration(
@@ -153,14 +153,16 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
                   bottomRight: Radius.circular(70),
                   bottomLeft: Radius.circular(70))),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Expanded(
                 flex: 3,
                 child: Container(
+                  padding: EdgeInsets.only(top:  5),
                   color: Colors.white,
                   child: Row(
                     children: <Widget>[
-                      SizedBox(width: 30,),
+                      SizedBox(width: 20,),
                       Container(
                         width: 40,
                         height: 40,
@@ -181,7 +183,7 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
                       ),
                       SizedBox(width: 10,),
                       Expanded(
-                        child: Text(viewModel.homePageCardTimeLine.children.parent.name,
+                        child: Text(viewModel.homePageCardTimeLine.children.parent.name + "fsdf sfsdf sfsdf fsdf",
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 color: Colors.grey.shade600,

@@ -6,7 +6,6 @@ import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class LocateBusPage extends StatefulWidget {
@@ -25,6 +24,7 @@ class _LocateBusPageState extends State<LocateBusPage>
   @override
   void initState() {
     viewModel.driverBusSession = widget.driverBusSession;
+    //viewModel.listenData();
     viewModel.onCreateDriverBusSessionReport();
     super.initState();
   }
@@ -325,7 +325,7 @@ class _LocateBusPageState extends State<LocateBusPage>
     Widget __buildIconLocation() {
       return Positioned(
         right: 10.0,
-        bottom: MediaQuery.of(context).size.height/2 -120,
+        bottom: MediaQuery.of(context).size.height / 2 - 120,
         child: SizedBox(
           width: 40,
           height: 40,

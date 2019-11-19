@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class MessageBubble {
   bool fromMe;
   String body;
-  Uint8List avatarUrl;
+  String avatarUrl;
   String timestamp;
   MessageBubble({this.body, this.fromMe, this.avatarUrl, this.timestamp});
 }

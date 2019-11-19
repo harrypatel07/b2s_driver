@@ -1,6 +1,7 @@
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';
+import 'package:b2s_driver/src/app/pages/user/user_page_viewmodel.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,7 @@ class TabsPageViewModel extends ViewModelBase {
 
   LocateBusPageViewModel locateBusPageViewModel;
   HomePageViewModel homePageViewModel;
+  UserPageViewModel userPageViewModel;
   TabsPageViewModel() {
     // locateBusPageViewModel = LocateBusPageViewModel();
     // homePageViewModel = HomePageViewModel();

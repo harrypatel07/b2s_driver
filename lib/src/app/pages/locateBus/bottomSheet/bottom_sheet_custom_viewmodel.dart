@@ -139,7 +139,8 @@ class BottomSheetCustomViewModel extends ViewModelBase {
   }
 
   Future onTapScanQRCode() async {
-    BarCodeService.scan();
+    String barCode = await BarCodeService.scan();
+    if (barCode != null) return 0;
   }
 //  onTapChangeChildrenStatus(DriverBusSession driverBusSession,
 //      Children children, RouteBus routeBus, int statusID) {

@@ -21,8 +21,16 @@ class SchedulePage extends StatefulWidget {
 class _SchedulePageState extends State<SchedulePage> {
   ScheduleViewModel viewModel = ScheduleViewModel();
   List<CustomPopupMenu> choices = <CustomPopupMenu>[
-    CustomPopupMenu(id:0,title:'Hôm nay',subTitle: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString()),
-    CustomPopupMenu(id:1,title:'Ngày mai',subTitle: DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(days: 1))).toString())
+    CustomPopupMenu(
+        id: 0,
+        title: 'Hôm nay',
+        subTitle: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString()),
+    CustomPopupMenu(
+        id: 1,
+        title: 'Ngày mai',
+        subTitle: DateFormat('yyyy-MM-dd')
+            .format(DateTime.now().add(Duration(days: 1)))
+            .toString())
   ];
   CustomPopupMenu _selectedChoices;
 //  GlobalKey _key = GlobalKey();
@@ -42,13 +50,12 @@ class _SchedulePageState extends State<SchedulePage> {
 
   void _select(CustomPopupMenu choice) {
     _selectedChoices = choice;
-      viewModel
-          .onLoad(_selectedChoices.subTitle);
+    viewModel.onLoad(_selectedChoices.subTitle);
   }
+
   void _selectVehicle(CustomPopupMenu choice) {
     viewModel.selectedVehicle = choice;
-    viewModel
-        .onChangeVehicle(_selectedChoices.subTitle);
+    viewModel.onChangeVehicle(_selectedChoices.subTitle);
   }
 
   Widget _appBar() {
@@ -142,7 +149,7 @@ class _SchedulePageState extends State<SchedulePage> {
                 int routeBusID =
                     driverBusSession.childDrenRoute[index].routeBusID;
                 var routeBus = driverBusSession.listRouteBus
-                    .singleWhere((route) => route.id == routeBusID);
+                    .firstWhere((route) => route.id == routeBusID);
                 return Container(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -428,13 +435,12 @@ class _SchedulePageState extends State<SchedulePage> {
                   child: Container(
                     child: Column(
                       children: <Widget>[
-                          _item(
-                              driverBusSession:
-                                  viewModel.listDriverBusSession[0],
-                              title: _selectedChoices.title,
-                              onTap: () {
-                                viewModel.onTapItemPick();
-                              }),
+                        _item(
+                            driverBusSession: viewModel.listDriverBusSession[0],
+                            title: _selectedChoices.title,
+                            onTap: () {
+                              viewModel.onTapItemPick();
+                            }),
                         SizedBox(
                           height: 20,
                         ),
@@ -479,5 +485,5 @@ class CustomPopupMenu {
   int id;
   String title;
   String subTitle;
-  CustomPopupMenu({this.id,this.title,this.subTitle});
+  CustomPopupMenu({this.id, this.title, this.subTitle});
 }

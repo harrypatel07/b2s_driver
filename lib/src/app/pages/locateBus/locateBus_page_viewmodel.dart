@@ -31,12 +31,13 @@ class LocateBusPageViewModel extends ViewModelBase {
   int countPick = 0;
   int countDrop = 0;
   //List<Children> listChildrenPaidTicket;
-  //StreamSubscription streamCloud;
-  LocateBusPageViewModel() {}
+  StreamSubscription streamLocation;
+  LocateBusPageViewModel();
 
   @override
   dispose() {
     //  if (streamCloud != null) streamCloud.cancel();
+    if (streamLocation != null) streamLocation.cancel();
     super.dispose();
   }
 
@@ -44,6 +45,11 @@ class LocateBusPageViewModel extends ViewModelBase {
     //listChildrenPaidTicket = Children.getListChildrenPaidTicket(driverBusSession.listChildren);
     driverBusSession.totalChildrenLeave = getCountChildrenByStatusBusId(3);
     driverBusSession.totalChildrenInBus = getCountChildrenByStatusBusId(1);
+    driverBusSession.totalChildrenPick = getCountChildrenByStatusBusId(1) +
+        getCountChildrenByStatusBusId(2) +
+        getCountChildrenByStatusBusId(4);
+    driverBusSession.taotalChildrenDrop =
+        getCountChildrenByStatusBusId(2) + getCountChildrenByStatusBusId(4);
   }
 
   void onMapCreated(GoogleMapController controller) async {
@@ -55,16 +61,17 @@ class LocateBusPageViewModel extends ViewModelBase {
     mapController.setMapStyle(_pathStyleMap);
 
     this.updateState();
-//    animateMyLocation();
+    animateMyLocation(animate: false);
     animateThePoint(0);
-    movingBus();
+    initMarkers();
   }
 
-  void animateMyLocation() async {
+  void animateMyLocation({bool animate = true}) async {
     var myLoc = await location.getLocation();
-    center = LatLng(myLoc.latitude, myLoc.longitude);
-    mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-        target: LatLng(myLoc.latitude, myLoc.longitude), zoom: 13.0)));
+    if (animate) {
+      center = LatLng(myLoc.latitude, myLoc.longitude);
+      _animateCamera(center);
+    }
     myLocationEnabled = true;
 //    childrenBus.status = StatusBus.list[0];
 //    final iconMy = await GoogleMapService.getMarkerIcon(
@@ -76,7 +83,8 @@ class LocateBusPageViewModel extends ViewModelBase {
 //      rotation: myLoc.heading,
 //      icon: iconMy,
 //    );
-    location.onLocationChanged().listen((onData) {
+    if (streamLocation != null) streamLocation.cancel();
+    streamLocation = location.onLocationChanged().listen((onData) {
       // final _marker = markers[MarkerId("location")];
       // markers[MarkerId("location")] = _marker.copyWith(
       //     rotationParam: onData.heading,
@@ -95,7 +103,7 @@ class LocateBusPageViewModel extends ViewModelBase {
     this.updateState();
   }
 
-  Future movingBus() async {
+  Future initMarkers() async {
     markers.clear();
     for (int i = 0; i < driverBusSession.listRouteBus.length; i++) {
       var route = driverBusSession.listRouteBus[i];
@@ -175,13 +183,16 @@ class LocateBusPageViewModel extends ViewModelBase {
     });
   }
 
-  onTapFinish() {
+  onTapFinish() async {
     if (countPick == countDrop &&
         (countPick + driverBusSession.totalChildrenLeave) ==
             driverBusSession.totalChildrenRegistered) {
       driverBusSession.status = true;
-      Navigator.pushReplacementNamed(context, TabsPage.routeName,
-          arguments: TabsArgument(routeChildName: HomePage.routeName));
+      String barcode = await BarCodeService.scan();
+      print(barcode);
+      if (barcode != null)
+        Navigator.pushReplacementNamed(context, TabsPage.routeName,
+            arguments: TabsArgument(routeChildName: HomePage.routeName));
     } else
       LoadingDialog.showMsgDialog(context,
           'Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.');
@@ -195,4 +206,10 @@ class LocateBusPageViewModel extends ViewModelBase {
   //     this.updateState();
   //   });
   // }
+
+  _animateCamera(LatLng latlng) {
+    if (mapController != null)
+      mapController.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(target: latlng, zoom: 14.0)));
+  }
 }

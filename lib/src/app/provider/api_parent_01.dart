@@ -49,6 +49,7 @@ class Api1 extends ApiMaster {
     body["domain"] = [
       ['driver_id', '=', id]
     ];
+    body["fields"] = ["name", "id", "x_posx", "x_posy", "x_posz"];
     var params = convertSerialize(body);
     return http
         .get('${this.api}/search_read/fleet.vehicle?$params',
@@ -79,6 +80,61 @@ class Api1 extends ApiMaster {
     body = new Map();
     body["domain"] = [
       ['id', '=', id],
+    ];
+    body["fields"] = [
+      "company_id",
+      "company_name",
+      "company_type",
+      "contact_address",
+      "contract_ids",
+      "contracts_count",
+      "country_id",
+      "create_date",
+      "create_uid",
+      "credit",
+      "credit_limit",
+      "currency_id",
+      "customer",
+      "date",
+      "debit",
+      "debit_limit",
+      "display_name",
+      "email",
+      "email_formatted",
+      "employee",
+      "id",
+      "im_status",
+      "is_company",
+      "is_published",
+      "is_seo_optimized",
+      "journal_item_count",
+      "lang",
+      "mobile",
+      "name",
+      "parent_id",
+      "parent_name",
+      "partner_gid",
+      "partner_share",
+      "phone",
+      "state_id",
+      "street",
+      "street2",
+      "supplier",
+      "team_id",
+      "title",
+      "total_invoiced",
+      "trust",
+      "type",
+      "user_id",
+      "user_ids",
+      "vat",
+      "vehicle_count",
+      "vehicle_ids",
+      "x_class",
+      "x_company_type",
+      "x_date_of_birth",
+      "x_school",
+      "wk_dob"
     ];
     var params = convertSerialize(body);
     Driver driver = Driver();
@@ -199,6 +255,7 @@ class Api1 extends ApiMaster {
       "x_company_type",
       "x_date_of_birth",
       "x_school",
+      "wk_dob"
     ];
     var params = convertSerialize(body);
     List<ResPartner> listResult = new List();
@@ -345,7 +402,8 @@ class Api1 extends ApiMaster {
       "x_company_type",
       "x_date_of_birth",
       "x_school",
-      "zip"
+      "zip",
+      "wk_dob"
     ];
     var params = convertSerialize(body);
     List<ResPartner> listResult = List();

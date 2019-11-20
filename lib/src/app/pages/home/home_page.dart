@@ -20,6 +20,7 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
+
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   HomePageViewModel viewModel = HomePageViewModel();
   @override
@@ -41,6 +42,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildBody(DriverBusSession driverBusSession) {
+    var __index = 0;
     var listTimeLine = driverBusSession.listRouteBus
         .map((item) => TimeLineEvent(
             id: item.id,
@@ -49,6 +51,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             content: viewModel
                 .getListChildrenForTimeLine(driverBusSession, item.id)
                 .map((children) {
+              __index++;
               viewModel.addChildrenByDriverBusSessionType(
                   driverBusSession.type, children);
               final status = ChildDrenStatus.getStatusByChildrenID(
@@ -57,7 +60,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   StatusBus.getStatusByID(StatusBus.list, status.statusID);
               var tag = children.id.toString() +
                   item.id.toString() +
-                  driverBusSession.busID.toString();
+                  status.id.toString() +
+                  __index.toString();
               return HomePageCardTimeLine(
                 children: children,
                 isEnablePicked: status.statusID == 0 ? true : false,
@@ -73,7 +77,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 //                  print("show button call");
                 },
                 onTapShowChildrenProfile: () {
-                  viewModel.onTapShowChildrenProfile(children,tag);
+                  viewModel.onTapShowChildrenProfile(children, tag);
                 },
               );
             }).toList(),
@@ -140,7 +144,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         right: 0,
         child: GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, LocateBusPage.routeName,arguments: driverBusSession);
+            Navigator.pushNamed(context, LocateBusPage.routeName,
+                arguments: driverBusSession);
           },
           child: Container(
             padding: EdgeInsets.only(left: 20),

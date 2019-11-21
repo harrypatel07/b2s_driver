@@ -125,7 +125,7 @@ class LocateBusPageViewModel extends ViewModelBase {
     this.position = _pos;
     this.routeBus = _route;
     if (_pos >= 2) {
-      if (driverBusSession.listRouteBus[_pos - 2].status)
+      if (driverBusSession.listRouteBus[_pos - 2].status) {
         showModalBottomSheet(
             isScrollControlled: true,
             backgroundColor: Colors.transparent,
@@ -138,11 +138,13 @@ class LocateBusPageViewModel extends ViewModelBase {
             animateThePoint(_pos);
           }
         });
+        animateThePoint(_pos-1);
+      }
       else {
         LoadingDialog.showMsgDialog(
             context, 'Bạn cần hoàn thành điểm ${_pos - 1}');
       }
-    } else
+    } else {
       showModalBottomSheet(
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
@@ -155,6 +157,8 @@ class LocateBusPageViewModel extends ViewModelBase {
           animateThePoint(_pos);
         }
       });
+      animateThePoint(_pos-1);
+    }
   }
 
   int getCountChildrenByStatus() {

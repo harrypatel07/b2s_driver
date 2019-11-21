@@ -78,13 +78,12 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
       Widget _buttonLeave() {
         return GestureDetector(
           onTap: () {
-            viewModel.onTapChangeStatus(3);
-            widget.arguments.homePageCardTimeLine.onTapChangeStatusLeave();
+            viewModel.onTapLeave();
           },
           child: Container(
             padding: EdgeInsets.only(right: 10),
             decoration: new BoxDecoration(
-                color: Colors.deepOrange,
+                color: viewModel.homePageCardTimeLine.status.statusID == 0? Colors.red:Colors.grey,
                 borderRadius:
                     new BorderRadius.only(bottomRight: Radius.circular(70))),
             child: Row(

@@ -1,8 +1,6 @@
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
-import 'package:b2s_driver/src/app/pages/login/login_page.dart';
 import 'package:b2s_driver/src/app/pages/user/user_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
-import 'package:b2s_driver/src/app/widgets/popupConfirm.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
@@ -78,18 +76,7 @@ class _UserPageState extends State<UserPage> {
               ),
               trailing: Icon(LineIcons.chevron_circle_right),
               onTap: () {
-                popupConfirm(
-                    context: context,
-                    title: 'THÔNG BÁO',
-                    desc: 'Xác nhận đăng xuất ?',
-                    yes: 'Có',
-                    no: 'Không',
-                    onTap: () {
-                      Navigator.pop(context);
-                      viewModel.driver.clearLocal();
-                      Navigator.pushReplacementNamed(
-                          context, LoginPage.routeName);
-                    });
+                viewModel.onTapLogout();
               }),
         ],
       );
@@ -118,7 +105,9 @@ class _UserPageState extends State<UserPage> {
                 ),
               ),
               trailing: Icon(LineIcons.chevron_circle_right),
-              onTap: () {}),
+              onTap: () {
+                viewModel.onTapHistoryTrip();
+              }),
         ],
       );
     }
@@ -138,11 +127,11 @@ class _UserPageState extends State<UserPage> {
             ),
             child: Column(
               children: <Widget>[
-                _buildChatTitle(Icons.person_pin, Colors.blue, "Tin nhắn"),
+                _buildChatTitle(Icons.person_pin, ThemePrimary.primaryColor, "Tin nhắn"),
                 hr,
-                _buildHistoryTitle(Icons.history, Colors.blue, 'Lịch sử'),
+                _buildHistoryTitle(Icons.history, ThemePrimary.primaryColor, 'Lịch sử'),
                 hr,
-                _buildLogOutTitle(Icons.exit_to_app, Colors.blue, "Đăng xuất"),
+                _buildLogOutTitle(Icons.exit_to_app, ThemePrimary.primaryColor, "Đăng xuất"),
               ],
             ),
           ),

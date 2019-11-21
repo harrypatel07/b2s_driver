@@ -1,13 +1,11 @@
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
-import 'package:b2s_driver/src/app/pages/home/home_page.dart';
 import 'package:b2s_driver/src/app/pages/schedule/schedule_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/googlemap-service.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/dash.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -419,47 +417,55 @@ class _SchedulePageState extends State<SchedulePage> {
 
   Widget _body() {
     return RefreshIndicator(
-      onRefresh: () async {
-        _select(_selectedChoices);
-      },
-      child: viewModel.loading
-          ? LoadingSpinner.loadingView(
-              context: context,
-              loading: viewModel.loading,
-            )
-          : (viewModel.listDriverBusSession.length == 0)
-              ? (Center(
-                  child: Text('Không có dữ liệu để hiển thị.'),
-                ))
-              : SingleChildScrollView(
-                  child: Container(
-                    child: Column(
-                      children: <Widget>[
-                        _item(
-                            driverBusSession: viewModel.listDriverBusSession[0],
-                            title: _selectedChoices.title,
-                            onTap: () {
-                              viewModel.onTapItemPick();
-                            }),
-                        SizedBox(
-                          height: 20,
+        onRefresh: () async {
+          _select(_selectedChoices);
+        },
+        child: viewModel.loading
+            ? LoadingSpinner.loadingView(
+                context: context,
+                loading: viewModel.loading,
+              )
+            : SingleChildScrollView(
+                child: (viewModel.listDriverBusSession.length == 0)
+                    ? Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.9,
+                        child: Center(
+                          child: Text('Không có dữ liệu để hiển thị.'),
                         ),
-                        if (viewModel.listDriverBusSession.length > 1)
-                          _item(
-                              driverBusSession:
-                                  viewModel.listDriverBusSession[1],
-                              title: _selectedChoices.title,
-                              onTap: () {
-                                viewModel.onTapItemDrop();
-                              }),
-                        SizedBox(
-                          height: 35,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-    );
+                      )
+                    : Container(
+                        child: Column(
+                          children: <Widget>[
+                            _item(
+                                driverBusSession:
+                                    viewModel.listDriverBusSession[0],
+                                title: _selectedChoices.title,
+                                onTap: () {
+                                  viewModel.onTapItemPick();
+                                }),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            (viewModel.listDriverBusSession.length > 1)
+                                ? _item(
+                                    driverBusSession:
+                                        viewModel.listDriverBusSession[1],
+                                    title: _selectedChoices.title,
+                                    onTap: () {
+                                      viewModel.onTapItemDrop();
+                                    })
+                                : Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.5,
+                                  ),
+                            SizedBox(
+                              height: 35,
+                            )
+                          ],
+                        ),
+                      ),
+              ));
   }
 
   @override

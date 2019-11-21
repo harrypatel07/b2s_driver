@@ -1,3 +1,5 @@
+import 'dart:ui' as prefix0;
+
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
@@ -58,90 +60,95 @@ class _LocateBusPageState extends State<LocateBusPage>
           color: ThemePrimary.primaryColor);
       return Positioned(
         top: 0,
-        child: Container(
-          padding: EdgeInsets.fromLTRB(15, 30, 15, 5),
-          width: MediaQuery.of(context).size.width,
-          color: Colors.white54,
-          child: Column(
-            children: <Widget>[
-              Row(
+        child: ClipRect(
+          child: BackdropFilter(
+            filter: prefix0.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+            child: Container(
+              padding: EdgeInsets.fromLTRB(15, 30, 15, 5),
+              width: MediaQuery.of(context).size.width,
+//              color: Colors.transparent,
+              child: Column(
                 children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: Text(
-                        "Học sinh đăng ký",
-                        textAlign: TextAlign.center,
-                        style: ___textStyle,
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 20, right: 20),
+                          child: Text(
+                            "Học sinh đăng ký",
+                            textAlign: TextAlign.center,
+                            style: ___textStyle,
+                          ),
+                        ),
                       ),
-                    ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 20, right: 20),
+                          child: Text(
+                            "Học sinh trên xe",
+                            textAlign: TextAlign.center,
+                            style: ___textStyle,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 20, right: 20),
+                          child: Text(
+                            "Học sinh báo nghỉ",
+                            textAlign: TextAlign.center,
+                            style: ___textStyle,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: Text(
-                        "Học sinh trên xe",
-                        textAlign: TextAlign.center,
-                        style: ___textStyle,
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+                          child: Text(
+                            viewModel.driverBusSession.totalChildrenRegistered
+                                .toString(),
+                            textAlign: TextAlign.center,
+                            style: ___numberStyle,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: Text(
-                        "Học sinh báo nghỉ",
-                        textAlign: TextAlign.center,
-                        style: ___textStyle,
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+                          child: Text(
+                            viewModel.driverBusSession.totalChildrenInBus
+                                .toString(),
+                            textAlign: TextAlign.center,
+                            style: ___numberStyle,
+                          ),
+                        ),
                       ),
-                    ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+                          child: Text(
+                            viewModel.driverBusSession.totalChildrenLeave
+                                .toString(),
+                            textAlign: TextAlign.center,
+                            style: ___numberStyle,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
-                      child: Text(
-                        viewModel.driverBusSession.totalChildrenRegistered
-                            .toString(),
-                        textAlign: TextAlign.center,
-                        style: ___numberStyle,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
-                      child: Text(
-                        viewModel.driverBusSession.totalChildrenInBus
-                            .toString(),
-                        textAlign: TextAlign.center,
-                        style: ___numberStyle,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
-                      child: Text(
-                        viewModel.driverBusSession.totalChildrenLeave
-                            .toString(),
-                        textAlign: TextAlign.center,
-                        style: ___numberStyle,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+            ),
           ),
         ),
       );

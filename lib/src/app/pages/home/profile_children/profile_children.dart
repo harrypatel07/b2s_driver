@@ -166,7 +166,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                 child: Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.white),
                 ),
               ),
             ),

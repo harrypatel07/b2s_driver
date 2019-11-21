@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/pages/user/edit_profile_driver/edit_profile_driver_viewmodel.dart';
+import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/drop_down_field.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
@@ -354,8 +355,8 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                           decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: <Color>[
-                                  Colors.deepOrange,
-                                  Colors.yellow
+                                  ThemePrimary.primaryColor,
+                                  ThemePrimary.primaryColor
                                 ],
                               ),
                               boxShadow: [
@@ -385,7 +386,7 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                                   });
                                 },
                                 child: Center(
-                                  child: Text("LƯU"),
+                                  child: Text("LƯU",style: TextStyle(color: Colors.white),),
                                 )),
                           ),
                         ),

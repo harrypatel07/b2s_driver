@@ -56,4 +56,10 @@ class PopupCardTimeLineViewModel extends ViewModelBase {
     );
     Navigator.pushNamed(context, MessageDetailPage.routeName, arguments: chatting,);
   }
+  onTapLeave(){
+    if(homePageCardTimeLine.status == StatusBus.list[0]) {
+      onTapChangeStatus(3);
+      homePageCardTimeLine.onTapChangeStatusLeave();
+    }
+  }
 }

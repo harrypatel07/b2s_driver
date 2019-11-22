@@ -12,7 +12,7 @@ class DriverBusSession {
   int totalChildrenInBus;
   int totalChildrenLeave;
   int totalChildrenPick;
-  int taotalChildrenDrop;
+  int totalChildrenDrop;
   List<Children> listChildren;
   List<ChildDrenStatus> childDrenStatus;
   List<ChildDrenRoute> childDrenRoute;
@@ -48,7 +48,7 @@ class DriverBusSession {
     this.totalChildrenInBus = 0;
     this.totalChildrenLeave = 0;
     this.totalChildrenPick = 0;
-    this.taotalChildrenDrop = 0;
+    this.totalChildrenDrop = 0;
     this.listChildren = listChildren;
     this.childDrenStatus = childDrenStatus;
     this.childDrenRoute = childDrenRoute;

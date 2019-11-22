@@ -58,11 +58,11 @@ class BottomSheetCustomViewModel extends ViewModelBase {
     if (childrenStatus.typePickDrop == 1 && childrenStatus.statusID != 1)
       return;
     if (childrenStatus.typePickDrop == 0 && childrenStatus.statusID == 0) {
-      localBusViewModel.countPick++;
+      localBusViewModel.driverBusSession.totalChildrenPick++;
 //      updateStatusPickChildren(childrenStatus.id);
     }
     if (childrenStatus.typePickDrop == 1 && childrenStatus.statusID == 1) {
-      localBusViewModel.countDrop++;
+      localBusViewModel.driverBusSession.totalChildrenDrop++;
 //      updateStatusDropChildren(childrenStatus.id);
     }
     DriverBusSession.updateChildrenStatusIdByPickDrop(

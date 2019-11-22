@@ -277,29 +277,23 @@ class HomePageCardTimeLine extends StatelessWidget {
 //                                          mainAxisAlignment:
 //                                              MainAxisAlignment.start,
                                           children: <Widget>[
-                                            Expanded(
-                                              flex: 1,
+                                           if(typePickDrop == 0 && status.statusID == 0 || typePickDrop == 1 && status.statusID == 1) Expanded(
+                                              flex: 3,
                                               child: Container(
 //                                              color: Colors.red,
                                                 alignment: Alignment.center,
 //                                                width: 20,
-                                                child: typePickDrop == 0
-                                                    ? Icon(
+                                                child: Icon(
                                                         Icons.arrow_drop_up,
                                                         color: Colors.white,
                                                         size: 20,
                                                       )
-                                                    : Icon(
-                                                        Icons.arrow_drop_down,
-                                                        color: Colors.white,
-                                                        size: 20,
-                                                      ),
                                               ),
                                             ),
                                             Expanded(
                                               flex: 5,
                                               child: Container(
-                                                alignment: Alignment.center,
+                                                alignment:(typePickDrop == 0 && status.statusID == 0 || typePickDrop == 1 && status.statusID == 1)? Alignment.centerLeft: Alignment.center,
                                                 child: Text(
                                                   setTextButtonStatus(),
                                                   style: new TextStyle(
@@ -355,7 +349,7 @@ class HomePageCardTimeLine extends StatelessWidget {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                           children: <Widget>[
                                             Expanded(
-                                              flex: 2,
+                                              flex: 3,
                                               child: Container(
                                                 alignment: Alignment.center,
 //                                                color: Colors.green,
@@ -374,7 +368,7 @@ class HomePageCardTimeLine extends StatelessWidget {
                                             Expanded(
                                               flex: 5,
                                               child: Container(
-                                                alignment: Alignment.center,
+                                                alignment: Alignment.centerLeft,
 //                                                color: Colors.red,
                                                 child: Text(
                                                   'Quét',
@@ -478,7 +472,7 @@ class HomePageCardTimeLine extends StatelessWidget {
 //      else if (status.statusID == 1)
 //        str = 'Đã đón';
       else
-        str = 'Đã đón ';
+        str = 'Đã đón';
     } else {
       if (status.statusID == 1 || status.statusID == 0)
         str = 'Trả';

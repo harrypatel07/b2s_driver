@@ -1,4 +1,5 @@
 import 'package:b2s_driver/src/app/pages/historyTrip/historyTrip_page.dart';
+import 'package:b2s_driver/src/app/pages/historyTripDetailPage/historyTrip_detail_page.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
 import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/bottomSheet/bottom_sheet_custom.dart';
@@ -46,7 +47,8 @@ class Routes {
         MessageUserPage(userId:ModalRoute.of(context).settings.arguments),
     ContactsPage.routeName: (context)=>ContactsPage(),
     ProfileMessageUserPage.routeName: (context) => ProfileMessageUserPage(userModel:ModalRoute.of(context).settings.arguments),
-    EditProfileDriver.routeName: (context)=>EditProfileDriver(driver:ModalRoute.of(context).settings.arguments)
+    EditProfileDriver.routeName: (context)=>EditProfileDriver(driver:ModalRoute.of(context).settings.arguments),
+    HistoryTripDetailPage.routeName: (context)=>HistoryTripDetailPage(driverBusSession: ModalRoute.of(context).settings.arguments,)
   };
 }
 

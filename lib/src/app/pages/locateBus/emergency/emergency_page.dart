@@ -1,23 +1,37 @@
+import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_appbar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+//import 'package:intent/action.dart' as prefix0;
+//import 'package:intent/action.dart' as prefix0;
 import 'package:polygon_clipper/polygon_border.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 import 'package:url_launcher/url_launcher.dart';
+//import 'package:intent/intent.dart' as intent;
+//import 'package:intent/action.dart';
+//import 'package:intent/extra.dart';
+//import 'package:intent/category.dart';
+//import 'package:intent/flag.dart';
 
 class EmergencyPage extends StatelessWidget {
   static const String routeName = "/emergency";
   Widget _appBar() {
     return TS24AppBar(
-      backgroundColorStart: Colors.red,
-      backgroundColorEnd: Colors.yellow,
+      backgroundColorStart: ThemePrimary.primaryColor,
+      backgroundColorEnd: ThemePrimary.primaryColor,
       title: Text(
         'KHẨN CẤP',
         textAlign: TextAlign.center,
       ),
     );
   }
-
+  void onTapCall(String phoneNumber){
+    launch('tel:$phoneNumber');
+//    intent.Intent()
+//      ..setAction(prefix0.Action.ACTION_CALL)
+//      ..setData(Uri(scheme: "tel", path: phoneNumber))
+//      ..startActivity().catchError((e) => print(e));
+  }
   @override
   Widget build(BuildContext context) {
     Widget _buildBody() {
@@ -37,41 +51,23 @@ class EmergencyPage extends StatelessWidget {
             ],
             child: InkWell(
               onTap: (){
-                launch('tel:113');
+                onTapCall("113");
               },
               child: Container(
                 color: Colors.white,
-                child: Stack(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Positioned(
-                      top: 30,
-                      left: 58,
-                      child: Container(
-                        //color: Colors.yellow,
-                        child: Image(
-                          image:
-                          AssetImage('assets/images/sheriff.png'),
-                        ),
-                      ),
+                    Text(
+                      '113',
+                      style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.w900,
+                          color: ThemePrimary.primaryColor),
                     ),
-                    Positioned(
-                      top: 90,
-                      left: 70,
-                      child: Text(
-                        '113',
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.orange),
-                      ),
-                    ),
-                    Positioned(
-                      top: 125,
-                      left: 55,
-                      child: Text(
-                        'CÔNG AN',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                    Text(
+                      'CÔNG AN',
+                      style: TextStyle(fontSize: 16),
                     )
                   ],
                 ),
@@ -96,40 +92,23 @@ class EmergencyPage extends StatelessWidget {
             ],
             child: InkWell(
               onTap: (){
-                launch('tel:115');
+                onTapCall("115");
               },
               child: Container(
                 color: Colors.white,
-                child: Stack(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Positioned(
-                      top: 30,
-                      left: 55,
-                      child: Container(
-                        //color: Colors.yellow,
-                        child: Image(
-                          image: AssetImage('assets/images/fire.png'),
-                        ),
-                      ),
+                    Text(
+                      '115',
+                      style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.w900,
+                          color: ThemePrimary.primaryColor),
                     ),
-                    Positioned(
-                      top: 90,
-                      left: 70,
-                      child: Text(
-                        '115',
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.orange),
-                      ),
-                    ),
-                    Positioned(
-                      top: 125,
-                      left: 55,
-                      child: Text(
-                        'CỨU HỎA',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                    Text(
+                      'CỨU HỎA',
+                      style: TextStyle(fontSize: 16),
                     )
                   ],
                 ),
@@ -154,41 +133,23 @@ class EmergencyPage extends StatelessWidget {
             ],
             child: InkWell(
               onTap: (){
-                launch('tel:114');
+                onTapCall("114");
               },
               child: Container(
                 color: Colors.white,
-                child: Stack(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Positioned(
-                      top: 33,
-                      left: 60,
-                      child: Container(
-                        //color: Colors.yellow,
-                        child: Image(
-                          image: AssetImage(
-                              'assets/images/ambulance.png'),
-                        ),
-                      ),
+                    Text(
+                      '114',
+                      style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.w900,
+                          color: ThemePrimary.primaryColor),
                     ),
-                    Positioned(
-                      top: 88,
-                      left: 70,
-                      child: Text(
-                        '114',
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.orange),
-                      ),
-                    ),
-                    Positioned(
-                      top: 125,
-                      left: 40,
-                      child: Text(
-                        'CỨU THƯƠNG',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                    Text(
+                      'CỨU THƯƠNG',
+                      style: TextStyle(fontSize: 16),
                     )
                   ],
                 ),
@@ -205,17 +166,7 @@ class EmergencyPage extends StatelessWidget {
               height: 345,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  stops: [0.1, 0.5, 0.7, 0.9],
-                  colors: [
-                    Colors.deepOrange,
-                    Colors.yellow,
-                    Colors.deepOrange,
-                    Colors.yellow,
-                  ],
-                ),
+                color: Colors.grey[200]
               ),
               //color: Colors.red,
               child: Stack(
@@ -228,9 +179,10 @@ class EmergencyPage extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.center,
+              padding: EdgeInsets.only(left: 10,right: 10),
               //color: Colors.grey[700],
               height: 50,
-              child: Text('THÔNG BÁO SỰ CỐ CHO PHỤ HUYNH & NHÀ TRƯỜNG'),
+              child: Text('THÔNG BÁO SỰ CỐ CHO PHỤ HUYNH & NHÀ TRƯỜNG',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
             ),
             Container(
               margin: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
@@ -249,7 +201,7 @@ class EmergencyPage extends StatelessWidget {
                     ),
                   )
                 ],
-                color: Colors.grey[300],
+                color: ThemePrimary.primaryColor,
 //                border: Border.all(
 //                    width: 1.5
 //                ),
@@ -259,7 +211,7 @@ class EmergencyPage extends StatelessWidget {
               ),
               child: Text(
                 'Kẹt xe nghiêm trọng',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                style: TextStyle(color: Colors.white,fontSize: 16, fontWeight: FontWeight.w700),
               ),
             ),
             Container(
@@ -279,7 +231,7 @@ class EmergencyPage extends StatelessWidget {
                     ),
                   )
                 ],
-                color: Colors.grey[300],
+                color: ThemePrimary.primaryColor,
 //                border: Border.all(
 //                    width: 1.5
 //                ),
@@ -289,7 +241,7 @@ class EmergencyPage extends StatelessWidget {
               ),
               child: Text(
                 'Tai nạn giao thông',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                style: TextStyle(color: Colors.white,fontSize: 16, fontWeight: FontWeight.w700),
               ),
             ),
             Container(
@@ -309,7 +261,7 @@ class EmergencyPage extends StatelessWidget {
                     ),
                   )
                 ],
-                color: Colors.grey[300],
+                color: ThemePrimary.primaryColor,
 //                border: Border.all(
 //                    width: 1.5
 //                ),
@@ -319,7 +271,7 @@ class EmergencyPage extends StatelessWidget {
               ),
               child: Text(
                 'Học sinh bị ốm / nghỉ',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                style: TextStyle(color: Colors.white,fontSize: 16, fontWeight: FontWeight.w700),
               ),
             ),
           ],

@@ -557,7 +557,7 @@ class Api1 extends ApiMaster {
     body["date"] = date;
     return client
         .callController("/handle_picking_info_request", body)
-        .then((onValue) {
+        .then((onValue) async {
       var result = onValue.getResult();
       if (result['code'] != null) return listResult;
       var data = result["data"];
@@ -648,8 +648,31 @@ class Api1 extends ApiMaster {
               childDrenStatus: listChildDrenStatus));
         }
       }
-
+      if (listResult.length > 0) {
+        Driver driver = Driver();
+        for (var item in listResult) {
+          item.status = await checkBusSessionFinished(
+              vehicleId: driver.vehicleId, date: date, type: item.type);
+        }
+      }
       return listResult;
+    });
+  }
+
+  Future<bool> checkBusSessionFinished(
+      {int vehicleId, int type, String date}) async {
+    var client = await this.authorizationOdoo();
+    body = new Map();
+    body["vehicle_id"] = vehicleId;
+    body["type"] = type == 0 ? "pick" : "drop";
+    body["date"] = date;
+    bool check = false;
+    return client
+        .callController("/check_driver_picking_info", body)
+        .then((onValue) {
+      var result = onValue.getResult();
+      check = result;
+      return check;
     });
   }
 

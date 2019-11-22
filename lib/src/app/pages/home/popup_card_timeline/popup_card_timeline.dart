@@ -182,7 +182,7 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
                       ),
                       SizedBox(width: 10,),
                       Expanded(
-                        child: Text(viewModel.homePageCardTimeLine.children.parent.name + "fsdf sfsdf sfsdf fsdf",
+                        child: Text(viewModel.homePageCardTimeLine.children.parent.name,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 color: Colors.grey.shade600,

@@ -7,7 +7,6 @@ import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/bottomSheet/bottom_sheet_custom.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/widgets/icon_marker_custom.dart';
-import 'package:b2s_driver/src/app/pages/schedule/schedule_page.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
@@ -28,8 +27,6 @@ class LocateBusPageViewModel extends ViewModelBase {
   DriverBusSession driverBusSession;
   int position;
   RouteBus routeBus;
-  int countPick = 0;
-  int countDrop = 0;
   //List<Children> listChildrenPaidTicket;
   StreamSubscription streamLocation;
   LocateBusPageViewModel();
@@ -48,7 +45,7 @@ class LocateBusPageViewModel extends ViewModelBase {
     driverBusSession.totalChildrenPick = getCountChildrenByStatusBusId(1) +
         getCountChildrenByStatusBusId(2) +
         getCountChildrenByStatusBusId(4);
-    driverBusSession.taotalChildrenDrop =
+    driverBusSession.totalChildrenDrop =
         getCountChildrenByStatusBusId(2) + getCountChildrenByStatusBusId(4);
   }
 
@@ -188,8 +185,8 @@ class LocateBusPageViewModel extends ViewModelBase {
   }
 
   onTapFinish() async {
-    if (countPick == countDrop &&
-        (countPick + driverBusSession.totalChildrenLeave) ==
+    if (driverBusSession.totalChildrenPick == driverBusSession.totalChildrenDrop &&
+        (driverBusSession.totalChildrenPick + driverBusSession.totalChildrenLeave) ==
             driverBusSession.totalChildrenRegistered) {
       driverBusSession.status = true;
       String barcode = await BarCodeService.scan();

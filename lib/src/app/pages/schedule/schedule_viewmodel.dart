@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ScheduleViewModel extends ViewModelBase {
-  List<DriverBusSession> listDriverBusSession;
+  List<DriverBusSession> listDriverBusSession = List();
   bool isShowListButton = false;
   TabsPageViewModel tabsPageViewModel;
   bool isLoadingData = false;
@@ -36,14 +36,16 @@ class ScheduleViewModel extends ViewModelBase {
   }
 
   onLoad(String date) {
-	print('OnLoad');
+    print('OnLoad');
     loading = true;
     api
         .getListDriverBusSession(
             vehicleId: driver.vehicleId, driverId: driver.id, date: date)
         .then((value) {
-      listDriverBusSession = value;
-      if (listDriverBusSession.length > 0) busId = value[0].busID;
+      if (value is List) {
+        listDriverBusSession = value;
+        if (value.length > 0) busId = value[0].busID;
+      }
       loading = false;
       this.updateState();
     });

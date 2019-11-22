@@ -131,6 +131,8 @@ class _UserPageState extends State<UserPage> {
                 hr,
                 _buildHistoryTitle(Icons.history, ThemePrimary.primaryColor, 'Lịch sử'),
                 hr,
+//                _buildHistoryTitle(Icons.history, ThemePrimary.primaryColor, 'Lịch sử'),
+//                hr,
                 _buildLogOutTitle(Icons.exit_to_app, ThemePrimary.primaryColor, "Đăng xuất"),
               ],
             ),

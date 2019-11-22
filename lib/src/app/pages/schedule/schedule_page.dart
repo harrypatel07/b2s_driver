@@ -323,32 +323,29 @@ class _SchedulePageState extends State<SchedulePage> {
     }
 
     Widget __buttonSupport() {
-      return InkWell(
-        onTap: onTap,
-        child: ClipRRect(
-          borderRadius: new BorderRadius.only(
-              bottomRight: Radius.circular(18),
-              bottomLeft: Radius.circular(18)),
-          child: Container(
+      return ClipRRect(
+        borderRadius: new BorderRadius.only(
+            bottomRight: Radius.circular(18),
+            bottomLeft: Radius.circular(18)),
+        child: Container(
 //          padding: EdgeInsets.only(right: 10,left: 10),
-            child: Container(
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width - 25,
-              height: 50,
-              color:
-                  driverBusSession.status ? Colors.green[300] : Colors.black87,
-              child: driverBusSession.status
-                  ? Text(
-                      'ĐÃ HOÀN THÀNH',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
-                    )
-                  : Text(
-                      'CHỌN',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
-                    ),
-            ),
+          child: Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width - 25,
+            height: 50,
+            color:
+                driverBusSession.status ? ThemePrimary.primaryColor : Colors.black87,
+            child: driverBusSession.status
+                ? Text(
+                    'ĐÃ HOÀN THÀNH',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white),
+                  )
+                : Text(
+                    'CHỌN',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white),
+                  ),
           ),
         ),
       );
@@ -357,7 +354,7 @@ class _SchedulePageState extends State<SchedulePage> {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: InkWell(
-        onTap: onTap,
+        onTap: driverBusSession.status?(){}:onTap,
         child: Container(
           decoration: new BoxDecoration(boxShadow: [
             new BoxShadow(
@@ -426,12 +423,12 @@ class _SchedulePageState extends State<SchedulePage> {
                 loading: viewModel.loading,
               )
             : SingleChildScrollView(
-                child: (viewModel.listDriverBusSession.length == 0)
+                child: ( viewModel.listDriverBusSession.length == 0)
                     ? Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.9,
                         child: Center(
-                          child: Text('Không có dữ liệu để hiển thị.'),
+                          child: Text('Không có chuyến đi.'),
                         ),
                       )
                     : Container(

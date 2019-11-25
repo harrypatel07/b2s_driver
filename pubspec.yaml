@@ -64,6 +64,7 @@ dependencies:
   type_helper: ^0.1.0  
   android_intent: ^0.3.4+4
   barcode_scan: ^1.0.0
+  onesignal_flutter: ^2.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

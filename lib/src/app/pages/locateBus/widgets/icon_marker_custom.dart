@@ -91,7 +91,7 @@ Future<BitmapDescriptor> iconMarkerCustomText(
     ..strokeWidth = 5
     ..style = PaintingStyle.stroke;
   canvas.drawLine(
-      Offset(width / 2, height / 2), Offset(width / 2, height), paint);
+      Offset(width / 2, height * 0.8), Offset(width / 2, height), paint);
   Paint complete = new Paint()
     ..color = backgroundColor ?? Colors.deepOrange
     ..strokeCap = StrokeCap.round

@@ -1,10 +1,10 @@
 class PickingRoute {
   dynamic sLastUpdate;
   dynamic createDate;
-  dynamic createUid;
+  List<dynamic> createUid;
   dynamic deliveryId;
-  dynamic deliveryRouteId;
-  dynamic destinationLocation;
+  List<dynamic> deliveryRouteId;
+  List<dynamic> destinationLocation;
   dynamic displayName;
   dynamic distance;
   dynamic endTime;
@@ -12,11 +12,14 @@ class PickingRoute {
   dynamic hour;
   dynamic id;
   dynamic note;
-  dynamic sourceLocation;
+  List<dynamic> sourceLocation;
   dynamic startTime;
   dynamic status;
   dynamic writeDate;
-  dynamic writeUid;
+  List<dynamic> writeUid;
+  dynamic xGpsTrackingDes;
+  dynamic xRealEndTime;
+  dynamic xRealStartTime;
 
   PickingRoute(
       {this.sLastUpdate,
@@ -36,7 +39,10 @@ class PickingRoute {
       this.startTime,
       this.status,
       this.writeDate,
-      this.writeUid});
+      this.writeUid,
+      this.xGpsTrackingDes,
+      this.xRealEndTime,
+      this.xRealStartTime});
 
   PickingRoute.fromJson(Map<String, dynamic> json) {
     sLastUpdate = json['__last_update'];
@@ -57,28 +63,39 @@ class PickingRoute {
     status = json['status'];
     writeDate = json['write_date'];
     writeUid = json['write_uid'];
+    xGpsTrackingDes = json['x_gps_tracking_des'];
+    xRealEndTime = json['x_real_end_time'];
+    xRealStartTime = json['x_real_start_time'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['__last_update'] = this.sLastUpdate;
-    data['create_date'] = this.createDate;
-    data['create_uid'] = this.createUid;
-    data['delivery_id'] = this.deliveryId;
-    data['delivery_route_id'] = this.deliveryRouteId;
-    data['destination_location'] = this.destinationLocation;
-    data['display_name'] = this.displayName;
-    data['distance'] = this.distance;
-    data['end_time'] = this.endTime;
-    data['gps_tracking'] = this.gpsTracking;
-    data['hour'] = this.hour;
-    data['id'] = this.id;
-    data['note'] = this.note;
-    data['source_location'] = this.sourceLocation;
-    data['start_time'] = this.startTime;
-    data['status'] = this.status;
-    data['write_date'] = this.writeDate;
-    data['write_uid'] = this.writeUid;
+    if (this.sLastUpdate != null) data['__last_update'] = this.sLastUpdate;
+    if (this.createDate != null) data['create_date'] = this.createDate;
+    if (this.createUid != null) data['create_uid'] = this.createUid;
+    if (this.deliveryId != null) data['delivery_id'] = this.deliveryId;
+    if (this.deliveryRouteId != null)
+      data['delivery_route_id'] = this.deliveryRouteId;
+    if (this.destinationLocation != null)
+      data['destination_location'] = this.destinationLocation;
+    if (this.displayName != null) data['display_name'] = this.displayName;
+    if (this.distance != null) data['distance'] = this.distance;
+    if (this.endTime != null) data['end_time'] = this.endTime;
+    if (this.gpsTracking != null) data['gps_tracking'] = this.gpsTracking;
+    if (this.hour != null) data['hour'] = this.hour;
+    if (this.id != null) data['id'] = this.id;
+    if (this.note != null) data['note'] = this.note;
+    if (this.sourceLocation != null)
+      data['source_location'] = this.sourceLocation;
+    if (this.startTime != null) data['start_time'] = this.startTime;
+    if (this.status != null) data['status'] = this.status;
+    if (this.writeDate != null) data['write_date'] = this.writeDate;
+    if (this.writeUid != null) data['write_uid'] = this.writeUid;
+    if (this.xGpsTrackingDes != null)
+      data['x_gps_tracking_des'] = this.xGpsTrackingDes;
+    if (this.xRealEndTime != null) data['x_real_end_time'] = this.xRealEndTime;
+    if (this.xRealStartTime != null)
+      data['x_real_start_time'] = this.xRealStartTime;
     return data;
   }
 }

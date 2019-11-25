@@ -1,16 +1,15 @@
 import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
-import 'package:b2s_driver/src/app/models/bodyNotification.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/itemCustomPopupMenu.dart';
+import 'package:b2s_driver/src/app/pages/attendantManager/attendant_manager_page.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
-import 'package:b2s_driver/src/app/service/onesingal-service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ScheduleViewModel extends ViewModelBase {
+class AttendantPageViewModel extends ViewModelBase{
   List<DriverBusSession> listDriverBusSession = List();
   bool isShowListButton = false;
   bool isLoadingData = false;
@@ -19,7 +18,7 @@ class ScheduleViewModel extends ViewModelBase {
   CustomPopupMenu selectedVehicle;
 //  DriverBusSession driverBusSession;
   Driver driver = Driver();
-  ScheduleViewModel() {
+  AttendantPageViewModel() {
     choicesVehicle = driver.listVehicle
         .map((vehicle) => CustomPopupMenu(id: vehicle.id, title: vehicle.name))
         .toList();
@@ -40,7 +39,7 @@ class ScheduleViewModel extends ViewModelBase {
     loading = true;
     api
         .getListDriverBusSession(
-            vehicleId: driver.vehicleId, driverId: driver.id, date: date)
+        vehicleId: driver.vehicleId, driverId: driver.id, date: date)
         .then((value) {
       if (value is List) {
         listDriverBusSession = value;
@@ -70,22 +69,16 @@ class ScheduleViewModel extends ViewModelBase {
   }
 
   onTapItemPick() {
-    BodyNotification body = BodyNotification();
-    body.contents = {"en": "xe dang den"};
-    body.filters = [
-      {"field": "tag", "key": "id", "relation": "=", "value": 48}
-    ];
-    OneSignalService.postNotification(body);
     cloudService.busSession
         .createListBusSessionFromDriverBusSession(listDriverBusSession[0]);
-    Navigator.pushNamed(context, HomePage.routeName,
+    Navigator.pushNamed(context, AttendantManagerPage.routeName,
         arguments: listDriverBusSession[0]);
   }
 
   onTapItemDrop() {
     cloudService.busSession
         .createListBusSessionFromDriverBusSession(listDriverBusSession[1]);
-    Navigator.pushNamed(context, HomePage.routeName,
+    Navigator.pushNamed(context, AttendantManagerPage.routeName,
         arguments: listDriverBusSession[1]);
   }
 }

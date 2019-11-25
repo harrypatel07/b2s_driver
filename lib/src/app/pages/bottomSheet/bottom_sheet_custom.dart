@@ -1,11 +1,11 @@
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
+import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/models/statusBus.dart';
+import 'package:b2s_driver/src/app/pages/bottomSheet/bottom_sheet_custom_viewmodel.dart';
 import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
 import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
-import 'package:b2s_driver/src/app/pages/locateBus/bottomSheet/bottom_sheet_custom_viewmodel.dart';
-import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ class BottomSheetCustom extends StatefulWidget {
 }
 
 class BottomSheetCustomArgs {
-  final LocateBusPageViewModel viewModel;
+  final BottomSheetViewModelBase viewModel;
   BottomSheetCustomArgs({this.viewModel});
 }
 
@@ -28,7 +28,7 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
   BottomSheetCustomViewModel viewModel = BottomSheetCustomViewModel();
   @override
   void initState() {
-    viewModel.localBusViewModel = widget.arguments.viewModel;
+    viewModel.bottomSheetViewModelBase = widget.arguments.viewModel;
     viewModel.listenData();
     super.initState();
   }
@@ -102,9 +102,9 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                       margin: EdgeInsets.only(right: 2, left: 2),
                       child: HomePageTimeLineV2(
                         listTimeLine: _buildListTimeLine(
-                            viewModel.localBusViewModel.driverBusSession,
-                            viewModel.localBusViewModel.routeBus),
-                        position: viewModel.localBusViewModel.position,
+                            viewModel.bottomSheetViewModelBase.driverBusSession,
+                            viewModel.bottomSheetViewModelBase.routeBus),
+                        position: viewModel.bottomSheetViewModelBase.position,
                       )),
                 ),
                 Positioned(
@@ -112,16 +112,16 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                     right: 2,
                     left: 2,
                     child: FlatButton(
-                      color: (viewModel.localBusViewModel.routeBus.status)
+                      color: (viewModel.bottomSheetViewModelBase.routeBus.status)
                           ? Colors.grey
                           : ThemePrimary.primaryColor,
-                      child: (viewModel.localBusViewModel.routeBus.status)
+                      child: (viewModel.bottomSheetViewModelBase.routeBus.status)
                           ? Text('ĐÃ HOÀN THÀNH',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold))
                           : Text(
-                              'HOÀN THÀNH ĐIỂM ${viewModel.localBusViewModel.position}',
+                              'HOÀN THÀNH ĐIỂM ${viewModel.bottomSheetViewModelBase.position}',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),

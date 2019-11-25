@@ -74,17 +74,72 @@ class LoadingDialog {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Thông báo",style: TextStyle(color: ThemePrimary.primaryColor),),
-        content: Text(msg,style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold),),
+        title: Text(
+          "Thông báo",
+          style: TextStyle(color: ThemePrimary.primaryColor),
+        ),
+        content: Text(
+          msg,
+          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+        ),
         actions: [
           OutlineButton(
-            borderSide: BorderSide(color:ThemePrimary.primaryColor ),
-              child: new Text("OK",style: TextStyle(fontSize: 16,color: ThemePrimary.primaryColor),),
-              onPressed:() {
-            Navigator.of(context).pop(LoadingDialog);
-          },
-              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(0.0))
-          ),
+              borderSide: BorderSide(color: ThemePrimary.primaryColor),
+              child: new Text(
+                "OK",
+                style:
+                    TextStyle(fontSize: 16, color: ThemePrimary.primaryColor),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(LoadingDialog);
+              },
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(0.0))),
+        ],
+      ),
+    );
+  }
+
+  Future<bool> showMsgDialogWithButton(
+      BuildContext context, String msg) async{
+      return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          "Thông báo",
+          style: TextStyle(color: ThemePrimary.primaryColor),
+        ),
+        content: Text(
+          msg,
+          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          OutlineButton(
+              borderSide: BorderSide(color: ThemePrimary.primaryColor),
+              child: new Text(
+                "Hủy",
+                style:
+                    TextStyle(fontSize: 16, color: ThemePrimary.primaryColor),
+              ),
+              onPressed: () {
+//                result = false;
+                Navigator.of(context).pop(false);
+              },
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(0.0))),
+          OutlineButton(
+              borderSide: BorderSide(color: ThemePrimary.primaryColor),
+              child: new Text(
+                "Tiếp tục",
+                style:
+                    TextStyle(fontSize: 16, color: ThemePrimary.primaryColor),
+              ),
+              onPressed: () {
+//                result = true;
+                Navigator.of(context).pop(true);
+              },
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(0.0))),
         ],
       ),
     );
@@ -132,7 +187,10 @@ class ToastController {
     Duration duration,
   }) {
     Flushbar(
-      messageText: Text(message,style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold),),
+      messageText: Text(
+        message,
+        style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+      ),
       duration: duration,
       animationDuration: Duration(milliseconds: 100),
       //leftBarIndicatorColor: Colors.blue[300],
@@ -155,6 +213,7 @@ class ToastController {
     )..show(context);
   }
 }
+
 class LoadingSpinner {
   static Widget loadingView({BuildContext context, bool loading}) {
     if (loading)

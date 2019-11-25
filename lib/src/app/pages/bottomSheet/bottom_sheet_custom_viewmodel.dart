@@ -2,16 +2,19 @@ import 'dart:async';
 
 import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
+import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
+import 'package:b2s_driver/src/app/pages/attendantManager/attendant_manager_viewmodel.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/barcode-service.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:flutter/cupertino.dart';
 
 class BottomSheetCustomViewModel extends ViewModelBase {
-  LocateBusPageViewModel localBusViewModel;
+  BottomSheetViewModelBase bottomSheetViewModelBase;
+  AttendantManagerViewModel attendantManagerViewModel;
   List<ChildDrenStatus> listChildrenStatus = List();
   StreamSubscription streamCloud;
   BottomSheetCustomViewModel();
@@ -43,9 +46,9 @@ class BottomSheetCustomViewModel extends ViewModelBase {
     cloudService.busSession.updateBusSessionFromChildrenStatus(childrenStatus);
 //    updateStatusLeaveChildren(childrenStatus.id);
     this.updateState();
-    if (localBusViewModel != null) {
-      localBusViewModel.onCreateDriverBusSessionReport();
-      localBusViewModel.updateState();
+    if (bottomSheetViewModelBase != null) {
+      bottomSheetViewModelBase.onCreateDriverBusSessionReport();
+      bottomSheetViewModelBase.updateState();
     }
   }
 
@@ -58,11 +61,11 @@ class BottomSheetCustomViewModel extends ViewModelBase {
     if (childrenStatus.typePickDrop == 1 && childrenStatus.statusID != 1)
       return;
     if (childrenStatus.typePickDrop == 0 && childrenStatus.statusID == 0) {
-      localBusViewModel.driverBusSession.totalChildrenPick++;
+      bottomSheetViewModelBase.driverBusSession.totalChildrenPick++;
 //      updateStatusPickChildren(childrenStatus.id);
     }
     if (childrenStatus.typePickDrop == 1 && childrenStatus.statusID == 1) {
-      localBusViewModel.driverBusSession.totalChildrenDrop++;
+      bottomSheetViewModelBase.driverBusSession.totalChildrenDrop++;
 //      updateStatusDropChildren(childrenStatus.id);
     }
     DriverBusSession.updateChildrenStatusIdByPickDrop(
@@ -72,10 +75,10 @@ class BottomSheetCustomViewModel extends ViewModelBase {
     cloudService.busSession.updateBusSessionFromChildrenStatus(childrenStatus);
 
     this.updateState();
-    if (localBusViewModel != null) {
+    if (bottomSheetViewModelBase != null) {
 //      localBusViewModel.driverBusSession.totalChildrenInBus += 1;
-      localBusViewModel.onCreateDriverBusSessionReport();
-      localBusViewModel.updateState();
+      bottomSheetViewModelBase.onCreateDriverBusSessionReport();
+      bottomSheetViewModelBase.updateState();
     }
   }
 
@@ -113,7 +116,7 @@ class BottomSheetCustomViewModel extends ViewModelBase {
   }
 
   onTapFinishRoute() {
-    if (!localBusViewModel.routeBus.status) {
+    if (!bottomSheetViewModelBase.routeBus.status) {
       var listPick = listChildrenStatus
           .where((statusBus) =>
               statusBus.statusID == 0 && statusBus.typePickDrop == 0)
@@ -129,9 +132,9 @@ class BottomSheetCustomViewModel extends ViewModelBase {
             message: 'Vẫn còn học sinh, ban chưa thể hoàn thành.',
             duration: Duration(milliseconds: 1000));
       else {
-        localBusViewModel.routeBus.status = true;
-        var route = localBusViewModel.driverBusSession.listRouteBus.singleWhere(
-            (routeBus) => routeBus.id == localBusViewModel.routeBus.id);
+        bottomSheetViewModelBase.routeBus.status = true;
+        var route = bottomSheetViewModelBase.driverBusSession.listRouteBus.singleWhere(
+            (routeBus) => routeBus.id == bottomSheetViewModelBase.routeBus.id);
         route.status = true;
         Navigator.pop(context, true);
       }
@@ -155,10 +158,10 @@ class BottomSheetCustomViewModel extends ViewModelBase {
   listenData() async {
     if (streamCloud != null) streamCloud.cancel();
     streamCloud = await cloudService.busSession
-        .listenBusSessionForDriver(localBusViewModel.driverBusSession, () {
+        .listenBusSessionForDriver(bottomSheetViewModelBase.driverBusSession, () {
       this.updateState();
-      localBusViewModel.onCreateDriverBusSessionReport();
-      localBusViewModel.updateState();
+      bottomSheetViewModelBase.onCreateDriverBusSessionReport();
+      bottomSheetViewModelBase.updateState();
     });
   }
 }

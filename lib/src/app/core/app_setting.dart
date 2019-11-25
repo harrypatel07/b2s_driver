@@ -18,7 +18,10 @@ const String admin_id = "bus2school";
 const String admin_password = "B@S#2019";
 
 final String ggKey = "AIzaSyCjB1Kh7OstaDns8ie6uPysWEWa_vwS3iw";
-
+const String oneSignal_appId = "ece1d724-31f9-4372-9ecf-5b13ad2baef0";
+const String oneSignal_restKey =
+    "MTNkMDBjOWMtZjM3Ni00YzlkLWJmMWEtOThhMTAwOWQwMjYz";
+    
 const superKeyEncrypt = "b2s@#encrypt";
 
 const emptyState = {

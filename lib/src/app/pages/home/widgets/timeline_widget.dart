@@ -12,10 +12,11 @@ class HomePageTimeLineV2 extends StatelessWidget {
   final BusTimeLine busTimeLine;
   final Animation<double> animationBusController;
   final int position;
+  final bool atPageHome;
 //  final ui.Image image;
 //  final bool isEnableIconBus;
   HomePageTimeLineV2(
-      {this.listTimeLine, this.busTimeLine, this.animationBusController,this.position});
+      {this.listTimeLine, this.busTimeLine, this.animationBusController,this.position,this.atPageHome = true});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class HomePageTimeLineV2 extends StatelessWidget {
     return Container(
       child: ListView.builder(
         itemCount: listTimeLine.length,
-        padding: const EdgeInsets.only(bottom: 60),
+        padding: atPageHome? EdgeInsets.only(bottom: 60):EdgeInsets.only(bottom: 0.0),
         itemBuilder: (context, index) {
           return new LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
@@ -173,7 +174,7 @@ class TimeLineEvent {
   final int id;
   final String time;
   final String task;
-  final List<HomePageCardTimeLine> content;
+  final List<Widget> content;
   final bool isFinish;
 
   TimeLineEvent({this.id,this.time, this.task, this.content, this.isFinish});

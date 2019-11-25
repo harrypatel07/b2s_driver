@@ -1,24 +1,25 @@
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/itemCustomPopupMenu.dart';
-import 'package:b2s_driver/src/app/pages/schedule/schedule_viewmodel.dart';
+import 'package:b2s_driver/src/app/pages/attendant/attendant_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/googlemap-service.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/dash.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_appbar_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
-class SchedulePage extends StatefulWidget {
-  static const String routeName = "/schedule";
+class AttendantPage extends StatefulWidget {
+  static const String routeName = "/attendant";
   @override
-  _SchedulePageState createState() => _SchedulePageState();
+  _AttendantPageState createState() => _AttendantPageState();
 }
 
-class _SchedulePageState extends State<SchedulePage> {
-  ScheduleViewModel viewModel = ScheduleViewModel();
+class _AttendantPageState extends State<AttendantPage> {
+  AttendantPageViewModel viewModel = AttendantPageViewModel();
   List<CustomPopupMenu> choices = <CustomPopupMenu>[
     CustomPopupMenu(
         id: 0,
@@ -31,27 +32,10 @@ class _SchedulePageState extends State<SchedulePage> {
             .format(DateTime.now().add(Duration(days: 1)))
             .toString())
   ];
-  CustomPopupMenu _selectedChoices;
-//  GlobalKey _key = GlobalKey();
-//  Size _size = Size(0, 0);
-//  _getPosition() {
-//    final RenderBox renderBox = _key.currentContext.findRenderObject();
-//    _size = renderBox.size;
-//  }
   @override
   void initState() {
-    _selectedChoices = choices[0];
-//    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-//          _getPosition();
-//        }));
     super.initState();
   }
-
-  void _select(CustomPopupMenu choice) {
-    _selectedChoices = choice;
-    viewModel.onLoad(_selectedChoices.subTitle);
-  }
-
   void _selectVehicle(CustomPopupMenu choice) {
     viewModel.selectedVehicle = choice;
     viewModel.onChangeVehicle(viewModel.selectedVehicle.subTitle);
@@ -80,25 +64,6 @@ class _SchedulePageState extends State<SchedulePage> {
           }).toList();
         },
       ),
-//      leading: IconButton(
-//        icon: Icon(Icons.arrow_back),
-//        onPressed: () => Navigator.pop(context),
-//      ),
-      actions: <Widget>[
-        PopupMenuButton<CustomPopupMenu>(
-//          elevation:  30.2,
-          initialValue: _selectedChoices,
-          onSelected: _select,
-          itemBuilder: (BuildContext context) {
-            return choices.map((CustomPopupMenu choice) {
-              return PopupMenuItem<CustomPopupMenu>(
-                value: choice,
-                child: Text(choice.title),
-              );
-            }).toList();
-          },
-        ),
-      ],
     );
   }
 
@@ -127,9 +92,9 @@ class _SchedulePageState extends State<SchedulePage> {
               child: CachedNetworkImage(
                   imageUrl: url,
                   imageBuilder: (context, imageProvider) => Image(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
-                      ))),
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ))),
         ),
       );
     }
@@ -145,49 +110,49 @@ class _SchedulePageState extends State<SchedulePage> {
             itemBuilder: (context, index) {
               return new LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                int routeBusID =
-                    driverBusSession.childDrenRoute[index].routeBusID;
-                var routeBus = driverBusSession.listRouteBus
-                    .firstWhere((route) => route.id == routeBusID);
-                return Container(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 8,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 0.0, top: 0.0),
-                          child: Container(
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  height: 43.5,
-                                  child: Text(
-                                    routeBus.routeName,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                (index <
+                    int routeBusID =
+                        driverBusSession.childDrenRoute[index].routeBusID;
+                    var routeBus = driverBusSession.listRouteBus
+                        .firstWhere((route) => route.id == routeBusID);
+                    return Container(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 8,
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 0.0, top: 0.0),
+                              child: Container(
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      height: 43.5,
+                                      child: Text(
+                                        routeBus.routeName,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    (index <
                                         driverBusSession.childDrenRoute.length -
                                             1)
-                                    ? Container(
-                                        height: 1,
-                                        color: Colors.grey[500],
-                                      )
-                                    : Container(
-                                        height: 1,
-                                      ),
-                              ],
+                                        ? Container(
+                                      height: 1,
+                                      color: Colors.grey[500],
+                                    )
+                                        : Container(
+                                      height: 1,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              });
+                          )
+                        ],
+                      ),
+                    );
+                  });
             },
           ),
         ),
@@ -205,55 +170,55 @@ class _SchedulePageState extends State<SchedulePage> {
             itemBuilder: (context, index) {
               return new LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                return Container(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 0.0, top: 0.0),
-                          child: Container(
-                            child: Column(
-                              children: <Widget>[
-                                (index == 0)
-                                    ? Container(
-                                        width: 10,
-                                      )
-                                    : Container(),
-                                (index == 0)
-                                    ? SizedBox(
-                                        height: 10,
-                                      )
-                                    : Dash(
-                                        length: 25.0 + index * 1.0,
-                                        dashLength: 2,
-                                        direction: Axis.vertical,
-                                        dashColor: ThemePrimary.primaryColor,
-                                        dashThickness: 1,
+                    return Container(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 0.0, top: 0.0),
+                              child: Container(
+                                child: Column(
+                                  children: <Widget>[
+                                    (index == 0)
+                                        ? Container(
+                                      width: 10,
+                                    )
+                                        : Container(),
+                                    (index == 0)
+                                        ? SizedBox(
+                                      height: 10,
+                                    )
+                                        : Dash(
+                                      length: 25.0 + index * 1.0,
+                                      dashLength: 2,
+                                      direction: Axis.vertical,
+                                      dashColor: ThemePrimary.primaryColor,
+                                      dashThickness: 1,
+                                    ),
+                                    (index == 0)
+                                        ? Transform.rotate(
+                                      angle: 3.14,
+                                      child: Icon(
+                                        Icons.navigation,
+                                        color: ThemePrimary.primaryColor,
                                       ),
-                                (index == 0)
-                                    ? Transform.rotate(
-                                        angle: 3.14,
-                                        child: Icon(
-                                          Icons.navigation,
-                                          color: ThemePrimary.primaryColor,
-                                        ),
-                                      )
-                                    : Icon(
-                                        Icons.radio_button_unchecked,
-                                        color: Colors.orange,
-                                        size: 15,
-                                      ),
-                              ],
+                                    )
+                                        : Icon(
+                                      Icons.radio_button_unchecked,
+                                      color: Colors.orange,
+                                      size: 15,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              });
+                          )
+                        ],
+                      ),
+                    );
+                  });
             },
           ),
         ),
@@ -335,18 +300,18 @@ class _SchedulePageState extends State<SchedulePage> {
             width: MediaQuery.of(context).size.width - 25,
             height: 50,
             color:
-                driverBusSession.status ? ThemePrimary.primaryColor : Colors.black87,
+            driverBusSession.status ? ThemePrimary.primaryColor : Colors.black87,
             child: driverBusSession.status
                 ? Text(
-                    'ĐÃ HOÀN THÀNH',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                  )
+              'ĐÃ HOÀN THÀNH',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white),
+            )
                 : Text(
-                    'CHỌN',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                  ),
+              'CHỌN',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ),
       );
@@ -416,54 +381,54 @@ class _SchedulePageState extends State<SchedulePage> {
   Widget _body() {
     return RefreshIndicator(
         onRefresh: () async {
-          _select(_selectedChoices);
+          _selectVehicle(viewModel.selectedVehicle);
         },
         child: viewModel.loading
             ? LoadingSpinner.loadingView(
-                context: context,
-                loading: viewModel.loading,
-              )
+          context: context,
+          loading: viewModel.loading,
+        )
             : SingleChildScrollView(
-                child: ( viewModel.listDriverBusSession.length == 0)
-                    ? Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.9,
-                        child: Center(
-                          child: Text('Không có chuyến đi.'),
-                        ),
-                      )
+          child: ( viewModel.listDriverBusSession.length == 0)
+              ? Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.9,
+            child: Center(
+              child: Text('Không có chuyến đi.'),
+            ),
+          )
+              : Container(
+            child: Column(
+              children: <Widget>[
+                _item(
+                    driverBusSession:
+                    viewModel.listDriverBusSession[0],
+                    title: viewModel.selectedVehicle.title,
+                    onTap: () {
+                      viewModel.onTapItemPick();
+                    }),
+                SizedBox(
+                  height: 20,
+                ),
+                (viewModel.listDriverBusSession.length > 1)
+                    ? _item(
+                    driverBusSession:
+                    viewModel.listDriverBusSession[1],
+                    title: viewModel.selectedVehicle.title,
+                    onTap: () {
+                      viewModel.onTapItemDrop();
+                    })
                     : Container(
-                        child: Column(
-                          children: <Widget>[
-                            _item(
-                                driverBusSession:
-                                    viewModel.listDriverBusSession[0],
-                                title: _selectedChoices.title,
-                                onTap: () {
-                                  viewModel.onTapItemPick();
-                                }),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            (viewModel.listDriverBusSession.length > 1)
-                                ? _item(
-                                    driverBusSession:
-                                        viewModel.listDriverBusSession[1],
-                                    title: _selectedChoices.title,
-                                    onTap: () {
-                                      viewModel.onTapItemDrop();
-                                    })
-                                : Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.5,
-                                  ),
-                            SizedBox(
-                              height: 35,
-                            )
-                          ],
-                        ),
-                      ),
-              ));
+                  height: MediaQuery.of(context).size.height *
+                      0.5,
+                ),
+                SizedBox(
+                  height: 35,
+                )
+              ],
+            ),
+          ),
+        ));
   }
 
   @override
@@ -484,4 +449,3 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 }
-

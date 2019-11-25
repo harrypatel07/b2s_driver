@@ -52,7 +52,7 @@ class _UserPageState extends State<UserPage> {
       );
     }
 
-    Widget _buildLogOutTitle(IconData icon, Color color, String title) {
+    Widget _builtUserTitle({IconData icon, Color color, String title, Function onTap}) {
       return new Column(
         children: <Widget>[
           new ListTile(
@@ -75,9 +75,7 @@ class _UserPageState extends State<UserPage> {
                 ),
               ),
               trailing: Icon(LineIcons.chevron_circle_right),
-              onTap: () {
-                viewModel.onTapLogout();
-              }),
+              onTap: onTap),
         ],
       );
     }
@@ -111,7 +109,35 @@ class _UserPageState extends State<UserPage> {
         ],
       );
     }
-
+    Widget _buildAttendantTitle(IconData icon, Color color, String title) {
+      return new Column(
+        children: <Widget>[
+          new ListTile(
+              title: Text(
+                title,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              leading: Container(
+                height: 30.0,
+                width: 30.0,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Center(
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              trailing: Icon(LineIcons.chevron_circle_right),
+              onTap: () {
+                viewModel.onTapHistoryTrip();
+              }),
+        ],
+      );
+    }
     Widget secondCard() {
       return Padding(
         padding: EdgeInsets.only(right: 20.0, left: 20.0, bottom: 30.0),
@@ -127,13 +153,13 @@ class _UserPageState extends State<UserPage> {
             ),
             child: Column(
               children: <Widget>[
-                _buildChatTitle(Icons.person_pin, ThemePrimary.primaryColor, "Tin nhắn"),
+                _builtUserTitle(icon:Icons.person_pin,color:ThemePrimary.primaryColor,title:"Tin nhắn",onTap:()=>viewModel.onTapMessage()),
                 hr,
-                _buildHistoryTitle(Icons.history, ThemePrimary.primaryColor, 'Lịch sử'),
+                _builtUserTitle(icon:Icons.history, color:ThemePrimary.primaryColor, title:'Lịch sử',onTap: ()=>viewModel.onTapHistoryTrip()),
                 hr,
-//                _buildHistoryTitle(Icons.history, ThemePrimary.primaryColor, 'Lịch sử'),
-//                hr,
-                _buildLogOutTitle(Icons.exit_to_app, ThemePrimary.primaryColor, "Đăng xuất"),
+                _builtUserTitle(icon:Icons.perm_identity, color:ThemePrimary.primaryColor, title:'Quản lý đưa đón',onTap: ()=>viewModel.onTapAttendant()),
+                hr,
+                _builtUserTitle(icon:Icons.exit_to_app,color:ThemePrimary.primaryColor,title:"Đăng xuất",onTap: ()=>viewModel.onTapLogout()),
               ],
             ),
           ),

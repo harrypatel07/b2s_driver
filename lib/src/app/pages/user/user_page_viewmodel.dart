@@ -1,5 +1,6 @@
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
+import 'package:b2s_driver/src/app/pages/attendant/attendant_page.dart';
 import 'package:b2s_driver/src/app/pages/historyTrip/historyTrip_page.dart';
 import 'package:b2s_driver/src/app/pages/login/login_page.dart';
 import 'package:b2s_driver/src/app/pages/message/message_page.dart';
@@ -37,5 +38,8 @@ class UserPageViewModel extends ViewModelBase {
   }
   onTapHistoryTrip(){
     Navigator.pushNamed(context, HistoryTripPage.routeName);
+  }
+  onTapAttendant(){
+    Navigator.pushNamed(context, AttendantPage.routeName);
   }
 }

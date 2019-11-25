@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:b2s_driver/src/app/core/app_setting.dart';
-import 'package:b2s_driver/src/app/core/baseViewModel.dart';
+import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
+import 'package:b2s_driver/src/app/pages/bottomSheet/bottom_sheet_custom.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
-import 'package:b2s_driver/src/app/pages/locateBus/bottomSheet/bottom_sheet_custom.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/widgets/icon_marker_custom.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
-class LocateBusPageViewModel extends ViewModelBase {
+class LocateBusPageViewModel extends BottomSheetViewModelBase {
   bool showGoolgeMap = true;
   bool showSpinner = false;
   bool myLocationEnabled = false;
@@ -24,9 +24,6 @@ class LocateBusPageViewModel extends ViewModelBase {
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   Map<PolylineId, Polyline> polyline = <PolylineId, Polyline>{};
   Location location = Location();
-  DriverBusSession driverBusSession;
-  int position;
-  RouteBus routeBus;
   //List<Children> listChildrenPaidTicket;
   StreamSubscription streamLocation;
   LocateBusPageViewModel();
@@ -38,16 +35,7 @@ class LocateBusPageViewModel extends ViewModelBase {
     super.dispose();
   }
 
-  onCreateDriverBusSessionReport() {
-    //listChildrenPaidTicket = Children.getListChildrenPaidTicket(driverBusSession.listChildren);
-    driverBusSession.totalChildrenLeave = getCountChildrenByStatusBusId(3);
-    driverBusSession.totalChildrenInBus = getCountChildrenByStatusBusId(1);
-    driverBusSession.totalChildrenPick = getCountChildrenByStatusBusId(1) +
-        getCountChildrenByStatusBusId(2) +
-        getCountChildrenByStatusBusId(4);
-    driverBusSession.totalChildrenDrop =
-        getCountChildrenByStatusBusId(2) + getCountChildrenByStatusBusId(4);
-  }
+
 
   void onMapCreated(GoogleMapController controller) async {
     // _mapController.complete(controller);
@@ -109,53 +97,37 @@ class LocateBusPageViewModel extends ViewModelBase {
           consumeTapEvents: true,
           position: LatLng(route.lat, route.lng),
           icon: await iconMarkerCustomText(
-              text: (i + 1).toString(),
-              backgroundColor: ThemePrimary.primaryColor),
+            text: (i + 1).toString(),
+            color: route.status ? Colors.black.withAlpha(200) : Colors.white,
+            backgroundColor: route.status
+                ? ThemePrimary.primaryColor.withAlpha(50)
+                : ThemePrimary.primaryColor,
+            strokeColor:
+                route.status ? Colors.black.withAlpha(200) : Colors.white,
+          ),
           onTap: () {
             onTapMaker(route, i + 1);
           });
     }
     this.updateState();
   }
-
   onTapMaker(RouteBus _route, int _pos) {
     this.position = _pos;
     this.routeBus = _route;
     if (_pos >= 2) {
-      if (driverBusSession.listRouteBus[_pos - 2].status) {
-        showModalBottomSheet(
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            context: context,
-            builder: (BuildContext bc) {
-              return BottomSheetCustom(
-                  arguments: BottomSheetCustomArgs(viewModel: this));
-            }).then((result) {
-          if (result == true && driverBusSession.listRouteBus.length > _pos) {
-            animateThePoint(_pos);
-          }
-        });
-        animateThePoint(_pos-1);
-      }
+      if (countRouteBusNotFinishPrev(_pos) == 0)
+        showBottomSheet(_pos);
       else {
-        LoadingDialog.showMsgDialog(
-            context, 'Bạn cần hoàn thành điểm ${_pos - 1}');
+        LoadingDialog()
+            .showMsgDialogWithButton(context, getTextPopupConfirm(_pos))
+            .then((result) {
+              try {
+                if (result) showBottomSheet(_pos);
+              }catch(e){print(e);}
+        });
       }
-    } else {
-      showModalBottomSheet(
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          context: context,
-          builder: (BuildContext bc) {
-            return BottomSheetCustom(
-                arguments: BottomSheetCustomArgs(viewModel: this));
-          }).then((result) {
-        if (result == true && driverBusSession.listRouteBus.length > _pos) {
-          animateThePoint(_pos);
-        }
-      });
-      animateThePoint(_pos-1);
-    }
+    } else
+      showBottomSheet(_pos);
   }
 
   int getCountChildrenByStatus() {
@@ -185,8 +157,10 @@ class LocateBusPageViewModel extends ViewModelBase {
   }
 
   onTapFinish() async {
-    if (driverBusSession.totalChildrenPick == driverBusSession.totalChildrenDrop &&
-        (driverBusSession.totalChildrenPick + driverBusSession.totalChildrenLeave) ==
+    if (driverBusSession.totalChildrenPick ==
+            driverBusSession.totalChildrenDrop &&
+        (driverBusSession.totalChildrenPick +
+                driverBusSession.totalChildrenLeave) ==
             driverBusSession.totalChildrenRegistered) {
       driverBusSession.status = true;
       String barcode = await BarCodeService.scan();
@@ -212,5 +186,24 @@ class LocateBusPageViewModel extends ViewModelBase {
     if (mapController != null)
       mapController.animateCamera(CameraUpdate.newCameraPosition(
           CameraPosition(target: latlng, zoom: 14.0)));
+  }
+  @override
+  void showBottomSheet(int pos) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (BuildContext bc) {
+          return BottomSheetCustom(
+              arguments: BottomSheetCustomArgs(viewModel: this));
+        }).then((result) {
+          try {
+            if (result && driverBusSession.listRouteBus.length > pos) {
+              animateThePoint(pos);
+            }
+            if (result) initMarkers();
+          }catch(e){print(e);}
+    });
+    animateThePoint(pos - 1);
   }
 }

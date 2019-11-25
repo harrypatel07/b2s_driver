@@ -190,7 +190,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  TabsPageViewModel tabsPageViewModel;
+//  TabsPageViewModel tabsPageViewModel;
   @override
   Widget build(BuildContext context) {
     //tabsPageViewModel = ViewModelProvider.of(context);

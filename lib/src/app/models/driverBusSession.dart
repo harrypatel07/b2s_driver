@@ -199,6 +199,14 @@ class ChildDrenStatus {
     return data;
   }
 
+  static List<ChildDrenStatus> getListChildrenStatusByTypeAndRouteBusId(
+      List<ChildDrenStatus> list, int type, int routeBusID) {
+    return list
+        .where((item) =>
+            item.routeBusID == routeBusID && item.typePickDrop == type)
+        .toList();
+  }
+
   static ChildDrenStatus getStatusByChildrenID(
       List<ChildDrenStatus> list, int childrenID, int routeBusID) {
     ChildDrenStatus status = ChildDrenStatus();
@@ -219,6 +227,21 @@ class ChildDrenStatus {
         orElse: () => null);
     if (_childrenStatus != null) statusID = _childrenStatus.statusID;
     return statusID;
+  }
+
+  static List<int> getListChildrenIdByTypeAndRouteBusId(
+      List<ChildDrenStatus> listChildrenStatus,
+      int _typePickDrop,
+      int _routeBusID) {
+    List<int> listChildrenId;
+    listChildrenId = listChildrenStatus
+        .where((item) =>
+            item.typePickDrop == _typePickDrop &&
+            item.routeBusID == _routeBusID)
+        .toList()
+        .map((item) => item.childrenID)
+        .toList();
+    return listChildrenId;
   }
 
   static List<ChildDrenStatus> list = [

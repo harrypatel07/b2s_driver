@@ -6,7 +6,6 @@ import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/helper/utils.dart';
 import 'package:b2s_driver/src/app/helper/validator-helper.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
-import 'package:b2s_driver/src/app/models/parent.dart';
 import 'package:b2s_driver/src/app/models/res-partner.dart';
 import 'package:b2s_driver/src/app/widgets/drop_down_field.dart';
 import 'package:flutter/material.dart';

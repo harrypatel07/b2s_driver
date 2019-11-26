@@ -9,6 +9,7 @@ import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:validators/sanitizers.dart';
 
 class EditProfileDriver extends StatefulWidget {
   static const String routeName = "/editProfileDriver";
@@ -27,11 +28,14 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
     viewModel.driver = widget.driver;
     //viewModel.imagePicker = widget.driver.photo;
     if (widget.driver != null) {
-      viewModel.nameEditingController.text = widget.driver.name;
-      viewModel.phoneEditingController.text = widget.driver.phone;
+      viewModel.nameEditingController.text = widget.driver.name.toString();
+      viewModel.phoneEditingController.text =
+          (toBoolean(widget.driver.phone.toString()) == false)
+              ? ''
+              : widget.driver.phone.toString();
 //      viewModel.emailEditingController.text = widget.driver.email;
 //      viewModel.addressEditingController.text = widget.driver.contactAddress;
-      viewModel.genderEditingController.text = widget.driver.gender.toString();
+      viewModel.genderEditingController.text = (widget.driver.gender == null)?'':widget.driver.gender.toString();
     }
     super.initState();
   }
@@ -386,7 +390,10 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                                   });
                                 },
                                 child: Center(
-                                  child: Text("LƯU",style: TextStyle(color: Colors.white),),
+                                  child: Text(
+                                    "LƯU",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 )),
                           ),
                         ),

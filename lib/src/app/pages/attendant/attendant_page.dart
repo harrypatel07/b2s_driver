@@ -32,10 +32,27 @@ class _AttendantPageState extends State<AttendantPage> {
             .format(DateTime.now().add(Duration(days: 1)))
             .toString())
   ];
+  CustomPopupMenu _selectedChoices;
+//  GlobalKey _key = GlobalKey();
+//  Size _size = Size(0, 0);
+//  _getPosition() {
+//    final RenderBox renderBox = _key.currentContext.findRenderObject();
+//    _size = renderBox.size;
+//  }
   @override
   void initState() {
+    _selectedChoices = choices[0];
+//    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+//          _getPosition();
+//        }));
     super.initState();
   }
+
+  void _select(CustomPopupMenu choice) {
+    _selectedChoices = choice;
+    viewModel.onLoad(_selectedChoices.subTitle);
+  }
+
   void _selectVehicle(CustomPopupMenu choice) {
     viewModel.selectedVehicle = choice;
     viewModel.onChangeVehicle(viewModel.selectedVehicle.subTitle);
@@ -64,6 +81,25 @@ class _AttendantPageState extends State<AttendantPage> {
           }).toList();
         },
       ),
+//      leading: IconButton(
+//        icon: Icon(Icons.arrow_back),
+//        onPressed: () => Navigator.pop(context),
+//      ),
+      actions: <Widget>[
+        PopupMenuButton<CustomPopupMenu>(
+//          elevation:  30.2,
+          initialValue: _selectedChoices,
+          onSelected: _select,
+          itemBuilder: (BuildContext context) {
+            return choices.map((CustomPopupMenu choice) {
+              return PopupMenuItem<CustomPopupMenu>(
+                value: choice,
+                child: Text(choice.title),
+              );
+            }).toList();
+          },
+        ),
+      ],
     );
   }
 
@@ -381,7 +417,7 @@ class _AttendantPageState extends State<AttendantPage> {
   Widget _body() {
     return RefreshIndicator(
         onRefresh: () async {
-          _selectVehicle(viewModel.selectedVehicle);
+          _select(_selectedChoices);
         },
         child: viewModel.loading
             ? LoadingSpinner.loadingView(
@@ -389,46 +425,46 @@ class _AttendantPageState extends State<AttendantPage> {
           loading: viewModel.loading,
         )
             : SingleChildScrollView(
-          child: ( viewModel.listDriverBusSession.length == 0)
-              ? Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.9,
-            child: Center(
-              child: Text('Không có chuyến đi.'),
-            ),
-          )
-              : Container(
-            child: Column(
-              children: <Widget>[
-                _item(
-                    driverBusSession:
-                    viewModel.listDriverBusSession[0],
-                    title: viewModel.selectedVehicle.title,
-                    onTap: () {
-                      viewModel.onTapItemPick();
-                    }),
-                SizedBox(
-                  height: 20,
-                ),
-                (viewModel.listDriverBusSession.length > 1)
-                    ? _item(
-                    driverBusSession:
-                    viewModel.listDriverBusSession[1],
-                    title: viewModel.selectedVehicle.title,
-                    onTap: () {
-                      viewModel.onTapItemDrop();
-                    })
+                child: ( viewModel.listDriverBusSession.length == 0)
+                    ? Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.9,
+                        child: Center(
+                          child: Text('Không có chuyến đi.'),
+                        ),
+                      )
                     : Container(
-                  height: MediaQuery.of(context).size.height *
-                      0.5,
-                ),
-                SizedBox(
-                  height: 35,
-                )
-              ],
-            ),
-          ),
-        ));
+                        child: Column(
+                          children: <Widget>[
+                            _item(
+                                driverBusSession:
+                                    viewModel.listDriverBusSession[0],
+                                title: _selectedChoices.title,
+                                onTap: () {
+                                  viewModel.onTapItemPick();
+                                }),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            (viewModel.listDriverBusSession.length > 1)
+                                ? _item(
+                                    driverBusSession:
+                                        viewModel.listDriverBusSession[1],
+                                    title: _selectedChoices.title,
+                                    onTap: () {
+                                      viewModel.onTapItemDrop();
+                                    })
+                                : Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.5,
+                                  ),
+                            SizedBox(
+                              height: 35,
+                            )
+                          ],
+                        ),
+                      ),
+              ));
   }
 
   @override

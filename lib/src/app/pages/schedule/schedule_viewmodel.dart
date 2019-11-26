@@ -70,12 +70,6 @@ class ScheduleViewModel extends ViewModelBase {
   }
 
   onTapItemPick() {
-    BodyNotification body = BodyNotification();
-    body.contents = {"en": "xe dang den"};
-    body.filters = [
-      {"field": "tag", "key": "id", "relation": "=", "value": 48}
-    ];
-    OneSignalService.postNotification(body);
     cloudService.busSession
         .createListBusSessionFromDriverBusSession(listDriverBusSession[0]);
     Navigator.pushNamed(context, HomePage.routeName,

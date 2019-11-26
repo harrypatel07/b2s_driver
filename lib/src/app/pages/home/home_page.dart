@@ -24,9 +24,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   HomePageViewModel viewModel = HomePageViewModel();
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      viewModel.loadData();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   viewModel.loadData();
+    // });
+    viewModel.loadData();
     super.initState();
   }
 
@@ -143,8 +144,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         right: 0,
         child: GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, LocateBusPage.routeName,
-                arguments: driverBusSession);
+            viewModel.onStart();
           },
           child: Container(
             padding: EdgeInsets.only(left: 20),
@@ -196,6 +196,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     //tabsPageViewModel = ViewModelProvider.of(context);
     //viewModel = tabsPageViewModel.homePageViewModel;
     viewModel.context = context;
+    viewModel.driverBusSession = widget.driverBusSession;
     return ViewModelProvider(
       viewmodel: viewModel,
       child: StreamBuilder<Object>(

@@ -9,7 +9,7 @@ import 'package:b2s_driver/src/app/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class AttendantPageViewModel extends ViewModelBase{
+class AttendantPageViewModel extends ViewModelBase {
   List<DriverBusSession> listDriverBusSession = List();
   bool isShowListButton = false;
   bool isLoadingData = false;
@@ -39,7 +39,7 @@ class AttendantPageViewModel extends ViewModelBase{
     loading = true;
     api
         .getListDriverBusSession(
-        vehicleId: driver.vehicleId, driverId: driver.id, date: date)
+            vehicleId: driver.vehicleId, driverId: driver.driverId, date: date)
         .then((value) {
       if (value is List) {
         listDriverBusSession = value;
@@ -71,14 +71,14 @@ class AttendantPageViewModel extends ViewModelBase{
   onTapItemPick() {
     cloudService.busSession
         .createListBusSessionFromDriverBusSession(listDriverBusSession[0]);
-    Navigator.pushNamed(context, AttendantManagerPage.routeName,
+    Navigator.pushReplacementNamed(context, AttendantManagerPage.routeName,
         arguments: listDriverBusSession[0]);
   }
 
   onTapItemDrop() {
     cloudService.busSession
         .createListBusSessionFromDriverBusSession(listDriverBusSession[1]);
-    Navigator.pushNamed(context, AttendantManagerPage.routeName,
+    Navigator.pushReplacementNamed(context, AttendantManagerPage.routeName,
         arguments: listDriverBusSession[1]);
   }
 }

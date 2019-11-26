@@ -1,7 +1,7 @@
 class BodyNotification {
   dynamic appId;
   dynamic contents;
-  dynamic heaing;
+  dynamic headings;
   dynamic isIos;
   dynamic isAndroid;
   dynamic isWP;
@@ -65,7 +65,7 @@ class BodyNotification {
   BodyNotification(
       {this.appId,
       this.contents,
-      this.heaing,
+      this.headings,
       this.isIos,
       this.isAndroid,
       this.isWP,
@@ -129,7 +129,7 @@ class BodyNotification {
   BodyNotification.fromJson(Map<String, dynamic> json) {
     appId = json['app_id'];
     contents = json['contents'];
-    heaing = json['heaing'];
+    headings = json['headings'];
     isIos = json['isIos'];
     isAndroid = json['isAndroid'];
     isWP = json['isWP'];
@@ -195,7 +195,7 @@ class BodyNotification {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.appId != null) data['app_id'] = this.appId;
     if (this.contents != null) data['contents'] = this.contents;
-    if (this.heaing != null) data['heaing'] = this.heaing;
+    if (this.headings != null) data['headings'] = this.headings;
     if (this.isIos != null) data['isIos'] = this.isIos;
     if (this.isAndroid != null) data['isAndroid'] = this.isAndroid;
     if (this.isWP != null) data['isWP'] = this.isWP;

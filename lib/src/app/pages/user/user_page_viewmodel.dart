@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 
 class UserPageViewModel extends ViewModelBase {
   Driver driver = Driver();
-  UserPageViewModel() {}
+  UserPageViewModel();
   onTapMessage() {
     Navigator.pushNamed(context, MessagePage.routeName);
   }
@@ -22,7 +22,8 @@ class UserPageViewModel extends ViewModelBase {
       this.updateState();
     });
   }
-  onTapLogout(){
+
+  onTapLogout() {
     popupConfirm(
         context: context,
         title: 'THÔNG BÁO',
@@ -32,14 +33,11 @@ class UserPageViewModel extends ViewModelBase {
         onTap: () {
           Navigator.pop(context);
           driver.clearLocal();
-          Navigator.pushReplacementNamed(
-              context, LoginPage.routeName);
+          Navigator.pushReplacementNamed(context, LoginPage.routeName);
         });
   }
-  onTapHistoryTrip(){
+
+  onTapHistoryTrip() {
     Navigator.pushNamed(context, HistoryTripPage.routeName);
-  }
-  onTapAttendant(){
-    Navigator.pushNamed(context, AttendantPage.routeName);
   }
 }

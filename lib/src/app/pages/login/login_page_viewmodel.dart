@@ -26,7 +26,7 @@ class LoginPageViewModel extends ViewModelBase {
 
   LoginPageViewModel() {
     //account demo
-    _emailController.text = "sonnguyen@ts24corp.com";
+    _emailController.text = "info@ts24.com.vn";
     _passController.text = "123456";
     _emailController.addListener(() {
       if (_emailController.text.length > 1) isValidEmail();
@@ -87,23 +87,30 @@ class LoginPageViewModel extends ViewModelBase {
         var userInfo = await api.getUser();
         if (userInfo != null) {
           //Kiểm tra có phải driver
-          bool result = await api.checkIsDriver(userInfo['partnerID']);
-          if (!result) {
+          bool isDriver = await api.checkIsDriver(userInfo['partnerID']);
+          if (isDriver) {
+            await api.getDriverInfo(userInfo['partnerID']);
             LoadingDialog.hideLoadingDialog(context);
-            return LoadingDialog.showMsgDialog(
-                context, translation.text("ERROR_MESSAGE.PERMISSION_APP"));
+            Navigator.pushReplacementNamed(context, TabsPage.routeName,
+                arguments: TabsArgument(routeChildName: HomePage.routeName));
+          } else {
+            //Kiểm tra có phải attendant
+            bool isAttendant =
+                await api.checkIsAttendant(userInfo['partnerID']);
+            if (isAttendant) {
+              await api.getDriverInfo(userInfo['partnerID']);
+              LoadingDialog.hideLoadingDialog(context);
+              Navigator.pushReplacementNamed(context, TabsPage.routeName,
+                  arguments: TabsArgument(routeChildName: HomePage.routeName));
+            } else {
+              LoadingDialog.hideLoadingDialog(context);
+              return LoadingDialog.showMsgDialog(
+                  context, translation.text("ERROR_MESSAGE.PERMISSION_APP"));
+            }
           }
           //Lấy thông tin parent
-          await api.getDriverInfo(userInfo['partnerID']);
-        }
-        LoadingDialog.hideLoadingDialog(context);
-        // ToastController.show(
-        //     context: context,
-        //     duration: Duration(milliseconds: 200),
-        //     message: translation.text("WAITING_MESSAGE.PERMISSION_CONNECT"));
 
-        Navigator.pushReplacementNamed(context, TabsPage.routeName,
-            arguments: TabsArgument(routeChildName: HomePage.routeName));
+        }
       } else {
         LoadingDialog.hideLoadingDialog(context);
         return LoadingDialog.showMsgDialog(

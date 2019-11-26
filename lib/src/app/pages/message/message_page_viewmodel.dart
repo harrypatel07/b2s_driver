@@ -13,7 +13,7 @@ class MessagePageViewModel extends ViewModelBase {
   List<ProfileMessageUserModel> listProfileMessageUser = List();
   SearchBarController searchBarController;
   StreamSubscription streamCloud;
-  List<Chatting> listChat = [];
+  List<Chatting> listChat = List();
   bool loadingDataMessage = true;
   bool loadingDataContacts = true;
   Driver driver = Driver();
@@ -35,25 +35,34 @@ class MessagePageViewModel extends ViewModelBase {
         await cloudService.chat.listenListMessageByUserId(driver.id.toString());
     streamCloud = _snap.listen((onData) {
       if (onData.documents.length > 0) {
+        onData.documents.sort((a, b) {
+          var timeStampA = double.parse(a.data["timestamp"].toString());
+          var timeStampB = double.parse(b.data["timestamp"].toString());
+          if (timeStampA > timeStampB) return 0;
+          return 1;
+        });
+
         listChat = onData.documents
             .map((item) =>
                 Chatting.fromDocumentSnapShot(item, driver.id.toString()))
             .toList();
-        var itemDriver = listChat.firstWhere((item)=>int.parse(item.peerId) == driver.id);
-        if(itemDriver != null) listChat.remove(itemDriver);
+        listChat.removeWhere((item) => int.parse(item.peerId) == driver.id);
         //get image listChat
         listChat.forEach((item) {
-            api.getCustomerInfo(item.peerId).then((onValue) {
-              item.name = onValue.displayName;
-              item.avatarUrl = onValue.image;
-              listProfileMessageUser
-                  .add(ProfileMessageUserModel.fromDocumentSnapShot(onValue));
-              if (checkDone++ == listChat.length - 1) {
-                loadingDataMessage = false;
-                this.updateState();
-              }
-            });
+          api.getCustomerInfo(item.peerId).then((onValue) {
+            item.name = onValue.displayName;
+            item.avatarUrl = onValue.image;
+            listProfileMessageUser
+                .add(ProfileMessageUserModel.fromDocumentSnapShot(onValue));
+            if (checkDone++ == listChat.length - 1) {
+              loadingDataMessage = false;
+              this.updateState();
+            }
+          });
         });
+      } else {
+        loadingDataMessage = false;
+        this.updateState();
       }
     });
   }

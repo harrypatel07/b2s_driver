@@ -16,7 +16,6 @@ class BusSession {
     this.notification = notification;
     this.statusId = childDrenStatus.statusID;
     this.childrenId = childDrenStatus.childrenID;
-    this.notification = "";
     this.id = md5
         .convert(
             utf8.encode("${childDrenStatus.id}${childDrenStatus.childrenID}"))

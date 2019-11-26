@@ -43,7 +43,7 @@ class _MessagePageState extends State<MessagePage> {
 //      ),
 //    );
     return TS24AppBar(
-      title: new Text("Message"),
+      title: new Text("Tin nhắn"),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.add),
@@ -140,14 +140,14 @@ class _MessagePageState extends State<MessagePage> {
           ? LoadingSpinner.loadingView(
               context: viewModel.context,
               loading: (viewModel.loadingDataMessage))
-          : ListView.builder(
+          : (viewModel.listChat.length > 0)? ListView.builder(
               //padding: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
               itemCount: viewModel.listChat.length,
               itemBuilder: (context, index) {
                 var _model = viewModel.listChat[index];
                 return WidgetANimator(_buildMessageRow(_model));
               },
-            ),
+            ):Container(),
     );
   }
 

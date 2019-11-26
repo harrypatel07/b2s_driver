@@ -10,7 +10,7 @@ class AttendantManagerViewModel extends BottomSheetViewModelBase{
   int countChildrenPickDrop(int routeBusId,int typePickDrop){
     int count = 0;
     driverBusSession.childDrenStatus.forEach((status){
-      if(status.routeBusID ==  routeBusId && status.typePickDrop == typePickDrop && typePickDrop == status.statusID)
+      if(status.routeBusID ==  routeBusId && status.typePickDrop == typePickDrop)
           count++;
     });
     return count;

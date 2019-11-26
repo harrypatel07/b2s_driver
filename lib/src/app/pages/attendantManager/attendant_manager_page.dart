@@ -30,10 +30,10 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
   Widget _appBar() {
     return TS24AppBar(
       title: Text('Lịch trình Attendant'),
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () => Navigator.pop(context),
-      ),
+      // leading: IconButton(
+      //   icon: Icon(Icons.arrow_back),
+      //   onPressed: () => Navigator.pop(context),
+      // ),
     );
   }
 
@@ -156,14 +156,18 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
         .toList();
     Widget __buildReport() {
       final ___textStyle = TextStyle(
-          fontSize: 13, fontWeight: FontWeight.w600, color: ThemePrimary.primaryColor);
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: ThemePrimary.primaryColor);
       final ___numberStyle = TextStyle(
-          fontSize: 16, fontWeight: FontWeight.w900, color: ThemePrimary.primaryColor);
+          fontSize: 16,
+          fontWeight: FontWeight.w900,
+          color: ThemePrimary.primaryColor);
       return Positioned(
         bottom: 0,
         right: 0,
         child: Container(
-          padding: EdgeInsets.only(right: 60,top: 5),
+          padding: EdgeInsets.only(right: 60, top: 5),
           decoration: new BoxDecoration(
               boxShadow: [
                 BoxShadow(
@@ -179,7 +183,7 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
               color: Colors.grey[200],
               //border: new Border.all(color: Colors.white, width: 2.0),
               borderRadius:
-              new BorderRadius.only(topLeft: Radius.circular(40))),
+                  new BorderRadius.only(topLeft: Radius.circular(40))),
           width: MediaQuery.of(context).size.width,
           height: 65,
           //color: Colors.white,
@@ -274,7 +278,7 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
         right: 0,
         child: GestureDetector(
           onTap: () {
-              viewModel.onTapFinish();
+            viewModel.onTapFinish();
           },
           child: Container(
             padding: EdgeInsets.only(left: 20),
@@ -302,7 +306,10 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
                 child: Text(
                   'Hoàn Thành',
                   style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w900,fontSize: 14),textAlign: TextAlign.right,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 14),
+                  textAlign: TextAlign.right,
                 )),
           ),
         ),

@@ -4,12 +4,11 @@ import 'dart:typed_data';
 
 import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
-import 'package:b2s_driver/src/app/theme/theme_primary.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:ui' as ui;
+import 'dart:math' as math;
 import 'package:android_intent/android_intent.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -151,6 +150,28 @@ class GoogleMapService {
     url += markers;
     print(url);
     return url;
+  }
+
+  ///Hàm xác định xe đã gần tới trạm
+  ///true <=> cách trạm <= distance
+  ///false <=> cách trạm > distance
+  static bool checkTwoPointCloserDistance(
+      LatLng latLngCurrent, LatLng latLngStation, double distance) {
+    double dLat =
+        (latLngStation.latitude - latLngCurrent.latitude) * (math.pi / 180);
+    double dLon =
+        (latLngStation.longitude - latLngCurrent.longitude) * (math.pi / 180);
+    double la1ToRad = latLngCurrent.latitude * (math.pi / 180);
+    double la2ToRad = latLngStation.latitude * (math.pi / 180);
+    double a = math.sin(dLat / 2) * math.sin(dLat / 2) +
+        math.cos(la1ToRad) *
+            math.cos(la2ToRad) *
+            math.sin(dLon / 2) *
+            math.sin(dLon / 2);
+    double c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+    double d = 6371000 * c;
+    if (distance >= d) return true;
+    return false;
   }
 }
 

@@ -350,8 +350,10 @@ class CollectionBusSession extends InterfaceFireStore {
     }
   }
 
-  updateBusSessionFromChildrenStatus(ChildDrenStatus childrenStatus) {
-    var busSession = BusSession.fromChildrenStatus(childrenStatus);
+  updateBusSessionFromChildrenStatus(ChildDrenStatus childrenStatus,
+      {String notification = ""}) {
+    var busSession =
+        BusSession.fromChildrenStatus(childrenStatus, notification);
     _firestore
         .collection(_collectionName)
         .document(busSession.id)

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:b2s_driver/src/app/core/app_setting.dart';
+import 'package:b2s_driver/src/app/models/bodyNotification.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/childrenBusSession.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
@@ -12,7 +13,9 @@ import 'package:b2s_driver/src/app/models/res-partner.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/models/sale-order-line.dart';
 import 'package:b2s_driver/src/app/models/sale-order.dart';
+import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
+import 'package:b2s_driver/src/app/service/onesingal-service.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
@@ -64,6 +67,41 @@ class Api1 extends ApiMaster {
           driver.listVehicle = listFleetVehicle;
           driver.vehicleId = listFleetVehicle[0].id;
           driver.vehicleName = listFleetVehicle[0].name;
+          driver.isDriver = true;
+          await driver.saveLocal();
+          return true;
+        }
+      }
+      return false;
+    }).catchError((error) {
+      return false;
+    });
+  }
+
+  ///Kiểm tra partner id có phải là attendant
+  Future<bool> checkIsAttendant(int id) async {
+    await this.authorization();
+    body = new Map();
+    body["domain"] = [
+      ['x_manager_shuttle', '=', id]
+    ];
+    body["fields"] = ["name", "id", "x_posx", "x_posy", "x_posz", "driver_id"];
+    var params = convertSerialize(body);
+    return http
+        .get('${this.api}/search_read/fleet.vehicle?$params',
+            headers: this.headers)
+        .then((http.Response response) async {
+      if (response.statusCode == 200) {
+        List list = json.decode(response.body);
+        if (list.length > 0) {
+          List<FleetVehicle> listFleetVehicle =
+              list.map((item) => FleetVehicle.fromJson(item)).toList();
+          Driver driver = Driver();
+          driver.listVehicle = listFleetVehicle;
+          driver.vehicleId = listFleetVehicle[0].id;
+          driver.vehicleName = listFleetVehicle[0].name;
+          driver.isDriver = false;
+          driver.driverId = listFleetVehicle[0].driverId[0];
           await driver.saveLocal();
           return true;
         }
@@ -821,5 +859,71 @@ class Api1 extends ApiMaster {
       }
       return result;
     });
+  }
+
+  /*---------------OneSignal----------------- */
+  Future<dynamic> postNotificationChangeStatus(
+      Children children, ChildDrenStatus childDrenStatus) async {
+    //   StatusBus(0, "Đang chờ", 0xFFFFD752),
+    //   StatusBus(1, "Đang trong chuyến", 0xFF8FD838),
+    //   StatusBus(2, "Đã tới trường", 0xFF3DABEC),
+    //   StatusBus(3, "Nghỉ học", 0xFFE80F0F),
+    //   StatusBus(4, "Đã về nhà", 0xFF6F32A0),
+    // }
+    String notification = "${children.name} ";
+    Driver driver = Driver();
+    switch (childDrenStatus.statusID) {
+      case 1:
+        notification += StatusBus.list[1].statusName.toLowerCase();
+        break;
+      case 2:
+        notification += StatusBus.list[2].statusName.toLowerCase();
+        break;
+      case 3:
+        notification +=
+            "được xác nhận ${StatusBus.list[3].statusName.toLowerCase()} từ ${driver.name}";
+        break;
+      case 4:
+        notification += StatusBus.list[4].statusName.toLowerCase();
+        break;
+      default:
+    }
+    notification += ".";
+    BodyNotification body = BodyNotification();
+    body.headings = {"en": "Thông báo từ Bus2School"};
+    body.contents = {"en": notification};
+    body.filters = [
+      {
+        "field": "tag",
+        "key": "id",
+        "relation": "=",
+        "value": children.parent.id
+      }
+    ];
+    OneSignalService.postNotification(body);
+  }
+
+  Future<dynamic> postNotificationBusIsComing(
+      List<Children> listChildren, String time,
+      {bool isCome = false}) async {
+    for (var i = 0; i < listChildren.length; i++) {
+      var children = listChildren[i];
+
+      String notification = isCome == false
+          ? "Xe sắp đến trong vòng $time, mời em ${children.name} chuẩn bị ra xe."
+          : "Xe đã đến, mời em ${children.name} nhanh chóng ra xe.";
+      BodyNotification body = BodyNotification();
+      body.headings = {"en": "Thông báo từ Bus2School"};
+      body.contents = {"en": notification};
+      body.filters = [
+        {
+          "field": "tag",
+          "key": "id",
+          "relation": "=",
+          "value": children.parent.id
+        }
+      ];
+      OneSignalService.postNotification(body);
+    }
   }
 }

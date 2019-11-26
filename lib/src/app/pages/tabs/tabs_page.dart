@@ -1,4 +1,5 @@
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
+import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/menu.dart';
 import 'package:b2s_driver/src/app/pages/sidemenu/sidemenu_page.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
@@ -23,9 +24,12 @@ class _TabsPageState extends State<TabsPage> {
   TabsPageViewModel viewModel = TabsPageViewModel();
 
   List<Widget> tabs = Menu.tabMenu.map((menu) => menu.page).toList();
-
+  Driver driver = Driver();
   @override
   void initState() {
+    //Kiểm tra user là attendant
+    if (!driver.isDriver)
+      tabs = Menu.tabMenuAttendant.map((menu) => menu.page).toList();
     super.initState();
     _navigateChild(widget.args);
   }
@@ -45,10 +49,16 @@ class _TabsPageState extends State<TabsPage> {
     //     viewModel.currentTabIndex = 3;
     //     break;
     // }
-    Menu.tabMenu.asMap().forEach((index, menu) {
-      if (arg.routeChildName == menu.routeChildName)
-        viewModel.currentTabIndex = menu.index;
-    });
+    if (driver.isDriver)
+      Menu.tabMenu.asMap().forEach((index, menu) {
+        if (arg.routeChildName == menu.routeChildName)
+          viewModel.currentTabIndex = menu.index;
+      });
+    else
+      Menu.tabMenuAttendant.asMap().forEach((index, menu) {
+        if (arg.routeChildName == menu.routeChildName)
+          viewModel.currentTabIndex = menu.index;
+      });
   }
 
   @override
@@ -77,10 +87,15 @@ class _TabsPageState extends State<TabsPage> {
               // ),
               bottomNavigationBar: FancyBottomNavigation(
                 key: viewModel.fancyKey,
-                tabs: Menu.tabMenu
-                    .map((menu) =>
-                        TabData(iconData: menu.iconData, title: menu.title))
-                    .toList(),
+                tabs: driver.isDriver
+                    ? Menu.tabMenu
+                        .map((menu) =>
+                            TabData(iconData: menu.iconData, title: menu.title))
+                        .toList()
+                    : Menu.tabMenuAttendant
+                        .map((menu) =>
+                            TabData(iconData: menu.iconData, title: menu.title))
+                        .toList(),
                 onTabChangedListener: (index) {
                   viewModel.onTapped(index);
                 },

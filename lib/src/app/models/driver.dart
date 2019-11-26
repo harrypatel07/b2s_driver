@@ -14,7 +14,8 @@ class Driver {
   dynamic vehicleId;
   dynamic vehicleName;
   List<FleetVehicle> listVehicle;
-
+  bool isDriver = false;
+  dynamic driverId;
   static dynamic aliasName = "Driver";
   static Driver _singleton;
 
@@ -35,7 +36,9 @@ class Driver {
       this.phone,
       this.listVehicle,
       this.vehicleId,
-      this.vehicleName}) {
+      this.vehicleName,
+      this.isDriver,
+      this.driverId}) {
     id = id;
     name = name;
     photo = photo;
@@ -44,6 +47,8 @@ class Driver {
     listVehicle = listVehicle;
     vehicleId = vehicleName;
     vehicleId = vehicleId;
+    isDriver = isDriver;
+    driverId = driverId;
   }
 
   Driver.fromResPartner(ResPartner resPartner) {
@@ -81,6 +86,7 @@ class Driver {
     vehicleName = json['vehicleName'];
     List list = json['listVehicle'];
     listVehicle = list.map((item) => FleetVehicle.fromJson(item)).toList();
+    driverId = json['driverId'];
   }
 
   fromJson(Map<dynamic, dynamic> json) {
@@ -94,6 +100,8 @@ class Driver {
     vehicleName = json['vehicleName'];
     List list = json['listVehicle'];
     listVehicle = list.map((item) => FleetVehicle.fromJson(item)).toList();
+    isDriver = json['isDriver'];
+    driverId = json['driverId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -108,6 +116,8 @@ class Driver {
     // data["vehicleName"] = this.vehicleName;
     data['listVehicle'] =
         this.listVehicle.map((item) => item.toJson()).toList();
+    data["isDriver"] = this.isDriver;
+    data["driverId"] = this.driverId;
     return data;
   }
 

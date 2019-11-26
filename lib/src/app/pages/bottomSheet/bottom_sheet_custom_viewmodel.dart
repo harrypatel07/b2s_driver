@@ -44,6 +44,8 @@ class BottomSheetCustomViewModel extends ViewModelBase {
         driverBusSession: driverBusSession, childDrenStatus: childrenStatus);
     //Đồng bộ firestore
     cloudService.busSession.updateBusSessionFromChildrenStatus(childrenStatus);
+    //Push thông báo
+    api.postNotificationChangeStatus(children, childrenStatus);
 //    updateStatusLeaveChildren(childrenStatus.id);
     this.updateState();
     if (bottomSheetViewModelBase != null) {
@@ -73,7 +75,8 @@ class BottomSheetCustomViewModel extends ViewModelBase {
 
     //Đồng bộ firestore
     cloudService.busSession.updateBusSessionFromChildrenStatus(childrenStatus);
-
+    //Push thông báo
+    api.postNotificationChangeStatus(children, childrenStatus);
     this.updateState();
     if (bottomSheetViewModelBase != null) {
 //      localBusViewModel.driverBusSession.totalChildrenInBus += 1;
@@ -133,8 +136,9 @@ class BottomSheetCustomViewModel extends ViewModelBase {
             duration: Duration(milliseconds: 1000));
       else {
         bottomSheetViewModelBase.routeBus.status = true;
-        var route = bottomSheetViewModelBase.driverBusSession.listRouteBus.singleWhere(
-            (routeBus) => routeBus.id == bottomSheetViewModelBase.routeBus.id);
+        var route = bottomSheetViewModelBase.driverBusSession.listRouteBus
+            .singleWhere((routeBus) =>
+                routeBus.id == bottomSheetViewModelBase.routeBus.id);
         route.status = true;
         Navigator.pop(context, true);
       }
@@ -157,8 +161,8 @@ class BottomSheetCustomViewModel extends ViewModelBase {
 
   listenData() async {
     if (streamCloud != null) streamCloud.cancel();
-    streamCloud = await cloudService.busSession
-        .listenBusSessionForDriver(bottomSheetViewModelBase.driverBusSession, () {
+    streamCloud = await cloudService.busSession.listenBusSessionForDriver(
+        bottomSheetViewModelBase.driverBusSession, () {
       this.updateState();
       bottomSheetViewModelBase.onCreateDriverBusSessionReport();
       bottomSheetViewModelBase.updateState();

@@ -112,8 +112,8 @@ class Driver {
     data["gender"] = this.gender;
     data["genderId"] = this.genderId;
     data["phone"] = this.phone;
-    // data["vehicleId"] = this.vehicleId;
-    // data["vehicleName"] = this.vehicleName;
+    data["vehicleId"] = this.vehicleId;
+    data["vehicleName"] = this.vehicleName;
     data['listVehicle'] =
         this.listVehicle.map((item) => item.toJson()).toList();
     data["isDriver"] = this.isDriver;
@@ -148,7 +148,7 @@ class Driver {
     return this;
   }
 
-  Future<bool> checkParentExist() async {
+  Future<bool> checkDriverExist() async {
     await reloadData();
     if (id != null) return true;
     return false;

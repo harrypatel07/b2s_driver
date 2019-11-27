@@ -5,9 +5,9 @@ import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+import 'package:b2s_driver/src/app/models/picking-transport-info.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/pages/attendantManager/attendant_manager_viewmodel.dart';
-import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/barcode-service.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,6 +47,9 @@ class BottomSheetCustomViewModel extends ViewModelBase {
     //Push thông báo
     api.postNotificationChangeStatus(children, childrenStatus);
 //    updateStatusLeaveChildren(childrenStatus.id);
+    api.updatePickingTransportInfo(
+        PickingTransportInfo.fromChildrenStatus(childrenStatus));
+    driverBusSession.saveLocal();
     this.updateState();
     if (bottomSheetViewModelBase != null) {
       bottomSheetViewModelBase.onCreateDriverBusSessionReport();
@@ -64,11 +67,15 @@ class BottomSheetCustomViewModel extends ViewModelBase {
       return;
     if (childrenStatus.typePickDrop == 0 && childrenStatus.statusID == 0) {
       bottomSheetViewModelBase.driverBusSession.totalChildrenPick++;
-//      updateStatusPickChildren(childrenStatus.id);
+      // updateStatusPickChildren(childrenStatus.id);
+      //Update tọa độ xe đến trạm
+      api.updatePickingRouteByDriver(childrenStatus.pickingRoute, 0);
     }
     if (childrenStatus.typePickDrop == 1 && childrenStatus.statusID == 1) {
       bottomSheetViewModelBase.driverBusSession.totalChildrenDrop++;
-//      updateStatusDropChildren(childrenStatus.id);
+      // updateStatusDropChildren(childrenStatus.id);
+      //Update tọa độ xe đến trạm
+      api.updatePickingRouteByDriver(childrenStatus.pickingRoute, 1);
     }
     DriverBusSession.updateChildrenStatusIdByPickDrop(
         driverBusSession: driverBusSession, childDrenStatus: childrenStatus);
@@ -77,6 +84,7 @@ class BottomSheetCustomViewModel extends ViewModelBase {
     cloudService.busSession.updateBusSessionFromChildrenStatus(childrenStatus);
     //Push thông báo
     api.postNotificationChangeStatus(children, childrenStatus);
+    driverBusSession.saveLocal();
     this.updateState();
     if (bottomSheetViewModelBase != null) {
 //      localBusViewModel.driverBusSession.totalChildrenInBus += 1;
@@ -140,6 +148,7 @@ class BottomSheetCustomViewModel extends ViewModelBase {
             .singleWhere((routeBus) =>
                 routeBus.id == bottomSheetViewModelBase.routeBus.id);
         route.status = true;
+        bottomSheetViewModelBase.driverBusSession.saveLocal();
         Navigator.pop(context, true);
       }
     }
@@ -165,6 +174,7 @@ class BottomSheetCustomViewModel extends ViewModelBase {
         bottomSheetViewModelBase.driverBusSession, () {
       this.updateState();
       bottomSheetViewModelBase.onCreateDriverBusSessionReport();
+      bottomSheetViewModelBase.driverBusSession.saveLocal();
       bottomSheetViewModelBase.updateState();
     });
   }

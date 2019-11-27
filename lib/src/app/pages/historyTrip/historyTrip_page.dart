@@ -355,38 +355,49 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
     Widget _body() {
       return RefreshIndicator(
         onRefresh: () async {
-          viewModel.onLoadMore(4,10);
+          viewModel.onLoad(2, 15);
         },
         child: viewModel.loading
             ? LoadingSpinner.loadingView(
                 context: context, loading: viewModel.loading)
-            :
-            viewModel.listDriverBusSession.length > 0?
-          ListView(
-                  children: <Widget>[
-                    if (viewModel.loadingMore)
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        color: Colors.transparent,
-                        child:Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            CircularProgressIndicator(),
-                            SizedBox(width: 15,),
-                            Text('Đang tải dữ liệu ...',style: TextStyle(color: ThemePrimary.primaryColor),),
-                          ],
+            : viewModel.listDriverBusSession.length > 0
+                ? ListView(
+                    controller: viewModel.controller,
+                    children: <Widget>[
+                      ...viewModel.listDriverBusSession
+                          .map((driverBusSession) => _item(
+                              driverBusSession: driverBusSession,
+                              title: driverBusSession.listRouteBus[0].date,
+                              onTap: () {
+                                viewModel.onTapHistory(driverBusSession);
+                              })),
+                      if (viewModel.loadingMore)
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 50,
+                          color: Colors.transparent,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(ThemePrimary.primaryColor),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Text(
+                                'Đang tải dữ liệu ...',
+                                style:
+                                    TextStyle(color: ThemePrimary.primaryColor),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ...viewModel.listDriverBusSession.map((driverBusSession) =>
-                        _item(
-                            driverBusSession: driverBusSession,
-                            title: driverBusSession.listRouteBus[0].date,
-                            onTap: () {
-                              viewModel.onTapHistory(driverBusSession);
-                            }))
-                  ],
-                ): Center(child: Text('Chưa có lịch sử chuyến.'),),
+                    ],
+                  )
+                : Center(
+                    child: Text('Chưa có lịch sử chuyến.'),
+                  ),
 //              ),
       );
     }

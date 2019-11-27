@@ -24,12 +24,13 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
   @override
   void initState() {
     viewModel.driverBusSession = widget.driverBusSession;
+    viewModel.onCreateDriverBusSessionReport();
     super.initState();
   }
 
   Widget _appBar() {
     return TS24AppBar(
-      title: Text('Lịch trình Attendant'),
+      title: Text('Lịch trình'),
       // leading: IconButton(
       //   icon: Icon(Icons.arrow_back),
       //   onPressed: () => Navigator.pop(context),

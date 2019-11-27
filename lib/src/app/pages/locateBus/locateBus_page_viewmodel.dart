@@ -171,9 +171,11 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
       driverBusSession.status = true;
       String barcode = await BarCodeService.scan();
       print(barcode);
-      if (barcode != null)
+      if (barcode != null) {
+        driverBusSession.clearLocal();
         Navigator.pushReplacementNamed(context, TabsPage.routeName,
             arguments: TabsArgument(routeChildName: HomePage.routeName));
+      }
     } else
       LoadingDialog.showMsgDialog(context,
           'Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.');

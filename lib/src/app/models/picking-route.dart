@@ -44,6 +44,15 @@ class PickingRoute {
       this.xRealEndTime,
       this.xRealStartTime});
 
+  PickingRoute.fromJsonController(Map<String, dynamic> json) {
+    // xRealEndTime = json["real_end_time"];
+    // xRealStartTime = json["real_start_time"];
+    status = json["status"];
+    id = json["id"];
+    gpsTracking = json["gps_tracking"] is bool ? 0 : json["gps_tracking"];
+    xGpsTrackingDes =
+        json["gps_tracking_des"] is bool ? 0 : json["gps_tracking_des"];
+  }
   PickingRoute.fromJson(Map<String, dynamic> json) {
     sLastUpdate = json['__last_update'];
     createDate = json['create_date'];

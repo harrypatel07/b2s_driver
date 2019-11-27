@@ -68,19 +68,38 @@ class Parent {
     }).toList();
   }
 
-  fromJson(Map<dynamic, dynamic> json) {
+  Parent.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    List photoUint8 = json['photo'];
-    photoUint8 = photoUint8.cast<int>();
-    photo = Uint8List.fromList(photoUint8);
+    if (json['photo'] is List) {
+      List photoUint8 = json['photo'];
+      photoUint8 = photoUint8.cast<int>();
+      photo = Uint8List.fromList(photoUint8);
+    } else if (!(json['photo'] is bool)) photo = json['photo'];
     email = json['email'];
     phone = json['phone'];
     gender = json['gender'];
     genderId = json['genderId'];
     contactAddress = json['contactAddress'];
-    List list = json['listChildren'];
-    listChildren = list.map((item) => Children.fromJson(item)).toList();
+    // List list = json['listChildren'];
+    // listChildren = list.map((item) => Children.fromJson(item)).toList();
+  }
+
+  fromJson(Map<dynamic, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    if (json['photo'] is List) {
+      List photoUint8 = json['photo'];
+      photoUint8 = photoUint8.cast<int>();
+      photo = Uint8List.fromList(photoUint8);
+    } else if (!(json['photo'] is bool)) photo = json['photo'];
+    email = json['email'];
+    phone = json['phone'];
+    gender = json['gender'];
+    genderId = json['genderId'];
+    contactAddress = json['contactAddress'];
+    // List list = json['listChildren'];
+    // listChildren = list.map((item) => Children.fromJson(item)).toList();
   }
 
   Map<dynamic, dynamic> toJson() {
@@ -93,8 +112,8 @@ class Parent {
     data['gender'] = this.gender;
     data['genderId'] = this.genderId;
     data['contactAddress'] = this.contactAddress;
-    data['listChildren'] =
-        this.listChildren.map((item) => item.toJson()).toList();
+    // data['listChildren'] =
+    //     this.listChildren.map((item) => item.toJson()).toList();
     return data;
   }
 

@@ -18,24 +18,25 @@ class HomePageCardTimeLine extends StatelessWidget {
   final bool isEnablePicked;
   final bool isEnableTapChildrenContentCard;
   final int typePickDrop;
+  final String note;
   final int cardType;
   final PopupCardTimeLinePage popupCardTimeLinePage;
-  const HomePageCardTimeLine(
-      {Key key,
-      this.onTapScan,
-      this.onTapPickUp,
-      this.onTapChangeStatusLeave,
-      this.onTapShowChildrenProfile,
-      this.heroTag,
-      this.status,
-      this.popupCardTimeLinePage,
-      this.cardType = 0,
-      this.typePickDrop = 0,
-      @required this.children,
-      this.isEnablePicked,
-      this.isEnableTapChildrenContentCard = false,
-      })
-      : super(key: key);
+  const HomePageCardTimeLine({
+    Key key,
+    this.onTapScan,
+    this.onTapPickUp,
+    this.onTapChangeStatusLeave,
+    this.onTapShowChildrenProfile,
+    this.heroTag,
+    this.status,
+    this.popupCardTimeLinePage,
+    this.cardType = 0,
+    this.typePickDrop = 0,
+    this.note = "",
+    @required this.children,
+    this.isEnablePicked,
+    this.isEnableTapChildrenContentCard = false,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     GlobalKey _key = GlobalKey();
@@ -92,7 +93,10 @@ class HomePageCardTimeLine extends StatelessWidget {
             Flexible(
               child: Container(
                 //width: 100.0,
-                child: new Text(status.statusName,
+                child: new Text(
+                    status.statusID == 3
+                        ? "${status.statusName}(${note.toString()})"
+                        : status.statusName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -277,23 +281,33 @@ class HomePageCardTimeLine extends StatelessWidget {
 //                                          mainAxisAlignment:
 //                                              MainAxisAlignment.start,
                                           children: <Widget>[
-                                           if(typePickDrop == 0 && status.statusID == 0 || typePickDrop == 1 && status.statusID == 1) Expanded(
-                                              flex: 3,
-                                              child: Container(
+                                            if (typePickDrop == 0 &&
+                                                    status.statusID == 0 ||
+                                                typePickDrop == 1 &&
+                                                    status.statusID == 1)
+                                              Expanded(
+                                                flex: 3,
+                                                child: Container(
 //                                              color: Colors.red,
-                                                alignment: Alignment.center,
+                                                    alignment: Alignment.center,
 //                                                width: 20,
-                                                child: Icon(
-                                                        Icons.arrow_drop_up,
-                                                        color: Colors.white,
-                                                        size: 20,
-                                                      )
+                                                    child: Icon(
+                                                      Icons.arrow_drop_up,
+                                                      color: Colors.white,
+                                                      size: 20,
+                                                    )),
                                               ),
-                                            ),
                                             Expanded(
                                               flex: 5,
                                               child: Container(
-                                                alignment:(typePickDrop == 0 && status.statusID == 0 || typePickDrop == 1 && status.statusID == 1)? Alignment.centerLeft: Alignment.center,
+                                                alignment: (typePickDrop == 0 &&
+                                                            status.statusID ==
+                                                                0 ||
+                                                        typePickDrop == 1 &&
+                                                            status.statusID ==
+                                                                1)
+                                                    ? Alignment.centerLeft
+                                                    : Alignment.center,
                                                 child: Text(
                                                   setTextButtonStatus(),
                                                   style: new TextStyle(
@@ -346,7 +360,8 @@ class HomePageCardTimeLine extends StatelessWidget {
                                         borderRadius:
                                             BorderRadius.circular(15.0),
                                         child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: <Widget>[
                                             Expanded(
                                               flex: 3,
@@ -354,10 +369,11 @@ class HomePageCardTimeLine extends StatelessWidget {
                                                 alignment: Alignment.center,
 //                                                color: Colors.green,
                                                 child: QrImage(
-                                                  padding: EdgeInsets.only(left: 1.0),
+                                                  padding: EdgeInsets.only(
+                                                      left: 1.0),
                                                   foregroundColor: Colors.white,
                                                   backgroundColor:
-                                                  Colors.transparent,
+                                                      Colors.transparent,
                                                   data: "ts24Corp",
                                                   version: 1,
                                                   size: 10.0,
@@ -377,7 +393,8 @@ class HomePageCardTimeLine extends StatelessWidget {
                                                           .primaryFontFamily,
                                                       fontSize: 14.0,
                                                       color: Colors.white,
-                                                      fontWeight: FontWeight.bold),
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                   textAlign: TextAlign.center,
                                                 ),
                                               ),

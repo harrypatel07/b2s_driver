@@ -1,3 +1,7 @@
+import 'package:b2s_driver/src/app/models/driver.dart';
+import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+import 'package:b2s_driver/src/app/service/common-service.dart';
+
 enum PickingTransportInfo_State {
   draft,
   halt,
@@ -115,6 +119,35 @@ class PickingTransportInfo {
       this.writeUid,
       this.xTime});
 
+  PickingTransportInfo.fromChildrenStatus(ChildDrenStatus childrenStatus) {
+    id = childrenStatus.id;
+    Driver driver = Driver();
+    note = childrenStatus.note = driver.isDriver == false ? "QLĐĐ" : "TX";
+    switch (childrenStatus.statusID) {
+      // StatusBus(0, "Đang chờ", 0xFFFFD752),
+      // StatusBus(1, "Đang trong chuyến", 0xFF8FD838),
+      // StatusBus(2, "Đã tới trường", 0xFF3DABEC),
+      // StatusBus(3, "Nghỉ học", 0xFFE80F0F),
+      // StatusBus(4, "Đã về nhà", 0xFF6F32A0),
+      case 0:
+        state = Common.getValueEnum(PickingTransportInfo_State.draft);
+        break;
+      case 1:
+        state = Common.getValueEnum(PickingTransportInfo_State.halt);
+        break;
+      case 2:
+        state = Common.getValueEnum(PickingTransportInfo_State.done);
+        break;
+      case 3:
+        state = Common.getValueEnum(PickingTransportInfo_State.cancel);
+        break;
+      case 4:
+        state = Common.getValueEnum(PickingTransportInfo_State.done);
+
+        break;
+      default:
+    }
+  }
   PickingTransportInfo.fromJson(Map<String, dynamic> json) {
     sLastUpdate = json['__last_update'];
     accessToken = json['access_token'];
@@ -252,59 +285,59 @@ class PickingTransportInfo {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['__last_update'] = this.sLastUpdate;
-    data['access_token'] = this.accessToken;
-    data['access_url'] = this.accessUrl;
-    data['access_warning'] = this.accessWarning;
-    data['activity_date_deadline'] = this.activityDateDeadline;
-    data['activity_ids'] = this.activityIds;
-    data['activity_state'] = this.activityState;
-    data['activity_summary'] = this.activitySummary;
-    data['activity_type_id'] = this.activityTypeId;
-    data['activity_user_id'] = this.activityUserId;
-    data['carrier_id'] = this.carrierId;
-    data['carrier_tracking_ref'] = this.carrierTrackingRef;
-    data['company_id'] = this.companyId;
-    data['create_date'] = this.createDate;
-    data['create_uid'] = this.createUid;
-    data['customer_id'] = this.customerId;
-    data['delivery_id'] = this.deliveryId;
-    data['destination_id'] = this.destinationId;
-    data['display_name'] = this.displayName;
+    // data['__last_update'] = this.sLastUpdate;
+    // data['access_token'] = this.accessToken;
+    // data['access_url'] = this.accessUrl;
+    // data['access_warning'] = this.accessWarning;
+    // data['activity_date_deadline'] = this.activityDateDeadline;
+    // data['activity_ids'] = this.activityIds;
+    // data['activity_state'] = this.activityState;
+    // data['activity_summary'] = this.activitySummary;
+    // data['activity_type_id'] = this.activityTypeId;
+    // data['activity_user_id'] = this.activityUserId;
+    // data['carrier_id'] = this.carrierId;
+    // data['carrier_tracking_ref'] = this.carrierTrackingRef;
+    // data['company_id'] = this.companyId;
+    // data['create_date'] = this.createDate;
+    // data['create_uid'] = this.createUid;
+    // data['customer_id'] = this.customerId;
+    // data['delivery_id'] = this.deliveryId;
+    // data['destination_id'] = this.destinationId;
+    // data['display_name'] = this.displayName;
     data['id'] = this.id;
-    data['lr_number'] = this.lrNumber;
-    data['message_attachment_count'] = this.messageAttachmentCount;
-    data['message_channel_ids'] = this.messageChannelIds;
-    data['message_follower_ids'] = this.messageFollowerIds;
-    data['message_has_error'] = this.messageHasError;
-    data['message_has_error_counter'] = this.messageHasErrorCounter;
-    data['message_ids'] = this.messageIds;
-    data['message_is_follower'] = this.messageIsFollower;
-    data['message_main_attachment_id'] = this.messageMainAttachmentId;
-    data['message_needaction'] = this.messageNeedaction;
-    data['message_needaction_counter'] = this.messageNeedactionCounter;
-    data['message_partner_ids'] = this.messagePartnerIds;
-    data['message_unread'] = this.messageUnread;
-    data['message_unread_counter'] = this.messageUnreadCounter;
-    data['name'] = this.name;
-    data['no_of_parcel'] = this.noOfParcel;
-    data['note'] = this.note;
-    data['number_of_packages'] = this.numberOfPackages;
-    data['picking_route_ids'] = this.pickingRouteIds;
-    data['saleorder_id'] = this.saleorderId;
-    data['shipping_weight'] = this.shippingWeight;
+    // data['lr_number'] = this.lrNumber;
+    // data['message_attachment_count'] = this.messageAttachmentCount;
+    // data['message_channel_ids'] = this.messageChannelIds;
+    // data['message_follower_ids'] = this.messageFollowerIds;
+    // data['message_has_error'] = this.messageHasError;
+    // data['message_has_error_counter'] = this.messageHasErrorCounter;
+    // data['message_ids'] = this.messageIds;
+    // data['message_is_follower'] = this.messageIsFollower;
+    // data['message_main_attachment_id'] = this.messageMainAttachmentId;
+    // data['message_needaction'] = this.messageNeedaction;
+    // data['message_needaction_counter'] = this.messageNeedactionCounter;
+    // data['message_partner_ids'] = this.messagePartnerIds;
+    // data['message_unread'] = this.messageUnread;
+    // data['message_unread_counter'] = this.messageUnreadCounter;
+    // data['name'] = this.name;
+    // data['no_of_parcel'] = this.noOfParcel;
+    if (this.note != null) data['note'] = this.note;
+    // data['number_of_packages'] = this.numberOfPackages;
+    // data['picking_route_ids'] = this.pickingRouteIds;
+    // data['saleorder_id'] = this.saleorderId;
+    // data['shipping_weight'] = this.shippingWeight;
     data['state'] = this.state;
-    data['transport_date'] = this.transportDate;
-    data['transporter_id'] = this.transporterId;
-    data['user_id'] = this.userId;
-    data['vehicle_driver'] = this.vehicleDriver;
-    data['vehicle_id'] = this.vehicleId;
-    data['website_message_ids'] = this.websiteMessageIds;
-    data['weight'] = this.weight;
-    data['weight_uom_id'] = this.weightUomId;
-    data['write_date'] = this.writeDate;
-    data['write_uid'] = this.writeUid;
-    data['x_time'] = this.xTime;
+    // data['transport_date'] = this.transportDate;
+    // data['transporter_id'] = this.transporterId;
+    // data['user_id'] = this.userId;
+    // data['vehicle_driver'] = this.vehicleDriver;
+    // data['vehicle_id'] = this.vehicleId;
+    // data['website_message_ids'] = this.websiteMessageIds;
+    // data['weight'] = this.weight;
+    // data['weight_uom_id'] = this.weightUomId;
+    // data['write_date'] = this.writeDate;
+    // data['write_uid'] = this.writeUid;
+    // data['x_time'] = this.xTime;
     return data;
   }
 }

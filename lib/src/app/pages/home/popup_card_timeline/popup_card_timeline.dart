@@ -266,6 +266,7 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
                             children: viewModel.homePageCardTimeLine.children,
                             //isEnablePicked: status.statusID == 0 ? true : false,
                             status: viewModel.status,
+                            note: viewModel.homePageCardTimeLine.note,
                             heroTag: viewModel.homePageCardTimeLine.heroTag,
                             typePickDrop: viewModel.homePageCardTimeLine.typePickDrop,
                             isEnableTapChildrenContentCard: false,
@@ -275,6 +276,7 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
                               viewModel.homePageCardTimeLine.onTapPickUp();
                             },
                             onTapChangeStatusLeave: (){
+                              viewModel.homePageCardTimeLine.onTapChangeStatusLeave();
                               viewModel.onTapChangeStatus(3);
                             },
                         ),

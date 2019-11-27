@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       navigatorObservers: [MyRouteObserver()],
       routes: Routes.route,
-      //  home: LoginPage()
+      home: Routes.defaultPage,
       //Init locale lang
       // Tells the system which are the supported languages
       supportedLocales: translation.supportedLocales(),

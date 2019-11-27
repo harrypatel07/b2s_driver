@@ -1,3 +1,5 @@
+import 'package:b2s_driver/src/app/models/driver.dart';
+import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/pages/attendant/attendant_page.dart';
 import 'package:b2s_driver/src/app/pages/attendantManager/attendant_manager_page.dart';
 import 'package:b2s_driver/src/app/pages/bottomSheet/bottom_sheet_custom.dart';
@@ -22,8 +24,29 @@ import 'package:b2s_driver/src/app/pages/user/user_page.dart';
 import 'package:flutter/material.dart';
 
 class Routes {
+  static Widget defaultPage;
+  static navigateDefaultPage() async {
+    Driver driver = new Driver();
+    bool result = await driver.checkDriverExist();
+    if (result) {
+      //Kiểm tra bus session chưa kết thúc.
+      DriverBusSession driverBusSession = DriverBusSession();
+      result = await driverBusSession.checkDriverBusSessionExists();
+      if (result) if (driver.isDriver) {
+        Routes.defaultPage = LocateBusPage(driverBusSession: driverBusSession);
+      } else {
+        Routes.defaultPage =
+            AttendantManagerPage(driverBusSession: driverBusSession);
+      }
+      else
+        Routes.defaultPage =
+            TabsPage(TabsArgument(routeChildName: HomePage.routeName));
+    } else
+      Routes.defaultPage = LoginPage();
+  }
+
   static final Map<String, WidgetBuilder> route = {
-    '/': (context) => LoginPage(),
+    // '/': (context) => LoginPage(),
     LoginPage.routeName: (context) => LoginPage(),
     TabsPage.routeName: (context) =>
         TabsPage(ModalRoute.of(context).settings.arguments),
@@ -39,8 +62,8 @@ class Routes {
     HistoryTripPage.routeName: (context) => HistoryTripPage(),
     SchedulePage.routeName: (context) => SchedulePage(),
     BottomSheetCustom.routeName: (context) => BottomSheetCustom(
-      arguments: ModalRoute.of(context).settings.arguments,
-    ),
+          arguments: ModalRoute.of(context).settings.arguments,
+        ),
 //    BottomSheetAttendantCustom.routeName: (context) => BottomSheetAttendantCustom(
 //      arguments: ModalRoute.of(context).settings.arguments,
 //    ),
@@ -49,13 +72,19 @@ class Routes {
     MessageDetailPage.routeName: (context) =>
         MessageDetailPage(chatting: ModalRoute.of(context).settings.arguments),
     MessageUserPage.routeName: (context) =>
-        MessageUserPage(userId:ModalRoute.of(context).settings.arguments),
-    ContactsPage.routeName: (context)=>ContactsPage(),
-    ProfileMessageUserPage.routeName: (context) => ProfileMessageUserPage(userModel:ModalRoute.of(context).settings.arguments),
-    EditProfileDriver.routeName: (context)=>EditProfileDriver(driver:ModalRoute.of(context).settings.arguments),
-    HistoryTripDetailPage.routeName: (context)=>HistoryTripDetailPage(driverBusSession: ModalRoute.of(context).settings.arguments,),
-    AttendantPage.routeName:(context) => AttendantPage(),
-    AttendantManagerPage.routeName: (context) => AttendantManagerPage(driverBusSession: ModalRoute.of(context).settings.arguments,)
+        MessageUserPage(userId: ModalRoute.of(context).settings.arguments),
+    ContactsPage.routeName: (context) => ContactsPage(),
+    ProfileMessageUserPage.routeName: (context) => ProfileMessageUserPage(
+        userModel: ModalRoute.of(context).settings.arguments),
+    EditProfileDriver.routeName: (context) =>
+        EditProfileDriver(driver: ModalRoute.of(context).settings.arguments),
+    HistoryTripDetailPage.routeName: (context) => HistoryTripDetailPage(
+          driverBusSession: ModalRoute.of(context).settings.arguments,
+        ),
+    AttendantPage.routeName: (context) => AttendantPage(),
+    AttendantManagerPage.routeName: (context) => AttendantManagerPage(
+          driverBusSession: ModalRoute.of(context).settings.arguments,
+        )
   };
 }
 

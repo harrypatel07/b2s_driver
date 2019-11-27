@@ -26,7 +26,7 @@ class LoginPageViewModel extends ViewModelBase {
 
   LoginPageViewModel() {
     //account demo
-    _emailController.text = "info@ts24.com.vn";
+    _emailController.text = "sonnguyen@ts24corp.com";
     _passController.text = "123456";
     _emailController.addListener(() {
       if (_emailController.text.length > 1) isValidEmail();

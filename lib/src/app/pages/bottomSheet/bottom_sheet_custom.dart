@@ -54,6 +54,7 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                 children: children,
                 //isEnablePicked: status.statusID == 0 ? true : false,
                 status: statusBus,
+                note: status.note,
                 heroTag: tag,
                 typePickDrop: status.typePickDrop,
                 isEnableTapChildrenContentCard: true,
@@ -112,20 +113,22 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                     right: 2,
                     left: 2,
                     child: FlatButton(
-                      color: (viewModel.bottomSheetViewModelBase.routeBus.status)
-                          ? Colors.grey
-                          : ThemePrimary.primaryColor,
-                      child: (viewModel.bottomSheetViewModelBase.routeBus.status)
-                          ? Text('ĐÃ HOÀN THÀNH',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold))
-                          : Text(
-                              'HOÀN THÀNH ĐIỂM ${viewModel.bottomSheetViewModelBase.position}',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                      color:
+                          (viewModel.bottomSheetViewModelBase.routeBus.status)
+                              ? Colors.grey
+                              : ThemePrimary.primaryColor,
+                      child:
+                          (viewModel.bottomSheetViewModelBase.routeBus.status)
+                              ? Text('ĐÃ HOÀN THÀNH',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold))
+                              : Text(
+                                  'HOÀN THÀNH ĐIỂM ${viewModel.bottomSheetViewModelBase.position}',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
                       onPressed: () {
                         viewModel.onTapFinishRoute();
                       },

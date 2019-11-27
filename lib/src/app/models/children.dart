@@ -27,20 +27,20 @@ class Children {
       {this.id,
       this.name,
       this.photo,
+      this.location = "HCM",
       this.gender,
+      this.genderId,
       this.age,
       this.primary,
       this.schoolName,
       this.schoolId,
-      this.classes,
       this.phone,
       this.email,
       this.parentId,
-      this.genderId,
       this.paidTicket,
-      this.location = "HCM",
       this.lat,
       this.lng,
+      this.classes,
       this.birthday,
       this.parent});
 
@@ -112,14 +112,15 @@ class Children {
     primary = json['primary'];
     schoolName = json['schoolName'];
     schoolId = json['schoolId'];
-    classes = json['classes'];
     phone = json['phone'];
     email = json['email'];
     parentId = json['parentId'];
     paidTicket = json['paidTicket'];
     lat = json['lat'];
     lng = json['lng'];
+    classes = json['classes'];
     birthday = json['birthday'];
+    parent = Parent.fromJson(json['parent']);
   }
 
   Map<String, dynamic> toJson() {
@@ -142,6 +143,7 @@ class Children {
     data["lat"] = this.lat;
     data["lng"] = this.lng;
     data["birthday"] = this.birthday;
+    data["parent"] = this.parent.toJson();
     return data;
   }
 

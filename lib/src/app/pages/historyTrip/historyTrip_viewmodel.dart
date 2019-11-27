@@ -14,20 +14,64 @@ class HistoryTripViewModel extends ViewModelBase {
       DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
   String dateTimePrevious = '';
   bool loadingMore = false;
+  ScrollController controller = ScrollController();
   HistoryTripViewModel() {
+    controller.addListener(() {
+      if(controller.offset == controller.position.maxScrollExtent)
+        onLoadMore(4,15);
+    });
+    onLoad(2, 15);
+  }
+  onLoad(int number, int countDay){
     loading = true;
+    dateTimeCurrent =
+        DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
     dateTimePrevious = datePrevious(dateTimeCurrent);
-//    onLoad(dateTimeCurrent);
-      onLoadMore(2, 15);
+    listDriverBusSession = List();
+    _onLoading(number, countDay);
+  }
+  _onLoading(int number, int countDay) {
+    if (countDay <= 0) {
+      listDriverBusSession.addAll(listDriverBusSessionLoadMore);
+      listDriverBusSessionLoadMore = List();
+      loading = false;
+      this.updateState();
+      return;
+    }
+    api
+        .getListDriverBusSession(
+            vehicleId: driver.vehicleId,
+            driverId: driver.id,
+            date: dateTimePrevious)
+        .then((value) {
+      if (value != null && value.length > 0)
+        value.forEach((item) {
+          listDriverBusSessionLoadMore.add(item);
+          number--;
+        });
+      else {
+        countDay--;
+      }
+      dateTimeCurrent = dateTimePrevious;
+      dateTimePrevious = datePrevious(dateTimeCurrent);
+      if (number > 0)
+        _onLoading(number, countDay);
+      else {
+        listDriverBusSession.addAll(listDriverBusSessionLoadMore);
+        listDriverBusSessionLoadMore = List();
+        loading = false;
+      }
+      this.updateState();
+    });
+    this.updateState();
   }
 
   ///number : số item cần load
   ///countDate : phạm vi lấy dữ liệu trong vòng n ngày.
   onLoadMore(int number, int countDay) {
     if (countDay <= 0) {
-      listDriverBusSession.insertAll(0, listDriverBusSessionLoadMore);
+        listDriverBusSession.addAll(listDriverBusSessionLoadMore);
       listDriverBusSessionLoadMore = List();
-      loading = false;
       this.updateState();
       return;
     }
@@ -40,7 +84,7 @@ class HistoryTripViewModel extends ViewModelBase {
         .then((value) {
       if (value != null && value.length > 0)
         value.forEach((item) {
-          listDriverBusSessionLoadMore.insert(0, item);
+          listDriverBusSessionLoadMore.add(item);
           number--;
         });
       else {
@@ -52,14 +96,14 @@ class HistoryTripViewModel extends ViewModelBase {
       if (number > 0)
         onLoadMore(number, countDay);
       else {
-        listDriverBusSession.insertAll(0, listDriverBusSessionLoadMore);
+        listDriverBusSession.addAll(listDriverBusSessionLoadMore);
         listDriverBusSessionLoadMore = List();
-        loading = false;
       }
       this.updateState();
     });
     this.updateState();
   }
+
   String datePrevious(String dateCurrent) {
     DateTime dateTime = DateTime.parse(dateCurrent);
     dateTime = dateTime.add(Duration(days: -1));

@@ -71,6 +71,7 @@ class AttendantPageViewModel extends ViewModelBase {
   onTapItemPick() {
     cloudService.busSession
         .createListBusSessionFromDriverBusSession(listDriverBusSession[0]);
+    listDriverBusSession[0].saveLocal();
     Navigator.pushReplacementNamed(context, AttendantManagerPage.routeName,
         arguments: listDriverBusSession[0]);
   }
@@ -78,6 +79,7 @@ class AttendantPageViewModel extends ViewModelBase {
   onTapItemDrop() {
     cloudService.busSession
         .createListBusSessionFromDriverBusSession(listDriverBusSession[1]);
+    listDriverBusSession[1].saveLocal();
     Navigator.pushReplacementNamed(context, AttendantManagerPage.routeName,
         arguments: listDriverBusSession[1]);
   }

@@ -7,6 +7,7 @@ import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/fleet-vehicle.dart';
 import 'package:b2s_driver/src/app/models/parent.dart';
+import 'package:b2s_driver/src/app/models/picking-route.dart';
 import 'package:b2s_driver/src/app/models/picking-transport-info.dart';
 import 'package:b2s_driver/src/app/models/res-partner-title.dart';
 import 'package:b2s_driver/src/app/models/res-partner.dart';
@@ -627,6 +628,11 @@ class Api1 extends ApiMaster {
                   int.parse(objPicking["id"].toString());
               childrenStatus.typePickDrop =
                   partnerIds[k]["type"] == "pick" ? 0 : 1;
+              childrenStatus.note = pickingTransportInfo["note"] is bool
+                  ? ""
+                  : pickingTransportInfo["note"];
+              childrenStatus.pickingRoute = PickingRoute.fromJsonController(
+                  pickingTransportInfo["picking_route"]);
               PickingTransportInfo_State.values.forEach((value) {
                 if (Common.getValueEnum(value) == pickingTransportInfo["state"])
                   switch (value) {
@@ -833,6 +839,44 @@ class Api1 extends ApiMaster {
       var error = onValue.getError();
       if (error == null) return true;
       return false;
+    });
+  }
+
+  ///Update tọa độ và thời điểm xe đến trạm
+  Future<bool> updatePickingRouteByDriver(
+      PickingRoute pickingRoute, int typePickDrop) async {
+    Location location = Location();
+    var myLoc = await location.getLocation();
+    var date = DateTime.now();
+    var strDateTime = DateFormat('yyyy-MM-dd HH:mm:ss')
+        .format(date.add(Duration(hours: -date.timeZoneOffset.inHours)))
+        .toString();
+    if (typePickDrop == 0) {
+      pickingRoute.gpsTracking = "${myLoc.latitude},${myLoc.longitude}";
+      pickingRoute.xRealStartTime = strDateTime;
+      pickingRoute.status = "halt";
+    } else {
+      pickingRoute.xGpsTrackingDes = "${myLoc.latitude},${myLoc.longitude}";
+      pickingRoute.xRealEndTime = strDateTime;
+      pickingRoute.status = "reach";
+    }
+    await this.authorization();
+    body = new Map();
+    body["model"] = "picking.route";
+    body["ids"] = json.encode([int.parse(pickingRoute.id.toString())]);
+    body["values"] = json.encode(pickingRoute.toJson());
+    return http
+        .put('${this.api}/write', headers: this.headers, body: body)
+        .then((http.Response response) {
+      var result = false;
+      if (response.statusCode == 200) {
+        print(response.body);
+        result = true;
+        //print(list);
+      } else {
+        result = false;
+      }
+      return result;
     });
   }
 

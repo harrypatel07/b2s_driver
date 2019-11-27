@@ -145,6 +145,7 @@ class HomePageViewModel extends ViewModelBase {
   }
 
   onStart() {
+    driverBusSession.saveLocal();
     Navigator.pushNamedAndRemoveUntil(context, LocateBusPage.routeName,
         ModalRoute.withName(SchedulePage.routeName),
         arguments: driverBusSession);

@@ -22,6 +22,36 @@ class _UserPageState extends State<UserPage> {
       height: 1,
       color: Colors.grey.shade200,
     );
+    Widget _buildChatTitle(IconData icon, Color color, String title) {
+      return new Column(
+        children: <Widget>[
+          new ListTile(
+              title: Text(
+                title,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              leading: Container(
+                height: 30.0,
+                width: 30.0,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Center(
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              trailing: Icon(LineIcons.chevron_circle_right),
+              onTap: () {
+                viewModel.onTapMessage();
+              }),
+        ],
+      );
+    }
+
     Widget _builtUserTitle({IconData icon, Color color, String title, Function onTap}) {
       return new Column(
         children: <Widget>[
@@ -46,6 +76,65 @@ class _UserPageState extends State<UserPage> {
               ),
               trailing: Icon(LineIcons.chevron_circle_right),
               onTap: onTap),
+        ],
+      );
+    }
+
+    Widget _buildHistoryTitle(IconData icon, Color color, String title) {
+      return new Column(
+        children: <Widget>[
+          new ListTile(
+              title: Text(
+                title,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              leading: Container(
+                height: 30.0,
+                width: 30.0,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Center(
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              trailing: Icon(LineIcons.chevron_circle_right),
+              onTap: () {
+                viewModel.onTapHistoryTrip();
+              }),
+        ],
+      );
+    }
+    Widget _buildAttendantTitle(IconData icon, Color color, String title) {
+      return new Column(
+        children: <Widget>[
+          new ListTile(
+              title: Text(
+                title,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              leading: Container(
+                height: 30.0,
+                width: 30.0,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Center(
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              trailing: Icon(LineIcons.chevron_circle_right),
+              onTap: () {
+                viewModel.onTapHistoryTrip();
+              }),
         ],
       );
     }

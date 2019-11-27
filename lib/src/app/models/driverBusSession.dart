@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:core';
+import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
+import 'package:b2s_driver/src/app/models/picking-route.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:crypto/crypto.dart';
 
@@ -18,17 +20,20 @@ class DriverBusSession {
   List<ChildDrenRoute> childDrenRoute;
   List<RouteBus> listRouteBus;
   bool status; // false: chưa hoàn thành, true: hoàn thành
+  static dynamic aliasName = "DriverBusSession";
   DriverBusSession({
-    this.childDrenRoute,
     this.sessionID,
     this.busID,
     this.type,
-    this.listChildren,
-    this.childDrenStatus,
-    this.listRouteBus,
     this.totalChildrenRegistered,
     this.totalChildrenInBus,
     this.totalChildrenLeave,
+    this.totalChildrenPick,
+    this.totalChildrenDrop,
+    this.listChildren,
+    this.childDrenStatus,
+    this.listRouteBus,
+    this.childDrenRoute,
     this.status,
   });
 
@@ -59,9 +64,14 @@ class DriverBusSession {
     List list = [];
     sessionID = json['sessionID'];
     busID = json['busID'];
+    type = json['type'];
+    totalChildrenRegistered = json['totalChildrenRegistered'];
+    totalChildrenInBus = json['totalChildrenInBus'];
+    totalChildrenLeave = json['totalChildrenLeave'];
+    totalChildrenPick = json['totalChildrenPick'];
+    totalChildrenDrop = json['totalChildrenDrop'];
     list = json['listChildren'];
     listChildren = list.map((item) => Children.fromJson(item)).toList();
-    type = json['type'];
     list = json['childDrenStatus'];
     childDrenStatus =
         list.map((item) => ChildDrenStatus.fromJson(item)).toList();
@@ -69,9 +79,6 @@ class DriverBusSession {
     childDrenRoute = list.map((item) => ChildDrenRoute.fromJson(item)).toList();
     list = json['listRouteBus'];
     listRouteBus = list.map((item) => RouteBus.fromJson(item)).toList();
-    totalChildrenRegistered = json['totalChildrenRegistered'];
-    totalChildrenInBus = json['totalChildrenInBus'];
-    totalChildrenLeave = json['totalChildrenLeave'];
     status = json['status'];
   }
 
@@ -79,18 +86,20 @@ class DriverBusSession {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['sessionID'] = this.sessionID;
     data['busID'] = this.busID;
+    data['type'] = this.type;
+    data['totalChildrenRegistered'] = this.totalChildrenRegistered;
+    data['totalChildrenInBus'] = this.totalChildrenInBus;
+    data['totalChildrenLeave'] = this.totalChildrenLeave;
+    data['totalChildrenPick'] = this.totalChildrenPick;
+    data['totalChildrenDrop'] = this.totalChildrenDrop;
     data['listChildren'] =
         this.listChildren.map((item) => item.toJson()).toList();
-    data['type'] = this.type;
     data['childDrenStatus'] =
         this.childDrenStatus.map((item) => item.toJson()).toList();
     data['childDrenRoute'] =
         this.childDrenRoute.map((item) => item.toJson()).toList();
     data['listRouteBus'] =
         this.listRouteBus.map((item) => item.toJson()).toList();
-    data['totalChildrenRegistered'] = this.totalChildrenRegistered;
-    data['totalChildrenInBus'] = this.totalChildrenInBus;
-    data['totalChildrenLeave'] = this.totalChildrenLeave;
     data['status'] = this.status;
     return data;
   }
@@ -167,6 +176,39 @@ class DriverBusSession {
       if (item.childrenID == childDrenStatus.childrenID) item.statusID = 3;
     });
   }
+
+  Future<dynamic> saveLocal() async {
+    return localStorage.setItem(DriverBusSession.aliasName, json.encode(this));
+  }
+
+  Future<dynamic> clearLocal() async {
+    bool ready = await localStorage.ready;
+    if (ready) {
+      if (localStorage.getItem(DriverBusSession.aliasName) != null) {
+        localStorage.deleteItem(DriverBusSession.aliasName);
+      }
+    }
+  }
+
+  Future<DriverBusSession> reloadData() async {
+    bool ready = await localStorage.ready;
+    if (ready) {
+      if (localStorage.getItem(DriverBusSession.aliasName) != null) {
+        print(jsonDecode(localStorage.getItem(DriverBusSession.aliasName)));
+        this.fromJson(
+            jsonDecode(localStorage.getItem(DriverBusSession.aliasName)));
+
+        return this;
+      }
+    }
+    return this;
+  }
+
+  Future<bool> checkDriverBusSessionExists() async {
+    await reloadData();
+    if (sessionID != null) return true;
+    return false;
+  }
 }
 
 class ChildDrenStatus {
@@ -175,19 +217,25 @@ class ChildDrenStatus {
   int statusID; //map với field state cua picking transport info
   int routeBusID;
   int typePickDrop; // 0 là pick, 1 là drop
-
+  String note; // PH- TX - QLĐĐ
+  PickingRoute pickingRoute;
   ChildDrenStatus(
       {this.id,
       this.childrenID,
       this.statusID,
       this.routeBusID,
-      this.typePickDrop});
+      this.typePickDrop,
+      this.note,
+      this.pickingRoute});
 
   ChildDrenStatus.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
     childrenID = json['childrenID'];
     statusID = json['statusID'];
     routeBusID = json['routeBusID'];
+    typePickDrop = json['typePickDrop'];
+    note = json['note'];
+    pickingRoute = PickingRoute.fromJson(json['pickingRoute']);
   }
 
   Map<String, dynamic> toJson() {
@@ -196,6 +244,9 @@ class ChildDrenStatus {
     data["childrenID"] = this.childrenID;
     data["statusID"] = this.statusID;
     data["routeBusID"] = this.routeBusID;
+    data["typePickDrop"] = this.typePickDrop;
+    data["note"] = this.note;
+    data["pickingRoute"] = this.pickingRoute.toJson();
     return data;
   }
 

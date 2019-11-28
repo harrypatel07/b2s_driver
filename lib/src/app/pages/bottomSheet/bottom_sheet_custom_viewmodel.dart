@@ -67,13 +67,13 @@ class BottomSheetCustomViewModel extends ViewModelBase {
       return;
     if (childrenStatus.typePickDrop == 0 && childrenStatus.statusID == 0) {
       bottomSheetViewModelBase.driverBusSession.totalChildrenPick++;
-      // updateStatusPickChildren(childrenStatus.id);
+      updateStatusPickChildren(childrenStatus.id);
       //Update tọa độ xe đến trạm
       api.updatePickingRouteByDriver(childrenStatus.pickingRoute, 0);
     }
     if (childrenStatus.typePickDrop == 1 && childrenStatus.statusID == 1) {
       bottomSheetViewModelBase.driverBusSession.totalChildrenDrop++;
-      // updateStatusDropChildren(childrenStatus.id);
+      updateStatusDropChildren(childrenStatus.id);
       //Update tọa độ xe đến trạm
       api.updatePickingRouteByDriver(childrenStatus.pickingRoute, 1);
     }
@@ -149,7 +149,7 @@ class BottomSheetCustomViewModel extends ViewModelBase {
                 routeBus.id == bottomSheetViewModelBase.routeBus.id);
         route.status = true;
         bottomSheetViewModelBase.driverBusSession.saveLocal();
-        Navigator.pop(context, true);
+        Navigator.pop(context);
       }
     }
   }

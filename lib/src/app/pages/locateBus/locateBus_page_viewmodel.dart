@@ -179,7 +179,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
     } else
       LoadingDialog.showMsgDialog(context,
           'Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.');
-  }
+  } 
 
   // listenData() async {
   //   if (streamCloud != null) streamCloud.cancel();

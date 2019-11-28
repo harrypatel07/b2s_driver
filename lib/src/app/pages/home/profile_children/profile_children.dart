@@ -1,22 +1,28 @@
+import 'package:b2s_driver/src/app/models/chat.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
+import 'package:b2s_driver/src/app/pages/message/messageDetail/message_detail_page.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:validators/sanitizers.dart';
 
 class ProfileChildrenPage extends StatefulWidget {
   static const String routeName = "/profileChildren";
   final ProfileChildrenArgs args;
-  const ProfileChildrenPage({Key key,this.args}) : super(key: key);
+  const ProfileChildrenPage({Key key, this.args}) : super(key: key);
   @override
   _ProfileChildrenPageState createState() => _ProfileChildrenPageState();
 }
-class ProfileChildrenArgs{
+
+class ProfileChildrenArgs {
   final Children children;
   final String heroTag;
-   ProfileChildrenArgs({this.children,this.heroTag});
+  ProfileChildrenArgs({this.children, this.heroTag});
 }
+
 class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
   Children children;
   String heroTag;
@@ -27,9 +33,9 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-
     final deviceWidth = MediaQuery.of(context).size.width;
 
     final cancelBtn = Positioned(
@@ -117,7 +123,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                 height: 30.0,
 //                width: 100.0,
                 decoration: BoxDecoration(
-                  color: ThemePrimary.primaryColor,
+                    color: ThemePrimary.primaryColor,
                     //gradient: ThemePrimary.chatBubbleGradient,
                     borderRadius: BorderRadius.circular(30.0)),
                 child: Center(
@@ -149,11 +155,12 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
         ),
       ),
     );
-    Widget rowTitle(String title){
+    Widget rowTitle(String title) {
       return Container(
-        padding: EdgeInsets.only(top:10,bottom: 10,left: 15.0,right: 15.0),
+        padding: EdgeInsets.only(top: 10, bottom: 10, left: 15.0, right: 15.0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(12),topRight: Radius.circular(12)),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
           color: ThemePrimary.primaryColor,
         ),
         height: 40,
@@ -166,7 +173,10 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                 child: Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               ),
             ),
@@ -174,10 +184,12 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
         ),
       );
     }
-    Widget row2(String title1,String content1,String title2,String content2,bool type) {
+
+    Widget row2(String title1, String content1, String title2, String content2,
+        bool type) {
       return Container(
         color: Colors.white,
-        padding: EdgeInsets.only(left: 15.0,right: 15.0,top: 15,bottom: 15),
+        padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 15, bottom: 15),
         child: Column(
           children: <Widget>[
             Row(
@@ -191,8 +203,12 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                   child: Row(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(top: 3,right: 3,bottom: 3),
-                        child: Icon(type?Icons.home:Icons.school,color: type?Colors.orange:Colors.green,size: 20,),
+                        margin: EdgeInsets.only(top: 3, right: 3, bottom: 3),
+                        child: Icon(
+                          type ? Icons.home : Icons.school,
+                          color: type ? Colors.orange : Colors.green,
+                          size: 20,
+                        ),
                       ),
                       Container(
                         alignment: Alignment.centerLeft,
@@ -212,7 +228,8 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                     child: Text(
                       content1,
                       textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                 )
@@ -229,8 +246,12 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                   child: Row(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(top: 3,right: 3,bottom: 3),
-                        child: Icon(type?Icons.school:Icons.home,color: type?Colors.green:Colors.orange,size: 20,),
+                        margin: EdgeInsets.only(top: 3, right: 3, bottom: 3),
+                        child: Icon(
+                          type ? Icons.school : Icons.home,
+                          color: type ? Colors.green : Colors.orange,
+                          size: 20,
+                        ),
                       ),
                       Container(
                         alignment: Alignment.centerLeft,
@@ -250,7 +271,8 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                     child: Text(
                       content2,
                       textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                 )
@@ -260,16 +282,17 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
         ),
       );
     }
-    Widget row1(String title,String content) {
+
+    Widget row1(String title, String content) {
       return Container(
         color: Colors.white,
-        padding: EdgeInsets.only(left: 15.0,right: 15.0),
+        padding: EdgeInsets.only(left: 15.0, right: 15.0),
         child: Row(
           children: <Widget>[
             Expanded(
               flex: 3,
               child: Container(
-                padding: EdgeInsets.only(top: 10,bottom: 10),
+                padding: EdgeInsets.only(top: 10, bottom: 10),
                 alignment: Alignment.centerLeft,
                 child: Text(
                   title,
@@ -281,12 +304,12 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
             Expanded(
               flex: 7,
               child: Container(
-                padding: EdgeInsets.only(top: 10,bottom: 10,left: 5),
+                padding: EdgeInsets.only(top: 10, bottom: 10, left: 5),
                 alignment: Alignment.centerLeft,
                 child: Text(
                   content,
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             )
@@ -294,16 +317,18 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
         ),
       );
     }
-    Widget rowIcon(String title,String content,String phoneNumber) {
+
+    Widget rowIcon(
+        String title, String content, String phoneNumber, Function onTap) {
       return Container(
-        color: Colors.white,
-        padding: EdgeInsets.only(left: 15.0,right: 15.0),
+        color: Colors.transparent,
+        padding: EdgeInsets.only(left: 15.0, right: 15.0),
         child: Row(
           children: <Widget>[
             Expanded(
               flex: 3,
               child: Container(
-                padding: EdgeInsets.only(top: 10,bottom: 10),
+                padding: EdgeInsets.only(top: 10, bottom: 10),
                 alignment: Alignment.centerLeft,
                 child: Text(
                   title,
@@ -317,43 +342,78 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex: 10,
-                    child:  Container(
-                      padding: EdgeInsets.only(top: 10,bottom: 10,left: 5),
+                    flex:
+                        (phoneNumber != null && toBoolean(phoneNumber) != false)
+                            ? 10
+                            : 14,
+                    child: Container(
+                      padding: EdgeInsets.only(top: 10, bottom: 10, left: 5),
                       alignment: Alignment.centerLeft,
                       child: Text(
                         content,
                         textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 2,
-                    child: InkWell(
-                      onTap: (){
-                        launch("tel://$phoneNumber");
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(right: 2),
-                        //color: Colors.amber,
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Icon(Icons.call,color: ThemePrimary.primaryColor,),
+                  if (phoneNumber != null && toBoolean(phoneNumber) != false)
+                    Expanded(
+                      flex: 2,
+                      child: InkWell(
+                        onTap: () {
+                          launch("tel://$phoneNumber");
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(right: 2),
+//color: Colors.amber,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.call,
+                              color: ThemePrimary.primaryColor,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  if (phoneNumber != null && toBoolean(phoneNumber) != false)
+                    Expanded(
+                      flex: 2,
+                      child: InkWell(
+                        onTap: () {
+                          launch("sms://$phoneNumber");
+                        },
+                        child: Container(
+// color: Colors.red,
+                          margin: EdgeInsets.only(left: 2),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.message,
+                              color: ThemePrimary.primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   Expanded(
                     flex: 2,
                     child: InkWell(
-                      onTap: (){launch("sms://$phoneNumber");},
+                      onTap: onTap,
                       child: Container(
-                        // color: Colors.red,
-                        margin: EdgeInsets.only(left: 2),
+// color: Colors.red,
+                        margin: EdgeInsets.only(left: 4),
                         child: Align(
                           alignment: Alignment.center,
-                          child: Icon(Icons.message,color: ThemePrimary.primaryColor,),
+                          child: Icon(
+                            FontAwesomeIcons.facebookMessenger,
+                            color: ThemePrimary.primaryColor,
+                            size: 20,
+                          ),
                         ),
                       ),
                     ),
@@ -365,40 +425,65 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
         ),
       );
     }
-    final childrenInfo = Padding(
-      padding: EdgeInsets.only(bottom: 20.0, left: 20.0, right: 20.0),
-      child: Material(
-        elevation: 5.0,
-        borderRadius: BorderRadius.circular(12.0),
-        shadowColor: Colors.white,
-        child: Container(
-          padding: EdgeInsets.all(0.0),
-          width: deviceWidth,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.0),
-            color: Colors.white,
-          ),
-          constraints: BoxConstraints(minHeight: 100.0),
+
+    Widget childrenInfo() {
+      onTapChatParent() {
+        Chatting chatting = Chatting(
+            peerId: children.parent.id.toString(),
+            name: children.parent.name.toString(),
+            message: 'Hi',
+            listMessage: new List(),
+            avatarUrl: children.parent.photo,
+            datetime: DateTime.now().toIso8601String());
+        Navigator.pushNamed(
+          context,
+          MessageDetailPage.routeName,
+          arguments: chatting,
+        );
+      }
+
+      return Padding(
+        padding: EdgeInsets.only(bottom: 20.0, left: 20.0, right: 20.0),
+        child: Material(
+          elevation: 5.0,
+          borderRadius: BorderRadius.circular(12.0),
+          shadowColor: Colors.white,
           child: Container(
-            child: Column(
-              children: <Widget>[
-                rowTitle('THÔNG TIN HỌC SINH'),
-                row1('Họ và tên :',children.name),
-                hr,
-                row1('Lớp :', children.classes.toString()),
-                hr,
-                row1('Trường :', children.schoolName.toString()),
-                hr,
-                row1('Địa chỉ :', children.location.toString()),
-                hr,
-                rowIcon('Phụ huynh :', children.parent.name,children.parent.phone.toString()),
-                Container(height: 1, margin: EdgeInsets.only(bottom: 10),)
-              ],
+            padding: EdgeInsets.all(0.0),
+            width: deviceWidth,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.0),
+              color: Colors.white,
+            ),
+            constraints: BoxConstraints(minHeight: 100.0),
+            child: Container(
+              child: Column(
+                children: <Widget>[
+                  rowTitle('THÔNG TIN HỌC SINH'),
+                  row1('Họ và tên :', children.name),
+                  hr,
+                  row1('Lớp :', children.classes.toString()),
+                  hr,
+                  row1('Trường :', children.schoolName.toString()),
+                  hr,
+                  row1('Địa chỉ :', children.location.toString()),
+                  hr,
+                  rowIcon('Phụ huynh :', children.parent.name,
+                      children.parent.phone.toString(), () {
+                    onTapChatParent();
+                  }),
+                  Container(
+                    height: 1,
+                    margin: EdgeInsets.only(bottom: 10),
+                  )
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
+
 //    final busInfo = Padding(
 //      padding: EdgeInsets.only(bottom: 20.0, left: 20.0, right: 20.0),
 //      child: Material(
@@ -443,7 +528,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
             userImage,
             userName,
             userLocation,
-            childrenInfo,
+            childrenInfo(),
             //busInfo
           ],
         ),

@@ -299,7 +299,7 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
                 borderRadius: new BorderRadius.only(
                     topLeft: Radius.circular(200),
                     topRight: Radius.circular(0))),
-            width: 70,
+            width: 80,
             height: 70,
             //color: Colors.white,
             child: Container(
@@ -309,7 +309,7 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w900,
-                      fontSize: 14),
+                      fontSize: 13),
                   textAlign: TextAlign.right,
                 )),
           ),

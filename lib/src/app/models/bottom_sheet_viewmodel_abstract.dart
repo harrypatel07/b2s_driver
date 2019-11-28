@@ -78,9 +78,13 @@ class BottomSheetViewModelBase extends ViewModelBase{
             : listPoint += '${i + 1}';
       }
     var many = '';
-    if (countRouteBusNotFinishPrev(pos) > 1) many = 'các ';
-    return """Bạn chưa hoàn thành $manyđiểm trước đó:
+    if (countRouteBusNotFinishPrev(pos) > 1) {
+      many = 'các ';
+      return """Bạn chưa hoàn thành $manyđiểm trước đó:
   $listPoint
+Bạn có muốn tiếp tục?
+""";
+    }else return """Bạn chưa hoàn thành $manyđiểm trước đó: $listPoint
 Bạn có muốn tiếp tục?
 """;
   }
@@ -93,13 +97,19 @@ Bạn có muốn tiếp tục?
   }
 
   void showBottomSheet(int pos) {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (BuildContext bc) {
-          return BottomSheetCustom(
-              arguments: BottomSheetCustomArgs(viewModel: this));
-        });
+    try {
+      showModalBottomSheet(
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          context: context,
+          builder: (BuildContext bc) {
+            return BottomSheetCustom(
+                arguments: BottomSheetCustomArgs(viewModel: this));
+          }).then((_){
+              this.updateState();
+      });
+    }catch(e){
+      print(e);
+    }
   }
 }

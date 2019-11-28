@@ -244,34 +244,37 @@ class EmergencyPage extends StatelessWidget {
                 style: TextStyle(color: Colors.white,fontSize: 16, fontWeight: FontWeight.w700),
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
-              alignment: Alignment.center,
-              //color: Colors.orange[700],
-              height: 50,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 2.0, // has the effect of softening the shadow
-                    spreadRadius: 1.0, // has the effect of extending the shadow
-                    offset: Offset(
-                      2.0, // horizontal, move right 10
-                      2.0, // vertical, move down 10
-                    ),
-                  )
-                ],
-                color: ThemePrimary.primaryColor,
+            InkWell(
+              onTap: (){},
+              child: Container(
+                margin: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
+                alignment: Alignment.center,
+                //color: Colors.orange[700],
+                height: 50,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 2.0, // has the effect of softening the shadow
+                      spreadRadius: 1.0, // has the effect of extending the shadow
+                      offset: Offset(
+                        2.0, // horizontal, move right 10
+                        2.0, // vertical, move down 10
+                      ),
+                    )
+                  ],
+                  color: ThemePrimary.primaryColor,
 //                border: Border.all(
 //                    width: 1.5
 //                ),
-                borderRadius: BorderRadius.all(
-                    Radius.circular(25.0) //         <--- border radius here
-                    ),
-              ),
-              child: Text(
-                'Học sinh bị ốm / nghỉ',
-                style: TextStyle(color: Colors.white,fontSize: 16, fontWeight: FontWeight.w700),
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(25.0) //         <--- border radius here
+                      ),
+                ),
+                child: Text(
+                  'Học sinh cấp cứu',
+                  style: TextStyle(color: Colors.white,fontSize: 16, fontWeight: FontWeight.w700),
+                ),
               ),
             ),
           ],

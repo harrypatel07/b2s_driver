@@ -1,8 +1,13 @@
+import 'package:b2s_driver/src/app/models/chat.dart';
 import 'package:b2s_driver/src/app/models/profileMessageUser.dart';
+import 'package:b2s_driver/src/app/pages/message/messageDetail/message_detail_page.dart';
+import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:validators/sanitizers.dart';
 
 class ProfileMessageUserPage extends StatefulWidget {
   static const String routeName = "/profileMessageUser";
@@ -54,12 +59,12 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
                     image: imageProvider,
                   ),
                 )
-              // Image(
-              //   fit: BoxFit.cover,
-              //   width: deviceWidth,
-              //   image: MemoryImage(widget.userModel.avatarUrl),
-              // ),
-            )),
+                // Image(
+                //   fit: BoxFit.cover,
+                //   width: deviceWidth,
+                //   image: MemoryImage(widget.userModel.avatarUrl),
+                // ),
+                )),
         cancelBtn,
       ],
     );
@@ -170,7 +175,7 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
                       content1,
                       textAlign: TextAlign.left,
                       style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                 )
@@ -213,7 +218,7 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
                       content2,
                       textAlign: TextAlign.left,
                       style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                 )
@@ -259,9 +264,10 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
       );
     }
 
-    Widget rowIcon(String title, String content, String phoneNumber) {
+    Widget rowIcon(
+        String title, String content, String phoneNumber, Function onTap) {
       return Container(
-        color: Colors.white,
+        color: Colors.transparent,
         padding: EdgeInsets.only(left: 15.0, right: 15.0),
         child: Row(
           children: <Widget>[
@@ -282,51 +288,76 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex: 10,
+                    flex: (phoneNumber != null &&
+                        toBoolean(phoneNumber) != false)
+                        ? 10
+                        : 14,
                     child: Container(
                       padding: EdgeInsets.only(top: 10, bottom: 10, left: 5),
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        content,
+                        toBoolean(phoneNumber) != false?content:'',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 2,
-                    child: InkWell(
-                      onTap: () {
-                        launch("tel://$phoneNumber");
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(right: 2),
-                        //color: Colors.amber,
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Icon(
-                            Icons.call,
-                            color: Colors.amber,
+                  if (phoneNumber != null && toBoolean(phoneNumber) != false)
+                    Expanded(
+                      flex: 2,
+                      child: InkWell(
+                        onTap: () {
+                          launch("tel://$phoneNumber");
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(right: 2),
+//color: Colors.amber,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.call,
+                              color: ThemePrimary.primaryColor,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  if (phoneNumber != null && toBoolean(phoneNumber) != false)
+                    Expanded(
+                      flex: 2,
+                      child: InkWell(
+                        onTap: () {
+                          launch("sms://$phoneNumber");
+                        },
+                        child: Container(
+// color: Colors.red,
+                          margin: EdgeInsets.only(left: 2),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.message,
+                              color: ThemePrimary.primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   Expanded(
                     flex: 2,
                     child: InkWell(
-                      onTap: () {
-                        launch("sms://$phoneNumber");
-                      },
+                      onTap: onTap,
                       child: Container(
-                        // color: Colors.red,
-                        margin: EdgeInsets.only(left: 2),
+// color: Colors.red,
+                        margin: EdgeInsets.only(left: 4),
                         child: Align(
                           alignment: Alignment.center,
                           child: Icon(
-                            Icons.message,
-                            color: Colors.lightBlue,
+                            FontAwesomeIcons.facebookMessenger,
+                            color: ThemePrimary.primaryColor,
+                            size: 20,
                           ),
                         ),
                       ),
@@ -341,6 +372,17 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
     }
 
     childrenInfo(ProfileMessageUserModel userModel) {
+      onTapChatUser(){
+        Chatting chatting = Chatting(
+            peerId: userModel.peerId.toString(),
+            name: userModel.name,
+            message: 'Hi',
+            listMessage: new List(),
+            avatarUrl: userModel.avatarUrl,
+            datetime: DateTime.now().toIso8601String()
+        );
+        Navigator.pushNamed(context, MessageDetailPage.routeName, arguments: chatting,);
+      }
       return Padding(
         padding: EdgeInsets.only(bottom: 20.0, left: 20.0, right: 20.0),
         child: Material(
@@ -363,9 +405,9 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
                   hr,
                   row1('Địa chỉ :', userModel.address),
                   hr,
-                  rowIcon('Số điện thoại :', userModel.phone, userModel.phone),
+                  rowIcon('Số điện thoại :', userModel.phone, userModel.phone,()=>onTapChatUser()),
                   hr,
-                  row1('Email :', userModel.email),
+                  row1('Email :', toBoolean(userModel.email)==false?'':userModel.email),
                   Container(
                     height: 1,
                     margin: EdgeInsets.only(bottom: 10),

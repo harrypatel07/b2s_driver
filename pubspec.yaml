@@ -66,9 +66,13 @@ dependencies:
   barcode_scan: ^1.0.0
   onesignal_flutter: ^2.1.0
 dev_dependencies:
+  flutter_launcher_icons: "^0.7.4"
   flutter_test:
     sdk: flutter
-
+flutter_icons:
+  android: "launcher_icon" 
+  ios: true
+  image_path: "assets/ios/icon-1024.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

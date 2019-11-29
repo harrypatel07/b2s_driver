@@ -56,7 +56,7 @@ class Routes {
     LocateBusPage.routeName: (context) => LocateBusPage(
           driverBusSession: ModalRoute.of(context).settings.arguments,
         ),
-    EmergencyPage.routeName: (context) => EmergencyPage(),
+    EmergencyPage.routeName: (context) => EmergencyPage(driverBusSession: ModalRoute.of(context).settings.arguments,),
     ProfileChildrenPage.routeName: (context) =>
         ProfileChildrenPage(args: ModalRoute.of(context).settings.arguments),
     HistoryTripPage.routeName: (context) => HistoryTripPage(),

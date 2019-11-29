@@ -1,10 +1,12 @@
+import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+import 'package:b2s_driver/src/app/pages/locateBus/bottomSheetListChildrenEmergency/bottomSheet_listChildren_emergency.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_appbar_widget.dart';
 import 'package:flutter/material.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 //import 'package:intent/action.dart' as prefix0;
 //import 'package:intent/action.dart' as prefix0;
-import 'package:polygon_clipper/polygon_border.dart';
+//import 'package:polygon_clipper/polygon_border.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 import 'package:url_launcher/url_launcher.dart';
 //import 'package:intent/intent.dart' as intent;
@@ -15,6 +17,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class EmergencyPage extends StatelessWidget {
   static const String routeName = "/emergency";
+  final DriverBusSession driverBusSession;
+  const EmergencyPage({Key key, this.driverBusSession}) : super(key: key);
   Widget _appBar() {
     return TS24AppBar(
       backgroundColorStart: ThemePrimary.primaryColor,
@@ -158,6 +162,7 @@ class EmergencyPage extends StatelessWidget {
           ),
         ),
       );
+
       return SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -185,10 +190,7 @@ class EmergencyPage extends StatelessWidget {
               child: Text('THÔNG BÁO SỰ CỐ CHO PHỤ HUYNH & NHÀ TRƯỜNG',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
             ),
             Container(
-              margin: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
-              alignment: Alignment.center,
-              //color: Colors.orange[700],
-              height: 50,
+              margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
@@ -202,23 +204,42 @@ class EmergencyPage extends StatelessWidget {
                   )
                 ],
                 color: ThemePrimary.primaryColor,
+                borderRadius: BorderRadius.all(
+                    Radius.circular(25.0) //         <--- border radius here
+                ),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  onTap: (){
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    //color: Colors.orange[700],
+                    height: 50,
+                    decoration: BoxDecoration(
+//                      color: ThemePrimary.primaryColor,
 //                border: Border.all(
 //                    width: 1.5
 //                ),
-                borderRadius: BorderRadius.all(
-                    Radius.circular(25.0) //         <--- border radius here
+                      borderRadius: BorderRadius.all(Radius.circular(
+                          25.0) //         <--- border radius here
+                      ),
                     ),
-              ),
-              child: Text(
-                'Kẹt xe nghiêm trọng',
-                style: TextStyle(color: Colors.white,fontSize: 16, fontWeight: FontWeight.w700),
+                    child: Text(
+                      'Kẹt xe nghiêm trọng',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
-              alignment: Alignment.center,
-              //color: Colors.orange[700],
-              height: 50,
+              margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
@@ -232,25 +253,42 @@ class EmergencyPage extends StatelessWidget {
                   )
                 ],
                 color: ThemePrimary.primaryColor,
+                borderRadius: BorderRadius.all(
+                    Radius.circular(25.0) //         <--- border radius here
+                ),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  onTap: (){
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    //color: Colors.orange[700],
+                    height: 50,
+                    decoration: BoxDecoration(
+//                      color: ThemePrimary.primaryColor,
 //                border: Border.all(
 //                    width: 1.5
 //                ),
-                borderRadius: BorderRadius.all(
-                    Radius.circular(25.0) //         <--- border radius here
+                      borderRadius: BorderRadius.all(Radius.circular(
+                          25.0) //         <--- border radius here
+                      ),
                     ),
-              ),
-              child: Text(
-                'Tai nạn giao thông',
-                style: TextStyle(color: Colors.white,fontSize: 16, fontWeight: FontWeight.w700),
+                    child: Text(
+                      'Tai nạn giao thông',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
               ),
             ),
-            InkWell(
-              onTap: (){},
-              child: Container(
-                margin: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
-                alignment: Alignment.center,
-                //color: Colors.orange[700],
-                height: 50,
+            Container(
+                margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -264,19 +302,47 @@ class EmergencyPage extends StatelessWidget {
                     )
                   ],
                   color: ThemePrimary.primaryColor,
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(25.0) //         <--- border radius here
+                  ),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                    onTap: (){
+                      showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (BuildContext bc) {
+                            return BottomSheetListChildrenEmergency(driverBusSession: driverBusSession,);
+                          });
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      //color: Colors.orange[700],
+                      height: 50,
+                      decoration: BoxDecoration(
+//                      color: ThemePrimary.primaryColor,
 //                border: Border.all(
 //                    width: 1.5
 //                ),
-                  borderRadius: BorderRadius.all(
-                      Radius.circular(25.0) //         <--- border radius here
+                        borderRadius: BorderRadius.all(Radius.circular(
+                            25.0) //         <--- border radius here
+                        ),
                       ),
-                ),
-                child: Text(
-                  'Học sinh cấp cứu',
-                  style: TextStyle(color: Colors.white,fontSize: 16, fontWeight: FontWeight.w700),
+                      child: Text(
+                        'Học sinh cấp cứu',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       );

@@ -303,8 +303,7 @@ class _LocateBusPageState extends State<LocateBusPage>
               left: 2,
               child: InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, EmergencyPage.routeName);
-                  print("On tab SOS");
+                  viewModel.onTapSOS();
                 },
                 child: Container(
                   width: 50,

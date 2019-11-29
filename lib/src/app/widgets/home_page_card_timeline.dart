@@ -1,5 +1,4 @@
 import 'package:b2s_driver/src/app/models/children.dart';
-import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/pages/home/popup_card_timeline/popup_card_timeline.dart';
@@ -20,6 +19,8 @@ class HomePageCardTimeLine extends StatelessWidget {
   final int typePickDrop;
   final String note;
   final int cardType;
+  final bool selected;
+  final Function onChangeSelect;
   final PopupCardTimeLinePage popupCardTimeLinePage;
   const HomePageCardTimeLine({
     Key key,
@@ -33,6 +34,8 @@ class HomePageCardTimeLine extends StatelessWidget {
     this.cardType = 0,
     this.typePickDrop = 0,
     this.note = "",
+    this.selected,
+    this.onChangeSelect,
     @required this.children,
     this.isEnablePicked,
     this.isEnableTapChildrenContentCard = false,
@@ -185,6 +188,8 @@ class HomePageCardTimeLine extends StatelessWidget {
               pageBuilder: (context, animation1, animation2) {
                 return Container();
               });
+        } else {
+          if (selected != null) onChangeSelect();
         }
       },
       child:
@@ -348,7 +353,13 @@ class HomePageCardTimeLine extends StatelessWidget {
                                         ),
                                       )
                                     ],
-                                    color: ThemePrimary.primaryColor,
+                                    color: (typePickDrop == 0)
+                                        ? (status.statusID == 0)
+                                            ? ThemePrimary.primaryColor
+                                            : Colors.grey
+                                        : (status.statusID == 1)
+                                            ? ThemePrimary.primaryColor
+                                            : Colors.grey,
 //                                    border: new Border.all(color: Colors.white, width: 2.0),
                                     borderRadius:
                                         new BorderRadius.circular(15.0),
@@ -356,7 +367,13 @@ class HomePageCardTimeLine extends StatelessWidget {
                                   child: Material(
                                     color: Colors.transparent,
                                     child: new InkWell(
-                                        onTap: onTapScan,
+                                        onTap: (typePickDrop == 0)
+                                            ? (status.statusID == 0)
+                                                ? onTapScan
+                                                : () {}
+                                            : (status.statusID == 1)
+                                                ? onTapScan
+                                                : () {},
                                         borderRadius:
                                             BorderRadius.circular(15.0),
                                         child: Row(
@@ -409,14 +426,36 @@ class HomePageCardTimeLine extends StatelessWidget {
 //                            color: Colors.yellow,
                               padding: EdgeInsets.only(right: 20, top: 8),
                               alignment: Alignment.center,
-                              child: Text(
-                                typePickDrop == 0 ? 'Đón' : 'Trả',
-                                style: new TextStyle(
-                                    fontFamily: ThemePrimary.primaryFontFamily,
-                                    fontSize: 14.0,
-                                    color: ThemePrimary.primaryColor,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              child: selected != null
+                                  ? Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: ThemePrimary.primaryColor),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(1.0),
+                                        child: selected
+                                            ? Icon(
+                                                Icons.check,
+                                                size: 20.0,
+                                                color: Colors.white,
+                                              )
+                                            : Container(
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.white)),
+                                      ),
+                                    )
+                                  : Text(
+                                      typePickDrop == 0 ? 'Đón' : 'Trả',
+                                      style: new TextStyle(
+                                          fontFamily:
+                                              ThemePrimary.primaryFontFamily,
+                                          fontSize: 14.0,
+                                          color: ThemePrimary.primaryColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                             )
                       : (cardType == 1)
                           ? Container()
@@ -424,14 +463,36 @@ class HomePageCardTimeLine extends StatelessWidget {
 //                            color: Colors.yellow,
                               padding: EdgeInsets.only(right: 20, top: 8),
                               alignment: Alignment.center,
-                              child: Text(
-                                typePickDrop == 0 ? 'Đón' : 'Trả',
-                                style: new TextStyle(
-                                    fontFamily: ThemePrimary.primaryFontFamily,
-                                    fontSize: 14.0,
-                                    color: ThemePrimary.primaryColor,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              child: selected != null
+                                  ? Container(
+                                width: 30,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: ThemePrimary.primaryColor),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(1.0),
+                                  child: selected
+                                      ? Icon(
+                                    Icons.check,
+                                    size: 20.0,
+                                    color: Colors.white,
+                                  )
+                                      : Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white)),
+                                ),
+                              )
+                                  : Text(
+                                      typePickDrop == 0 ? 'Đón' : 'Trả',
+                                      style: new TextStyle(
+                                          fontFamily:
+                                              ThemePrimary.primaryFontFamily,
+                                          fontSize: 14.0,
+                                          color: ThemePrimary.primaryColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                             ),
                   // ),
                 ],

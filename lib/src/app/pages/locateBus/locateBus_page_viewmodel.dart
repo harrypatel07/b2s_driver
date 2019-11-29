@@ -7,6 +7,7 @@ import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/pages/bottomSheet/bottom_sheet_custom.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
+import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/widgets/icon_marker_custom.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
@@ -277,5 +278,9 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
           }
         }
       }
+  }
+  onTapSOS(){
+    Navigator.pushNamed(context, EmergencyPage.routeName,arguments: driverBusSession);
+    print("On tab SOS");
   }
 }

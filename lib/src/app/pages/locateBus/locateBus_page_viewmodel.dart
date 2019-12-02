@@ -59,17 +59,6 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
     if (animate) {
       center = LatLng(myLoc.latitude, myLoc.longitude);
       _animateCamera(center);
-
-      if (streamLocation != null) streamLocation.cancel();
-      streamLocation = location.onLocationChanged().listen((onData) {
-        // final _marker = markers[MarkerId("location")];
-        // markers[MarkerId("location")] = _marker.copyWith(
-        //     rotationParam: onData.heading,
-        //     positionParam: LatLng(onData.latitude, onData.longitude));
-        Driver driver = Driver();
-        api.updateCoordinateVehicle(driver.vehicleId, onData);
-        checkBusLocationWithRoute(LatLng(onData.latitude, onData.longitude));
-      });
     }
     myLocationEnabled = true;
 //    childrenBus.status = StatusBus.list[0];
@@ -82,6 +71,18 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
 //      rotation: myLoc.heading,
 //      icon: iconMy,
 //    );
+    if (!animate) {
+      if (streamLocation != null) streamLocation.cancel();
+      streamLocation = location.onLocationChanged().listen((onData) {
+        // final _marker = markers[MarkerId("location")];
+        // markers[MarkerId("location")] = _marker.copyWith(
+        //     rotationParam: onData.heading,
+        //     positionParam: LatLng(onData.latitude, onData.longitude));
+        Driver driver = Driver();
+        api.updateCoordinateVehicle(driver.vehicleId, onData);
+        checkBusLocationWithRoute(LatLng(onData.latitude, onData.longitude));
+      });
+    }
     this.updateState();
   }
 

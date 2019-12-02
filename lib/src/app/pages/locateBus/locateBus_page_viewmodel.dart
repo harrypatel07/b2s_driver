@@ -82,8 +82,8 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
         api.updateCoordinateVehicle(driver.vehicleId, onData);
         checkBusLocationWithRoute(LatLng(onData.latitude, onData.longitude));
       });
+      this.updateState();
     }
-    this.updateState();
   }
 
   void animateThePoint(int point) async {

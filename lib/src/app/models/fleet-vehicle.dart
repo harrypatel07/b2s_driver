@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 
 class FleetVehicle {
@@ -155,6 +156,12 @@ class FleetVehicle {
       this.xPosz});
 
   FleetVehicle.fromLocationData(LocationData data) {
+    xPosx = data.latitude;
+    xPosy = data.longitude;
+    xPosz = data.heading;
+  }
+
+  FleetVehicle.fromPositionData(Position data) {
     xPosx = data.latitude;
     xPosy = data.longitude;
     xPosz = data.heading;

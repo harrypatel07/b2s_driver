@@ -16,6 +16,7 @@ import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 
 class LocateBusPageViewModel extends BottomSheetViewModelBase {
   bool showGoolgeMap = true;
@@ -26,6 +27,8 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   Map<PolylineId, Polyline> polyline = <PolylineId, Polyline>{};
   Location location = Location();
+  //For ios location
+  Geolocator geolocator = Geolocator();
   //List<Children> listChildrenPaidTicket;
   StreamSubscription streamLocation;
 
@@ -174,7 +177,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
 
   listenLocation() async {
     if (streamLocation != null) streamLocation.cancel();
-    streamLocation = new Location().onLocationChanged().listen((onData) {
+    streamLocation = geolocator.getPositionStream().listen((onData) {
       // final _marker = markers[MarkerId("location")];
       // markers[MarkerId("location")] = _marker.copyWith(
       //     rotationParam: onData.heading,
@@ -183,7 +186,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
       api.updateCoordinateVehicle(driver.vehicleId, onData);
       checkBusLocationWithRoute(LatLng(onData.latitude, onData.longitude));
     });
-    this.updateState();
+    // this.updateState();
   }
 
   _animateCamera(LatLng latlng) {

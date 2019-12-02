@@ -17,6 +17,7 @@ import 'package:b2s_driver/src/app/models/sale-order.dart';
 import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
 import 'package:b2s_driver/src/app/service/onesingal-service.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
@@ -804,10 +805,9 @@ class Api1 extends ApiMaster {
   ///Success - Trả về true
   ///
   ///Fail - Trả về false
-  Future<bool> updateCoordinateVehicle(
-      int vehicleId, LocationData location) async {
+  Future<bool> updateCoordinateVehicle(int vehicleId, Position location) async {
     await this.authorization();
-    FleetVehicle fleetVehicle = FleetVehicle.fromLocationData(location);
+    FleetVehicle fleetVehicle = FleetVehicle.fromPositionData(location);
     fleetVehicle.id = vehicleId;
     body = new Map();
     body["model"] = "fleet.vehicle";

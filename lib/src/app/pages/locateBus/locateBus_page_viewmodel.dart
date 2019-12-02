@@ -59,6 +59,17 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
     if (animate) {
       center = LatLng(myLoc.latitude, myLoc.longitude);
       _animateCamera(center);
+
+      if (streamLocation != null) streamLocation.cancel();
+      streamLocation = location.onLocationChanged().listen((onData) {
+        // final _marker = markers[MarkerId("location")];
+        // markers[MarkerId("location")] = _marker.copyWith(
+        //     rotationParam: onData.heading,
+        //     positionParam: LatLng(onData.latitude, onData.longitude));
+        Driver driver = Driver();
+        api.updateCoordinateVehicle(driver.vehicleId, onData);
+        checkBusLocationWithRoute(LatLng(onData.latitude, onData.longitude));
+      });
     }
     myLocationEnabled = true;
 //    childrenBus.status = StatusBus.list[0];
@@ -71,16 +82,6 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
 //      rotation: myLoc.heading,
 //      icon: iconMy,
 //    );
-    if (streamLocation != null) streamLocation.cancel();
-    streamLocation = location.onLocationChanged().listen((onData) {
-      // final _marker = markers[MarkerId("location")];
-      // markers[MarkerId("location")] = _marker.copyWith(
-      //     rotationParam: onData.heading,
-      //     positionParam: LatLng(onData.latitude, onData.longitude));
-      Driver driver = Driver();
-      api.updateCoordinateVehicle(driver.vehicleId, onData);
-      checkBusLocationWithRoute(LatLng(onData.latitude, onData.longitude));
-    });
     this.updateState();
   }
 
@@ -180,7 +181,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
     } else
       LoadingDialog.showMsgDialog(context,
           'Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.');
-  } 
+  }
 
   // listenData() async {
   //   if (streamCloud != null) streamCloud.cancel();
@@ -279,8 +280,10 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
         }
       }
   }
-  onTapSOS(){
-    Navigator.pushNamed(context, EmergencyPage.routeName,arguments: driverBusSession);
+
+  onTapSOS() {
+    Navigator.pushNamed(context, EmergencyPage.routeName,
+        arguments: driverBusSession);
     print("On tab SOS");
   }
 }

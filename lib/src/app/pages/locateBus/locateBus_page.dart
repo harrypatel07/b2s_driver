@@ -159,28 +159,28 @@ class _LocateBusPageState extends State<LocateBusPage>
         right: 0,
         child: Stack(
           children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 20),
-              decoration: new BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black38,
-                      blurRadius: 1.0, // has the effect of softening the shadow
-                      spreadRadius:
-                          1.0, // has the effect of extending the shadow
-                      offset: Offset(
-                        -1.0, // horizontal, move right 10
-                        -1.0, // vertical, move down 10
-                      ),
-                    )
-                  ],
-                  color: Colors.white54,
-                  borderRadius: new BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      bottomLeft: Radius.circular(40))),
-              width: 60,
-              height: 60,
-            ),
+            // Container(
+            //   padding: EdgeInsets.only(left: 20),
+            //   decoration: new BoxDecoration(
+            //       boxShadow: [
+            //         BoxShadow(
+            //           color: Colors.black38,
+            //           blurRadius: 1.0, // has the effect of softening the shadow
+            //           spreadRadius:
+            //               1.0, // has the effect of extending the shadow
+            //           offset: Offset(
+            //             -1.0, // horizontal, move right 10
+            //             -1.0, // vertical, move down 10
+            //           ),
+            //         )
+            //       ],
+            //       color: Colors.white54,
+            //       borderRadius: new BorderRadius.only(
+            //           topLeft: Radius.circular(40),
+            //           bottomLeft: Radius.circular(40))),
+            //   width: 60,
+            //   height: 60,
+            // ),
             Positioned(
               top: 4,
               left: 2,

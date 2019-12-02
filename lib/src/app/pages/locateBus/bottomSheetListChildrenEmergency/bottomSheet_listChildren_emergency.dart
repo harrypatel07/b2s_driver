@@ -36,7 +36,7 @@ class _BottomSheetListChildrenEmergencyState
 //        padding: EdgeInsets.fromLTRB(8, 0, 10, 0),
             height: MediaQuery.of(context).size.height * 0.8,
             decoration: BoxDecoration(
-              color: Colors.grey[100],
+              color: ThemePrimary.primaryColor,
               borderRadius: new BorderRadius.only(
                   topLeft: Radius.circular(18), topRight: Radius.circular(18)),
             ),
@@ -48,7 +48,7 @@ class _BottomSheetListChildrenEmergencyState
                   child: Text(
                     'CHỌN HỌC SINH CẤP CỨU',
                     style: TextStyle(
-                        color: ThemePrimary.primaryColor,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -118,7 +118,7 @@ class _BottomSheetListChildrenEmergencyState
                 child: InkWell(
                   borderRadius: BorderRadius.all(Radius.circular(25.0)),
                   onTap: () {
-                    print('');
+                    viewModel.onSendListChildrenSOS();
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -148,7 +148,7 @@ class _BottomSheetListChildrenEmergencyState
         ],
       );
     }
-
+    viewModel.context = context;
     return ViewModelProvider(
       viewmodel: viewModel,
       child: StreamBuilder<Object>(

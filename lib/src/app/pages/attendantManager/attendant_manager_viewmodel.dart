@@ -1,6 +1,5 @@
 import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
-import 'package:b2s_driver/src/app/pages/home/home_page.dart';
-import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
+import 'package:b2s_driver/src/app/pages/attendant/attendant_page.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -26,8 +25,7 @@ class AttendantManagerViewModel extends BottomSheetViewModelBase {
 //      print(barcode);
 //      if (barcode != null) {
 //        driverBusSession.clearLocal();
-        Navigator.pushReplacementNamed(context, TabsPage.routeName,
-            arguments: TabsArgument(routeChildName: HomePage.routeName));
+        Navigator.pushReplacementNamed(context, AttendantPage.routeName);
 //      }
     } else
       LoadingDialog.showMsgDialog(context,

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui' as prefix0;
 
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
@@ -30,7 +31,8 @@ class _LocateBusPageState extends State<LocateBusPage>
     super.initState();
   }
 
-  Widget _buildBody() {
+  @override
+  Widget build(BuildContext context) {
     Widget __buildGoogleMap() {
       return GoogleMap(
         onMapCreated: viewModel.onMapCreated,
@@ -59,97 +61,192 @@ class _LocateBusPageState extends State<LocateBusPage>
           color: ThemePrimary.primaryColor);
       return Positioned(
         top: 0,
-        child: ClipRect(
-          child: BackdropFilter(
-            filter: prefix0.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-            child: Container(
-              padding: EdgeInsets.fromLTRB(15, 30, 15, 5),
-              width: MediaQuery.of(context).size.width,
+        child: (Platform.isAndroid || Platform.isFuchsia)
+            ? ClipRect(
+                child: BackdropFilter(
+                  filter: prefix0.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(15, 30, 15, 5),
+                    width: MediaQuery.of(context).size.width,
 //              color: Colors.transparent,
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                          child: Text(
-                            "Học sinh đăng ký",
-                            textAlign: TextAlign.center,
-                            style: ___textStyle,
-                          ),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                padding: EdgeInsets.only(left: 20, right: 20),
+                                child: Text(
+                                  "Học sinh đăng ký",
+                                  textAlign: TextAlign.center,
+                                  style: ___textStyle,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                padding: EdgeInsets.only(left: 20, right: 20),
+                                child: Text(
+                                  "Học sinh trên xe",
+                                  textAlign: TextAlign.center,
+                                  style: ___textStyle,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                padding: EdgeInsets.only(left: 20, right: 20),
+                                child: Text(
+                                  "Học sinh báo nghỉ",
+                                  textAlign: TextAlign.center,
+                                  style: ___textStyle,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                          child: Text(
-                            "Học sinh trên xe",
-                            textAlign: TextAlign.center,
-                            style: ___textStyle,
-                          ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                    left: 20, right: 20, top: 5),
+                                child: Text(
+                                  viewModel
+                                      .driverBusSession.totalChildrenRegistered
+                                      .toString(),
+                                  textAlign: TextAlign.center,
+                                  style: ___numberStyle,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                    left: 20, right: 20, top: 5),
+                                child: Text(
+                                  viewModel.driverBusSession.totalChildrenInBus
+                                      .toString(),
+                                  textAlign: TextAlign.center,
+                                  style: ___numberStyle,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                    left: 20, right: 20, top: 5),
+                                child: Text(
+                                  viewModel.driverBusSession.totalChildrenLeave
+                                      .toString(),
+                                  textAlign: TextAlign.center,
+                                  style: ___numberStyle,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                          child: Text(
-                            "Học sinh báo nghỉ",
-                            textAlign: TextAlign.center,
-                            style: ___textStyle,
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
-                          child: Text(
-                            viewModel.driverBusSession.totalChildrenRegistered
-                                .toString(),
-                            textAlign: TextAlign.center,
-                            style: ___numberStyle,
+                ),
+              )
+            : Container(
+                color: Colors.white60,
+                padding: EdgeInsets.fromLTRB(15, 30, 15, 5),
+                width: MediaQuery.of(context).size.width,
+//              color: Colors.transparent,
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 20, right: 20),
+                            child: Text(
+                              "Học sinh đăng ký",
+                              textAlign: TextAlign.center,
+                              style: ___textStyle,
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
-                          child: Text(
-                            viewModel.driverBusSession.totalChildrenInBus
-                                .toString(),
-                            textAlign: TextAlign.center,
-                            style: ___numberStyle,
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 20, right: 20),
+                            child: Text(
+                              "Học sinh trên xe",
+                              textAlign: TextAlign.center,
+                              style: ___textStyle,
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 20, right: 20, top: 5),
-                          child: Text(
-                            viewModel.driverBusSession.totalChildrenLeave
-                                .toString(),
-                            textAlign: TextAlign.center,
-                            style: ___numberStyle,
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 20, right: 20),
+                            child: Text(
+                              "Học sinh báo nghỉ",
+                              textAlign: TextAlign.center,
+                              style: ___textStyle,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            padding:
+                                EdgeInsets.only(left: 20, right: 20, top: 5),
+                            child: Text(
+                              viewModel.driverBusSession.totalChildrenRegistered
+                                  .toString(),
+                              textAlign: TextAlign.center,
+                              style: ___numberStyle,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            padding:
+                                EdgeInsets.only(left: 20, right: 20, top: 5),
+                            child: Text(
+                              viewModel.driverBusSession.totalChildrenInBus
+                                  .toString(),
+                              textAlign: TextAlign.center,
+                              style: ___numberStyle,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            padding:
+                                EdgeInsets.only(left: 20, right: 20, top: 5),
+                            child: Text(
+                              viewModel.driverBusSession.totalChildrenLeave
+                                  .toString(),
+                              textAlign: TextAlign.center,
+                              style: ___numberStyle,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-        ),
       );
     }
 
@@ -162,19 +259,19 @@ class _LocateBusPageState extends State<LocateBusPage>
             Container(
               padding: EdgeInsets.only(left: 20),
               decoration: new BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black38,
-                      blurRadius: 1.0, // has the effect of softening the shadow
-                      spreadRadius:
-                          1.0, // has the effect of extending the shadow
-                      offset: Offset(
-                        -1.0, // horizontal, move right 10
-                        -1.0, // vertical, move down 10
-                      ),
-                    )
-                  ],
-                  color: Colors.white54,
+//                  boxShadow: [
+//                    BoxShadow(
+//                      color: Colors.black38,
+//                      blurRadius: 1.0, // has the effect of softening the shadow
+//                      spreadRadius:
+//                          1.0, // has the effect of extending the shadow
+//                      offset: Offset(
+//                        -1.0, // horizontal, move right 10
+//                        -1.0, // vertical, move down 10
+//                      ),
+//                    )
+//                  ],
+                  color: Colors.white,
                   borderRadius: new BorderRadius.only(
                       topLeft: Radius.circular(40),
                       bottomLeft: Radius.circular(40))),
@@ -196,13 +293,13 @@ class _LocateBusPageState extends State<LocateBusPage>
                       color: ThemePrimary.primaryColor,
                       shape: BoxShape.circle,
                     ),
-                    child: Transform.rotate(
-                        angle: 3.14 / 4,
-                        child: Icon(
-                          Icons.navigation,
-                          color: Colors.white,
-                          size: 25,
-                        ))),
+                    child: Center(
+                      child: Icon(
+                        Icons.near_me,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                    )),
               ),
             ),
           ],
@@ -279,19 +376,19 @@ class _LocateBusPageState extends State<LocateBusPage>
             Container(
               padding: EdgeInsets.only(left: 20),
               decoration: new BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black38,
-                      blurRadius: 1.0, // has the effect of softening the shadow
-                      spreadRadius:
-                          1.0, // has the effect of extending the shadow
-                      offset: Offset(
-                        -1.0, // horizontal, move right 10
-                        -1.0, // vertical, move down 10
-                      ),
-                    )
-                  ],
-                  color: Colors.white54,
+//                  boxShadow: [
+//                    BoxShadow(
+//                      color: Colors.black38,
+//                      blurRadius: 1.0, // has the effect of softening the shadow
+//                      spreadRadius:
+//                          1.0, // has the effect of extending the shadow
+//                      offset: Offset(
+//                        -1.0, // horizontal, move right 10
+//                        -1.0, // vertical, move down 10
+//                      ),
+//                    )
+//                  ],
+                  color: Colors.white,
                   borderRadius: new BorderRadius.only(
                       topLeft: Radius.circular(40),
                       bottomLeft: Radius.circular(40))),
@@ -346,24 +443,6 @@ class _LocateBusPageState extends State<LocateBusPage>
       );
     }
 
-    return Stack(
-      children: <Widget>[
-        viewModel.showGoolgeMap ? __buildGoogleMap() : Container(),
-        viewModel.showSpinner
-            ? LoadingIndicator.progress(
-                context: context, loading: true, position: Alignment.topCenter)
-            : Container(),
-        __report(),
-        __sosButton(),
-        __buildIconLocation(),
-        __navigateGoogleMap(),
-        __finishButton(),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
     viewModel.context = context;
     return ViewModelProvider(
       viewmodel: viewModel,
@@ -374,7 +453,18 @@ class _LocateBusPageState extends State<LocateBusPage>
               home: new Scaffold(
                 body: Stack(
                   children: <Widget>[
-                    _buildBody(),
+                    viewModel.showGoolgeMap ? __buildGoogleMap() : Container(),
+                    viewModel.showSpinner
+                        ? LoadingIndicator.progress(
+                            context: context,
+                            loading: true,
+                            position: Alignment.topCenter)
+                        : Container(),
+                    __report(),
+                    __sosButton(),
+                    __buildIconLocation(),
+                    __navigateGoogleMap(),
+                    __finishButton(),
 //                    if(viewModel.listTimeLine!=null)_builBottomSheet()
                   ],
                 ),

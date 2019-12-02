@@ -32,40 +32,37 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
     final deviceHeight = MediaQuery.of(context).size.height;
     final deviceWidth = MediaQuery.of(context).size.width;
 
-    Widget userImage() => InkWell(
-//        onTap: () => Navigator.pushNamed(context, MessageUserPage.routeName,
-//            arguments: int.parse(widget.chatting.peerId)),
-        child: Hero(
-          tag: widget.chatting.datetime,
-          child:
-              // Container(
-              //   margin: EdgeInsets.only(right: 8.0, bottom: 10.0),
-              //   height: 50.0,
-              //   width: 50.0,
-              //   decoration: BoxDecoration(
-              //     image: DecorationImage(
-              //       image: MemoryImage(viewModel.chat.avatarUrl),
-              //       fit: BoxFit.cover,
-              //     ),
-              //     shape: BoxShape.circle,
-              //   ),
-              // ),
-              CachedNetworkImage(
-            imageUrl: viewModel.chat.avatarUrl,
-            imageBuilder: (context, imageProvider) => Container(
-              margin: EdgeInsets.only(right: 8.0, bottom: 10.0),
-              height: 50.0,
-              width: 50.0,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
-                ),
-                shape: BoxShape.circle,
-              ),
+    Widget userImage() => Hero(
+      tag: widget.chatting.peerId.toString(),
+      child:
+          // Container(
+          //   margin: EdgeInsets.only(right: 8.0, bottom: 10.0),
+          //   height: 50.0,
+          //   width: 50.0,
+          //   decoration: BoxDecoration(
+          //     image: DecorationImage(
+          //       image: MemoryImage(viewModel.chat.avatarUrl),
+          //       fit: BoxFit.cover,
+          //     ),
+          //     shape: BoxShape.circle,
+          //   ),
+          // ),
+          CachedNetworkImage(
+        imageUrl: viewModel.chat.avatarUrl,
+        imageBuilder: (context, imageProvider) => Container(
+          margin: EdgeInsets.only(right: 8.0, bottom: 10.0),
+          height: 50.0,
+          width: 50.0,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
             ),
+            shape: BoxShape.circle,
           ),
-        ));
+        ),
+      ),
+    );
     final userName = Text(
       viewModel.chat.name,
       style: TextStyle(
@@ -96,7 +93,7 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
     Widget _textInput() => Container(
           padding: EdgeInsets.only(left: 10.0),
           height: 47.0,
-          width: deviceWidth * 0.7,
+          width: deviceWidth * 0.8,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.0),
             color: Colors.white,
@@ -155,14 +152,15 @@ class _MessageDetailPageState extends State<MessageDetailPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.camera_alt,
-                    color: Colors.grey,
-                  ),
-                  iconSize: 32.0,
-                ),
+//                IconButton(
+//                  onPressed: () {},
+//                  icon: Icon(
+//                    Icons.camera_alt,
+//                    color: Colors.grey,
+//                  ),
+//                  iconSize: 32.0,
+//                ),
+                SizedBox(),
                 _textInput(),
                 IconButton(
                   onPressed: () {

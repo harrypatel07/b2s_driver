@@ -19,6 +19,9 @@ class BottomSheetListChildrenEmergencyViewModel extends ViewModelBase{
     childrenWithSelect.isSelect = !childrenWithSelect.isSelect;
     this.updateState();
   }
+  onSendListChildrenSOS(){
+    Navigator.pop(context);
+  }
 }
 
 class ChildrenWithSelect{

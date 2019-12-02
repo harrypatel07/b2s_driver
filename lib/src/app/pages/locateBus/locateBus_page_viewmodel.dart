@@ -49,13 +49,13 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
     mapController.setMapStyle(_pathStyleMap);
 
     this.updateState();
-    animateMyLocation(animate: false);
-    listenData();
+    await animateMyLocation(animate: false);
+    await listenLocation();
     animateThePoint(0);
     initMarkers();
   }
 
-  void animateMyLocation({bool animate = true}) async {
+  Future animateMyLocation({bool animate = true}) async {
     var myLoc = await location.getLocation();
     if (animate) {
       center = LatLng(myLoc.latitude, myLoc.longitude);
@@ -72,19 +72,6 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
 //      rotation: myLoc.heading,
 //      icon: iconMy,
 //    );
-    // if (!animate) {
-    //   if (streamLocation != null) streamLocation.cancel();
-    //   streamLocation = location.onLocationChanged().listen((onData) {
-    //     // final _marker = markers[MarkerId("location")];
-    //     // markers[MarkerId("location")] = _marker.copyWith(
-    //     //     rotationParam: onData.heading,
-    //     //     positionParam: LatLng(onData.latitude, onData.longitude));
-    //     Driver driver = Driver();
-    //     api.updateCoordinateVehicle(driver.vehicleId, onData);
-    //     checkBusLocationWithRoute(LatLng(onData.latitude, onData.longitude));
-    //   });
-    //   this.updateState();
-    // }
   }
 
   void animateThePoint(int point) async {
@@ -185,9 +172,9 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
           'Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.');
   }
 
-  listenData() async {
+  listenLocation() async {
     if (streamLocation != null) streamLocation.cancel();
-    streamLocation = location.onLocationChanged().listen((onData) {
+    streamLocation = new Location().onLocationChanged().listen((onData) {
       // final _marker = markers[MarkerId("location")];
       // markers[MarkerId("location")] = _marker.copyWith(
       //     rotationParam: onData.heading,

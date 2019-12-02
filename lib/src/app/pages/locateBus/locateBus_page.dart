@@ -157,79 +157,57 @@ class _LocateBusPageState extends State<LocateBusPage>
       return Positioned(
         bottom: MediaQuery.of(context).size.height / 2 - 70,
         right: 0,
-        child: InkWell(
-          onTap: () {
-            viewModel.onTapGoogleMaps();
-          },
-          child: Container(
-              width: 50,
-              height: 50,
-              alignment: Alignment.center,
+        child: Stack(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(left: 20),
               decoration: new BoxDecoration(
-                color: ThemePrimary.primaryColor,
-                shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black38,
+                      blurRadius: 1.0, // has the effect of softening the shadow
+                      spreadRadius:
+                          1.0, // has the effect of extending the shadow
+                      offset: Offset(
+                        -1.0, // horizontal, move right 10
+                        -1.0, // vertical, move down 10
+                      ),
+                    )
+                  ],
+                  color: Colors.white54,
+                  borderRadius: new BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      bottomLeft: Radius.circular(40))),
+              width: 60,
+              height: 60,
+            ),
+            Positioned(
+              top: 4,
+              left: 2,
+              child: InkWell(
+                onTap: () {
+                  viewModel.onTapGoogleMaps();
+                },
+                child: Container(
+                    width: 50,
+                    height: 50,
+                    alignment: Alignment.center,
+                    decoration: new BoxDecoration(
+                      color: ThemePrimary.primaryColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Transform.rotate(
+                        angle: 3.14 / 4,
+                        child: Icon(
+                          Icons.navigation,
+                          color: Colors.white,
+                          size: 25,
+                        ))),
               ),
-              child: Icon(
-                Icons.navigation,
-                color: Colors.white,
-                size: 25,
-              )),
+            ),
+          ],
         ),
       );
-      // return Positioned(
-      //   bottom: MediaQuery.of(context).size.height / 2 - 70,
-      //   right: 0,
-      //   child: Stack(
-      //     children: <Widget>[
-      //       Container(
-      //         padding: EdgeInsets.only(left: 20),
-      //         decoration: new BoxDecoration(
-      //             boxShadow: [
-      //               BoxShadow(
-      //                 color: Colors.black38,
-      //                 blurRadius: 1.0, // has the effect of softening the shadow
-      //                 spreadRadius:
-      //                     1.0, // has the effect of extending the shadow
-      //                 offset: Offset(
-      //                   -1.0, // horizontal, move right 10
-      //                   -1.0, // vertical, move down 10
-      //                 ),
-      //               )
-      //             ],
-      //             color: Colors.white54,
-      //             borderRadius: new BorderRadius.only(
-      //                 topLeft: Radius.circular(40),
-      //                 bottomLeft: Radius.circular(40))),
-      //         width: 60,
-      //         height: 60,
-      //       ),
-      //       Positioned(
-      //         top: 4,
-      //         left: 2,
-      //         child: InkWell(
-      //           onTap: () {
-      //             viewModel.onTapGoogleMaps();
-      //           },
-      //           child: Container(
-      //               width: 50,
-      //               height: 50,
-      //               alignment: Alignment.center,
-      //               decoration: new BoxDecoration(
-      //                 color: ThemePrimary.primaryColor,
-      //                 shape: BoxShape.circle,
-      //               ),
-      //               child: Transform.rotate(
-      //                   angle: 3.14 / 4,
-      //                   child: Icon(
-      //                     Icons.navigation,
-      //                     color: Colors.white,
-      //                     size: 25,
-      //                   ))),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // );
     }
 
     Widget __finishButton() {
@@ -244,30 +222,26 @@ class _LocateBusPageState extends State<LocateBusPage>
             alignment: Alignment.topCenter,
             width: 100,
             height: 100,
-            // decoration:
-            // BoxDecoration(
-            //   boxShadow: [
-            //   BoxShadow(
-            //     color: Colors.black12,
-            //     blurRadius: 1.0, // has the effect of softening the shadow
-            //     spreadRadius: 1.0, // has the effect of extending the shadow
-            //     offset: Offset(
-            //       -1.0, // horizontal, move right 10
-            //       -1.0, // vertical, move down 10
-            //     ),
-            //   ),
-            //   BoxShadow(
-            //     color: Colors.black12,
-            //     blurRadius: 1.0, // has the effect of softening the shadow
-            //     spreadRadius: 1.0, // has the effect of extending the shadow
-            //     offset: Offset(
-            //       1.0, // horizontal, move right 10
-            //       1.0, // vertical, move down 10
-            //     ),
-            //   )
-            // ]
-            // ,
-            // shape: BoxShape.circle, color: ThemePrimary.primaryColor),
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 1.0, // has the effect of softening the shadow
+                spreadRadius: 1.0, // has the effect of extending the shadow
+                offset: Offset(
+                  -1.0, // horizontal, move right 10
+                  -1.0, // vertical, move down 10
+                ),
+              ),
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 1.0, // has the effect of softening the shadow
+                spreadRadius: 1.0, // has the effect of extending the shadow
+                offset: Offset(
+                  1.0, // horizontal, move right 10
+                  1.0, // vertical, move down 10
+                ),
+              )
+            ], shape: BoxShape.circle, color: ThemePrimary.primaryColor),
             child: Stack(
               children: <Widget>[
                 Align(
@@ -300,101 +274,77 @@ class _LocateBusPageState extends State<LocateBusPage>
       return Positioned(
         bottom: MediaQuery.of(context).size.height / 2,
         right: 0,
-        child: InkWell(
-          onTap: () {
-            viewModel.onTapSOS();
-          },
-          child: Container(
-            width: 50,
-            height: 50,
-            alignment: Alignment.center,
-            decoration: new BoxDecoration(
-              color: Colors.red[300],
-              shape: BoxShape.circle,
+        child: Stack(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(left: 20),
+              decoration: new BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black38,
+                      blurRadius: 1.0, // has the effect of softening the shadow
+                      spreadRadius:
+                          1.0, // has the effect of extending the shadow
+                      offset: Offset(
+                        -1.0, // horizontal, move right 10
+                        -1.0, // vertical, move down 10
+                      ),
+                    )
+                  ],
+                  color: Colors.white54,
+                  borderRadius: new BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      bottomLeft: Radius.circular(40))),
+              width: 60,
+              height: 60,
             ),
-            child: Text(
-              "SOS",
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(color: Colors.yellow, fontWeight: FontWeight.w900),
+            Positioned(
+              top: 4,
+              left: 2,
+              child: InkWell(
+                onTap: () {
+                  viewModel.onTapSOS();
+                },
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  alignment: Alignment.center,
+                  decoration: new BoxDecoration(
+                    color: Colors.red[300],
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    "SOS",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.yellow, fontWeight: FontWeight.w900),
+                  ),
+                ),
+              ),
             ),
+          ],
+        ),
+      );
+    }
+
+    Widget __buildIconLocation() {
+      return Positioned(
+        right: 10.0,
+        bottom: MediaQuery.of(context).size.height / 2 - 120,
+        child: SizedBox(
+          width: 40,
+          height: 40,
+          child: FloatingActionButton(
+            child: Icon(
+              Icons.gps_fixed,
+              color: Theme.of(context).primaryColor,
+            ),
+            onPressed: viewModel.animateMyLocation,
+            backgroundColor: Colors.white,
           ),
         ),
       );
-      // return Positioned(
-      //   bottom: MediaQuery.of(context).size.height / 2,
-      //   right: 0,
-      //   child: Stack(
-      //     children: <Widget>[
-      //       Container(
-      //         padding: EdgeInsets.only(left: 20),
-      //         decoration: new BoxDecoration(
-      //             boxShadow: [
-      //               BoxShadow(
-      //                 color: Colors.black38,
-      //                 blurRadius: 1.0, // has the effect of softening the shadow
-      //                 spreadRadius:
-      //                     1.0, // has the effect of extending the shadow
-      //                 offset: Offset(
-      //                   -1.0, // horizontal, move right 10
-      //                   -1.0, // vertical, move down 10
-      //                 ),
-      //               )
-      //             ],
-      //             color: Colors.white54,
-      //             borderRadius: new BorderRadius.only(
-      //                 topLeft: Radius.circular(40),
-      //                 bottomLeft: Radius.circular(40))),
-      //         width: 60,
-      //         height: 60,
-      //       ),
-      //       Positioned(
-      //         top: 4,
-      //         left: 2,
-      //         child: InkWell(
-      //           onTap: () {
-      //             viewModel.onTapSOS();
-      //           },
-      //           child: Container(
-      //             width: 50,
-      //             height: 50,
-      //             alignment: Alignment.center,
-      //             decoration: new BoxDecoration(
-      //               color: Colors.red[300],
-      //               shape: BoxShape.circle,
-      //             ),
-      //             child: Text(
-      //               "SOS",
-      //               textAlign: TextAlign.center,
-      //               style: TextStyle(
-      //                   color: Colors.yellow, fontWeight: FontWeight.w900),
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // );
     }
-
-    // Widget __buildIconLocation() {
-    //   return Positioned(
-    //     right: 10.0,
-    //     bottom: MediaQuery.of(context).size.height / 2 - 120,
-    //     child: SizedBox(
-    //       width: 40,
-    //       height: 40,
-    //       child: FloatingActionButton(
-    //         child: Icon(
-    //           Icons.gps_fixed,
-    //           color: Theme.of(context).primaryColor,
-    //         ),
-    //         onPressed: viewModel.animateMyLocation,
-    //         backgroundColor: Colors.white,
-    //       ),
-    //     ),
-    //   );
-    // }
 
     return Stack(
       children: <Widget>[
@@ -403,117 +353,13 @@ class _LocateBusPageState extends State<LocateBusPage>
             ? LoadingIndicator.progress(
                 context: context, loading: true, position: Alignment.topCenter)
             : Container(),
-        //__report(),
-        // __sosButton(),
-        // __buildIconLocation(),
-        // __navigateGoogleMap(),
-        // __finishButton(),
+        __report(),
+        __sosButton(),
+        __buildIconLocation(),
+        __navigateGoogleMap(),
+        __finishButton(),
       ],
     );
-  }
-
-  Widget __buildIconLocation() {
-    return Positioned(
-      right: 10.0,
-      bottom: MediaQuery.of(context).size.height / 2 - 120,
-      child: SizedBox(
-        width: 40,
-        height: 40,
-        child: FloatingActionButton(
-          child: Icon(
-            Icons.gps_fixed,
-            color: Theme.of(context).primaryColor,
-          ),
-          onPressed: viewModel.animateMyLocation,
-          backgroundColor: Colors.white,
-        ),
-      ),
-    );
-  }
-
-  Widget __navigateGoogleMap() {
-    return Positioned(
-      bottom: MediaQuery.of(context).size.height / 2 - 70,
-      right: 0,
-      child: Material(
-        color: ThemePrimary.primaryColor,
-        borderRadius: BorderRadius.circular(30.0),
-        child: InkWell(
-          onTap: () {
-            viewModel.onTapGoogleMaps();
-          },
-          borderRadius: BorderRadius.circular(30.0),
-          child: Container(
-            width: 50,
-            height: 50,
-            alignment: Alignment.center,
-            // decoration: new BoxDecoration(
-            //   color: ThemePrimary.primaryColor,
-            //   shape: BoxShape.circle,
-            // ),
-            child: Icon(
-              Icons.navigation,
-              color: Colors.white,
-              size: 25,
-            ),
-          ),
-        ),
-      ),
-    );
-    // return Positioned(
-    //   bottom: MediaQuery.of(context).size.height / 2 - 70,
-    //   right: 0,
-    //   child: Stack(
-    //     children: <Widget>[
-    //       Container(
-    //         padding: EdgeInsets.only(left: 20),
-    //         decoration: new BoxDecoration(
-    //             boxShadow: [
-    //               BoxShadow(
-    //                 color: Colors.black38,
-    //                 blurRadius: 1.0, // has the effect of softening the shadow
-    //                 spreadRadius:
-    //                     1.0, // has the effect of extending the shadow
-    //                 offset: Offset(
-    //                   -1.0, // horizontal, move right 10
-    //                   -1.0, // vertical, move down 10
-    //                 ),
-    //               )
-    //             ],
-    //             color: Colors.white54,
-    //             borderRadius: new BorderRadius.only(
-    //                 topLeft: Radius.circular(40),
-    //                 bottomLeft: Radius.circular(40))),
-    //         width: 60,
-    //         height: 60,
-    //       ),
-    //       Positioned(
-    //         top: 4,
-    //         left: 2,
-    //         child: InkWell(
-    //           onTap: () {
-    //             viewModel.onTapGoogleMaps();
-    //           },
-    //           child: Container(
-    //               width: 50,
-    //               height: 50,
-    //               alignment: Alignment.center,
-    //               decoration: new BoxDecoration(
-    //                 color: ThemePrimary.primaryColor,
-    //                 shape: BoxShape.circle,
-    //               ),
-    //               child: Transform.rotate(
-    //                   angle: 3.14 / 4,
-    //                   child: Icon(
-    //                     Icons.navigation,
-    //                     color: Colors.white,
-    //                     size: 25,
-    //                   ))),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 
   @override
@@ -525,12 +371,10 @@ class _LocateBusPageState extends State<LocateBusPage>
           stream: viewModel.stream,
           builder: (context, snapshot) {
             return MaterialApp(
-              home: SizedBox.expand(
-                child: Stack(
+              home: new Scaffold(
+                body: Stack(
                   children: <Widget>[
                     _buildBody(),
-                    __buildIconLocation(),
-                    // __navigateGoogleMap(),
 //                    if(viewModel.listTimeLine!=null)_builBottomSheet()
                   ],
                 ),

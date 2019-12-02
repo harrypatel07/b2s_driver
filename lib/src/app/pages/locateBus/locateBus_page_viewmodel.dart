@@ -50,6 +50,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
 
     this.updateState();
     animateMyLocation(animate: false);
+    listenData();
     animateThePoint(0);
     initMarkers();
   }
@@ -184,14 +185,19 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
           'Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.');
   }
 
-  // listenData() async {
-  //   if (streamCloud != null) streamCloud.cancel();
-  //   streamCloud = await cloudService.busSession
-  //       .listenBusSessionForDriver(driverBusSession, () {
-  //     onCreateDriverBusSessionReport();
-  //     this.updateState();
-  //   });
-  // }
+  listenData() async {
+    if (streamLocation != null) streamLocation.cancel();
+    streamLocation = location.onLocationChanged().listen((onData) {
+      // final _marker = markers[MarkerId("location")];
+      // markers[MarkerId("location")] = _marker.copyWith(
+      //     rotationParam: onData.heading,
+      //     positionParam: LatLng(onData.latitude, onData.longitude));
+      Driver driver = Driver();
+      api.updateCoordinateVehicle(driver.vehicleId, onData);
+      checkBusLocationWithRoute(LatLng(onData.latitude, onData.longitude));
+    });
+    this.updateState();
+  }
 
   _animateCamera(LatLng latlng) {
     if (mapController != null)

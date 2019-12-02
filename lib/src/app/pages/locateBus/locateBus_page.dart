@@ -431,6 +431,91 @@ class _LocateBusPageState extends State<LocateBusPage>
     );
   }
 
+  Widget __navigateGoogleMap() {
+    return Positioned(
+      bottom: MediaQuery.of(context).size.height / 2 - 70,
+      right: 0,
+      child: Material(
+        color: ThemePrimary.primaryColor,
+        borderRadius: BorderRadius.circular(30.0),
+        child: InkWell(
+          onTap: () {
+            viewModel.onTapGoogleMaps();
+          },
+          borderRadius: BorderRadius.circular(30.0),
+          child: Container(
+            width: 50,
+            height: 50,
+            alignment: Alignment.center,
+            // decoration: new BoxDecoration(
+            //   color: ThemePrimary.primaryColor,
+            //   shape: BoxShape.circle,
+            // ),
+            child: Icon(
+              Icons.navigation,
+              color: Colors.white,
+              size: 25,
+            ),
+          ),
+        ),
+      ),
+    );
+    // return Positioned(
+    //   bottom: MediaQuery.of(context).size.height / 2 - 70,
+    //   right: 0,
+    //   child: Stack(
+    //     children: <Widget>[
+    //       Container(
+    //         padding: EdgeInsets.only(left: 20),
+    //         decoration: new BoxDecoration(
+    //             boxShadow: [
+    //               BoxShadow(
+    //                 color: Colors.black38,
+    //                 blurRadius: 1.0, // has the effect of softening the shadow
+    //                 spreadRadius:
+    //                     1.0, // has the effect of extending the shadow
+    //                 offset: Offset(
+    //                   -1.0, // horizontal, move right 10
+    //                   -1.0, // vertical, move down 10
+    //                 ),
+    //               )
+    //             ],
+    //             color: Colors.white54,
+    //             borderRadius: new BorderRadius.only(
+    //                 topLeft: Radius.circular(40),
+    //                 bottomLeft: Radius.circular(40))),
+    //         width: 60,
+    //         height: 60,
+    //       ),
+    //       Positioned(
+    //         top: 4,
+    //         left: 2,
+    //         child: InkWell(
+    //           onTap: () {
+    //             viewModel.onTapGoogleMaps();
+    //           },
+    //           child: Container(
+    //               width: 50,
+    //               height: 50,
+    //               alignment: Alignment.center,
+    //               decoration: new BoxDecoration(
+    //                 color: ThemePrimary.primaryColor,
+    //                 shape: BoxShape.circle,
+    //               ),
+    //               child: Transform.rotate(
+    //                   angle: 3.14 / 4,
+    //                   child: Icon(
+    //                     Icons.navigation,
+    //                     color: Colors.white,
+    //                     size: 25,
+    //                   ))),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
+  }
+
   @override
   Widget build(BuildContext context) {
     viewModel.context = context;
@@ -440,11 +525,12 @@ class _LocateBusPageState extends State<LocateBusPage>
           stream: viewModel.stream,
           builder: (context, snapshot) {
             return MaterialApp(
-              home: new Scaffold(
-                body: Stack(
+              home: SizedBox.expand(
+                child: Stack(
                   children: <Widget>[
                     _buildBody(),
                     __buildIconLocation(),
+                    __navigateGoogleMap(),
 //                    if(viewModel.listTimeLine!=null)_builBottomSheet()
                   ],
                 ),

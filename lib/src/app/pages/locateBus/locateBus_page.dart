@@ -377,24 +377,24 @@ class _LocateBusPageState extends State<LocateBusPage>
       // );
     }
 
-    Widget __buildIconLocation() {
-      return Positioned(
-        right: 10.0,
-        bottom: MediaQuery.of(context).size.height / 2 - 120,
-        child: SizedBox(
-          width: 40,
-          height: 40,
-          child: FloatingActionButton(
-            child: Icon(
-              Icons.gps_fixed,
-              color: Theme.of(context).primaryColor,
-            ),
-            onPressed: viewModel.animateMyLocation,
-            backgroundColor: Colors.white,
-          ),
-        ),
-      );
-    }
+    // Widget __buildIconLocation() {
+    //   return Positioned(
+    //     right: 10.0,
+    //     bottom: MediaQuery.of(context).size.height / 2 - 120,
+    //     child: SizedBox(
+    //       width: 40,
+    //       height: 40,
+    //       child: FloatingActionButton(
+    //         child: Icon(
+    //           Icons.gps_fixed,
+    //           color: Theme.of(context).primaryColor,
+    //         ),
+    //         onPressed: viewModel.animateMyLocation,
+    //         backgroundColor: Colors.white,
+    //       ),
+    //     ),
+    //   );
+    // }
 
     return Stack(
       children: <Widget>[
@@ -404,11 +404,30 @@ class _LocateBusPageState extends State<LocateBusPage>
                 context: context, loading: true, position: Alignment.topCenter)
             : Container(),
         //__report(),
-        __sosButton(),
-        __buildIconLocation(),
-        __navigateGoogleMap(),
-        __finishButton(),
+        // __sosButton(),
+        // __buildIconLocation(),
+        // __navigateGoogleMap(),
+        // __finishButton(),
       ],
+    );
+  }
+
+  Widget __buildIconLocation() {
+    return Positioned(
+      right: 10.0,
+      bottom: MediaQuery.of(context).size.height / 2 - 120,
+      child: SizedBox(
+        width: 40,
+        height: 40,
+        child: FloatingActionButton(
+          child: Icon(
+            Icons.gps_fixed,
+            color: Theme.of(context).primaryColor,
+          ),
+          onPressed: viewModel.animateMyLocation,
+          backgroundColor: Colors.white,
+        ),
+      ),
     );
   }
 
@@ -425,6 +444,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                 body: Stack(
                   children: <Widget>[
                     _buildBody(),
+                    __buildIconLocation(),
 //                    if(viewModel.listTimeLine!=null)_builBottomSheet()
                   ],
                 ),

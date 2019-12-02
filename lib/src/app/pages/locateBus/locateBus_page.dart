@@ -169,13 +169,11 @@ class _LocateBusPageState extends State<LocateBusPage>
                 color: ThemePrimary.primaryColor,
                 shape: BoxShape.circle,
               ),
-              child: Transform.rotate(
-                  angle: 3.14 / 4,
-                  child: Icon(
-                    Icons.navigation,
-                    color: Colors.white,
-                    size: 25,
-                  ))),
+              child: Icon(
+                Icons.navigation,
+                color: Colors.white,
+                size: 25,
+              )),
         ),
       );
       // return Positioned(
@@ -246,26 +244,30 @@ class _LocateBusPageState extends State<LocateBusPage>
             alignment: Alignment.topCenter,
             width: 100,
             height: 100,
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 1.0, // has the effect of softening the shadow
-                spreadRadius: 1.0, // has the effect of extending the shadow
-                offset: Offset(
-                  -1.0, // horizontal, move right 10
-                  -1.0, // vertical, move down 10
-                ),
-              ),
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 1.0, // has the effect of softening the shadow
-                spreadRadius: 1.0, // has the effect of extending the shadow
-                offset: Offset(
-                  1.0, // horizontal, move right 10
-                  1.0, // vertical, move down 10
-                ),
-              )
-            ], shape: BoxShape.circle, color: ThemePrimary.primaryColor),
+            // decoration:
+            // BoxDecoration(
+            //   boxShadow: [
+            //   BoxShadow(
+            //     color: Colors.black12,
+            //     blurRadius: 1.0, // has the effect of softening the shadow
+            //     spreadRadius: 1.0, // has the effect of extending the shadow
+            //     offset: Offset(
+            //       -1.0, // horizontal, move right 10
+            //       -1.0, // vertical, move down 10
+            //     ),
+            //   ),
+            //   BoxShadow(
+            //     color: Colors.black12,
+            //     blurRadius: 1.0, // has the effect of softening the shadow
+            //     spreadRadius: 1.0, // has the effect of extending the shadow
+            //     offset: Offset(
+            //       1.0, // horizontal, move right 10
+            //       1.0, // vertical, move down 10
+            //     ),
+            //   )
+            // ]
+            // ,
+            // shape: BoxShape.circle, color: ThemePrimary.primaryColor),
             child: Stack(
               children: <Widget>[
                 Align(

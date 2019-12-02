@@ -353,7 +353,7 @@ class _LocateBusPageState extends State<LocateBusPage>
             ? LoadingIndicator.progress(
                 context: context, loading: true, position: Alignment.topCenter)
             : Container(),
-        __report(),
+        //__report(),
         __sosButton(),
         __buildIconLocation(),
         __navigateGoogleMap(),

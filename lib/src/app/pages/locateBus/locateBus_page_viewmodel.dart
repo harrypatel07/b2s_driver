@@ -71,19 +71,19 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
 //      rotation: myLoc.heading,
 //      icon: iconMy,
 //    );
-    if (!animate) {
-      if (streamLocation != null) streamLocation.cancel();
-      streamLocation = location.onLocationChanged().listen((onData) {
-        // final _marker = markers[MarkerId("location")];
-        // markers[MarkerId("location")] = _marker.copyWith(
-        //     rotationParam: onData.heading,
-        //     positionParam: LatLng(onData.latitude, onData.longitude));
-        Driver driver = Driver();
-        api.updateCoordinateVehicle(driver.vehicleId, onData);
-        checkBusLocationWithRoute(LatLng(onData.latitude, onData.longitude));
-      });
-      this.updateState();
-    }
+    // if (!animate) {
+    //   if (streamLocation != null) streamLocation.cancel();
+    //   streamLocation = location.onLocationChanged().listen((onData) {
+    //     // final _marker = markers[MarkerId("location")];
+    //     // markers[MarkerId("location")] = _marker.copyWith(
+    //     //     rotationParam: onData.heading,
+    //     //     positionParam: LatLng(onData.latitude, onData.longitude));
+    //     Driver driver = Driver();
+    //     api.updateCoordinateVehicle(driver.vehicleId, onData);
+    //     checkBusLocationWithRoute(LatLng(onData.latitude, onData.longitude));
+    //   });
+    //   this.updateState();
+    // }
   }
 
   void animateThePoint(int point) async {

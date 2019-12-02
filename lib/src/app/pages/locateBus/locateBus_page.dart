@@ -530,7 +530,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                   children: <Widget>[
                     _buildBody(),
                     __buildIconLocation(),
-                    __navigateGoogleMap(),
+                    // __navigateGoogleMap(),
 //                    if(viewModel.listTimeLine!=null)_builBottomSheet()
                   ],
                 ),

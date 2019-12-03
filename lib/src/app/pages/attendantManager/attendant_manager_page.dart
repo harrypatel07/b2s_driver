@@ -6,7 +6,9 @@ import 'package:b2s_driver/src/app/pages/attendantManager/attendant_manager_view
 import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_appbar_widget.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_scaffold_widget.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
 
 class AttendantManagerPage extends StatefulWidget {
@@ -277,42 +279,37 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
       return Positioned(
         bottom: 0,
         right: 0,
-        child: GestureDetector(
+        child: TS24Button(
           onTap: () {
             viewModel.onTapFinish();
           },
+          decoration: new BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 1.0, // has the effect of softening the shadow
+                  spreadRadius: 1.0, // has the effect of extending the shadow
+                  offset: Offset(
+                    -1.0, // horizontal, move right 10
+                    -1.0, // vertical, move down 10
+                  ),
+                )
+              ],
+              color: ThemePrimary.primaryColor,
+              borderRadius: new BorderRadius.only(
+                  topLeft: Radius.circular(200), topRight: Radius.circular(0))),
+          width: 80,
+          height: 70,
           child: Container(
-            padding: EdgeInsets.only(left: 20),
-            decoration: new BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 1.0, // has the effect of softening the shadow
-                    spreadRadius: 1.0, // has the effect of extending the shadow
-                    offset: Offset(
-                      -1.0, // horizontal, move right 10
-                      -1.0, // vertical, move down 10
-                    ),
-                  )
-                ],
-                color: ThemePrimary.primaryColor,
-                borderRadius: new BorderRadius.only(
-                    topLeft: Radius.circular(200),
-                    topRight: Radius.circular(0))),
-            width: 80,
-            height: 70,
-            //color: Colors.white,
-            child: Container(
-                padding: EdgeInsets.only(right: 10, top: 25),
-                child: Text(
-                  'Hoàn Thành',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 13),
-                  textAlign: TextAlign.right,
-                )),
-          ),
+              padding: EdgeInsets.only(right: 10, top: 25),
+              child: Text(
+                'Hoàn Thành',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 13),
+                textAlign: TextAlign.right,
+              )),
         ),
       );
     }
@@ -339,11 +336,14 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
       child: StreamBuilder<Object>(
           stream: viewModel.stream,
           builder: (context, snapshot) {
-            return MaterialApp(
-              home: TS24Scaffold(
-                appBar: _appBar(),
-                body: _buildBody(widget.driverBusSession),
-              ),
+            return TS24Scaffold(
+              appBar: _appBar(),
+              body: viewModel.loading
+                  ? Center(
+                      child: LoadingIndicator.spinner(
+                          context: context, loading: viewModel.loading),
+                    )
+                  : _buildBody(widget.driverBusSession),
             );
           }),
     );

@@ -37,6 +37,7 @@ class EditProfileDriverViewModel extends ViewModelBase {
   File imageFile;
   dynamic pickImageError;
   String retrieveDataError;
+  bool loadingGender = true;
   EditProfileDriverViewModel() {
     createEvent();
     getListGender();
@@ -199,12 +200,17 @@ class EditProfileDriverViewModel extends ViewModelBase {
   }
 
   getListGender() {
+    loadingGender = true;
     api.getTitleCustomer().then((lst) {
       lst.forEach((item) {
         listGender
             .add(ItemDropDownField(id: item.id, displayName: item.displayName));
       });
-      gender = getGenderFromID(driver.genderId);
+      if (driver != null)
+        gender = getGenderFromID(driver.genderId);
+      else
+        gender = listGender[0];
+      loadingGender = false;
       this.updateState();
     });
   }

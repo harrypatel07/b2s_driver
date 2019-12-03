@@ -337,11 +337,9 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
       child: StreamBuilder<Object>(
           stream: viewModel.stream,
           builder: (context, snapshot) {
-            return MaterialApp(
-              home: TS24Scaffold(
-                appBar: _appBar(),
-                body: _body(),
-              ),
+            return TS24Scaffold(
+              appBar: _appBar(),
+              body: _body(),
             );
           }),
     );

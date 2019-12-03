@@ -163,16 +163,38 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
                 driverBusSession.totalChildrenLeave) ==
             driverBusSession.totalChildrenRegistered) {
       driverBusSession.status = true;
-      String barcode = await BarCodeService.scan();
-      print(barcode);
-      if (barcode != null) {
-        driverBusSession.clearLocal();
-        Navigator.pushReplacementNamed(context, TabsPage.routeName,
-            arguments: TabsArgument(routeChildName: HomePage.routeName));
+      showSpinner = true;
+      this.updateState();
+      //Kiểm tra attendant đã hoàn thành chuyến
+      List<int> listIdPicking =
+          driverBusSession.childDrenStatus.map((item) => item.id).toList();
+      bool checkFinished =
+          await checkSessionFinishedByAnotherRole(listIdPicking);
+      showSpinner = false;
+      this.updateState();
+      if (!checkFinished) {
+        String barcode = await BarCodeService.scan();
+        print(barcode);
+        if (barcode != null) {
+          List<int> listIdPicking =
+              driverBusSession.childDrenStatus.map((item) => item.id).toList();
+          api.updateUserRoleFinishedBusSession(listIdPicking, 0);
+          driverBusSession.clearLocal();
+        } else
+          return false;
       }
+      Navigator.pushReplacementNamed(context, TabsPage.routeName,
+          arguments: TabsArgument(routeChildName: HomePage.routeName));
     } else
       LoadingDialog.showMsgDialog(context,
           'Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.');
+  }
+
+  Future<bool> checkSessionFinishedByAnotherRole(
+      List<int> listIdPicking) async {
+    //Kiểm tra attendant đã hoàn thành chuyến
+    bool result = await api.checkUserRoleFinishedBusSession(listIdPicking);
+    return result;
   }
 
   listenLocation() async {

@@ -6,6 +6,7 @@ import 'package:b2s_driver/src/app/service/googlemap-service.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/dash.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -354,15 +355,16 @@ class _SchedulePageState extends State<SchedulePage> {
 
     return Container(
       width: MediaQuery.of(context).size.width,
-      child: InkWell(
+      child: TS24Button(
         onTap: driverBusSession.status?(){}:onTap,
-        child: Container(
+//        child: Container(
           decoration: new BoxDecoration(boxShadow: [
             new BoxShadow(
               color: Colors.black26,
               blurRadius: 20.0,
             ),
-          ]),
+          ]
+          ),
           child: Card(
 //            decoration: new BoxDecoration(
 //                boxShadow: [
@@ -409,7 +411,7 @@ class _SchedulePageState extends State<SchedulePage> {
                 ],
               )),
         ),
-      ),
+//      ),
     );
   }
 
@@ -474,11 +476,9 @@ class _SchedulePageState extends State<SchedulePage> {
       child: StreamBuilder<Object>(
           stream: viewModel.stream,
           builder: (context, snapshot) {
-            return MaterialApp(
-              home: TS24Scaffold(
-                appBar: _appBar(),
-                body: _body(),
-              ),
+            return TS24Scaffold(
+              appBar: _appBar(),
+              body: _body(),
             );
           }),
     );

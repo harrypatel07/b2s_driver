@@ -880,6 +880,46 @@ class Api1 extends ApiMaster {
     });
   }
 
+  ///Update field user_check_done để xác định driver hoặc attendant kết thúc chuyến
+  ///@params
+  ///
+  ///listIdPicking
+  ///
+  ///role
+  ///(0 : driver ; 1: manager)
+  Future<bool> updateUserRoleFinishedBusSession(
+      List<int> listIdPicking, int role) async {
+    var client = await this.authorizationOdoo();
+    body = new Map();
+    body["list_picking_id"] = listIdPicking;
+    body["role"] = role == 0 ? "driver" : "manager";
+    bool check = false;
+    return client
+        .callController("/update_user_check_done", body)
+        .then((onValue) {
+      var result = onValue.getResult();
+      check = result;
+      return check;
+    });
+  }
+
+  ///Kiểm tra field user_check_done để xác định chuyến đã kết thúc
+  ///@params
+  ///listIdPicking
+  Future<bool> checkUserRoleFinishedBusSession(List<int> listIdPicking) async {
+    var client = await this.authorizationOdoo();
+    body = new Map();
+    body["list_picking_id"] = listIdPicking;
+    bool check = false;
+    return client
+        .callController("/check_type_user_check_done", body)
+        .then((onValue) {
+      var result = onValue.getResult();
+      check = result["check"];
+      return check;
+    });
+  }
+
   ///Insert thông tin khách hàng
   ///
   ///Success - Trả về new id

@@ -9,6 +9,7 @@ import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_appbar_widget.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -142,39 +143,38 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       return Positioned(
         bottom: 0,
         right: 0,
-        child: GestureDetector(
+        child:
+        TS24Button(
           onTap: () {
             viewModel.onStart();
           },
+          decoration: new BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 1.0, // has the effect of softening the shadow
+                  spreadRadius: 1.0, // has the effect of extending the shadow
+                  offset: Offset(
+                    -1.0, // horizontal, move right 10
+                    -1.0, // vertical, move down 10
+                  ),
+                )
+              ],
+              color: ThemePrimary.primaryColor,
+              borderRadius: new BorderRadius.only(
+                  topLeft: Radius.circular(200),
+                  topRight: Radius.circular(0))),
+          width: 70,
+          height: 70,
+          //color: Colors.white,
           child: Container(
-            padding: EdgeInsets.only(left: 20),
-            decoration: new BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 1.0, // has the effect of softening the shadow
-                    spreadRadius: 1.0, // has the effect of extending the shadow
-                    offset: Offset(
-                      -1.0, // horizontal, move right 10
-                      -1.0, // vertical, move down 10
-                    ),
-                  )
-                ],
-                color: ThemePrimary.primaryColor,
-                borderRadius: new BorderRadius.only(
-                    topLeft: Radius.circular(200),
-                    topRight: Radius.circular(0))),
-            width: 70,
-            height: 70,
-            //color: Colors.white,
-            child: Container(
-                padding: EdgeInsets.only(left: 12, top: 20),
-                child: Text(
-                  'BẮT ĐẦU',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w900),
-                )),
-          ),
+//              padding: EdgeInsets.only(left: 20)
+              padding: EdgeInsets.only(left: 32, top: 20),
+              child: Text(
+                'BẮT ĐẦU',
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.w900),
+              )),
         ),
       );
     }
@@ -202,11 +202,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       child: StreamBuilder<Object>(
           stream: viewModel.stream,
           builder: (context, snapshot) {
-            return MaterialApp(
-              home: TS24Scaffold(
-                appBar: _appBar(),
-                body: _buildBody(widget.driverBusSession),
-              ),
+            return TS24Scaffold(
+              appBar: _appBar(),
+              body: _buildBody(widget.driverBusSession),
             );
           }),
     );

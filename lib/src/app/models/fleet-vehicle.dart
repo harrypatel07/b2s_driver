@@ -304,7 +304,7 @@ class FleetVehicle {
     // data['message_unread_counter'] = this.messageUnreadCounter;
     // data['model_id'] = this.modelId;
     // data['model_year'] = this.modelYear;
-    // data['name'] = this.name;
+    if (this.name != null) data['name'] = this.name;
     // data['odometer'] = this.odometer;
     // data['odometer_count'] = this.odometerCount;
     // data['odometer_unit'] = this.odometerUnit;

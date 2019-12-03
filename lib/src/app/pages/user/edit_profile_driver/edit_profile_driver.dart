@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:b2s_driver/packages/flutter_form_builder/lib/src/fields/form_builder_dropdown.dart';
+import 'package:b2s_driver/packages/flutter_form_builder/lib/src/form_builder_validators.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/pages/user/edit_profile_driver/edit_profile_driver_viewmodel.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/drop_down_field.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -138,24 +141,65 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
         ],
       );
     }
-
-    final cancelBtn = Positioned(
-      top: 25.0,
-      left: 0.0,
-      child: Container(
-        height: 50.0,
-        width: 70.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          color: Colors.grey.withOpacity(0.5),
+    Widget _textFormFieldLoading(String text){
+      return Container(
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Container(height: 45,),
+                Text(text,style: TextStyle(fontSize: 13,color: ThemePrimary.primaryColor),),
+                SizedBox(width: 10,),
+                SizedBox(
+                  width: 15,
+                  height: 15,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(ThemePrimary.primaryColor),
+                  ),
+                )
+              ],
+            ),
+            SizedBox(height: 20,),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 1,
+              color: Colors.grey[350],
+            ),
+          ],
         ),
-        child: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-          iconSize: 20.0,
+      );
+    }
+    Widget _backButton() {
+      return Positioned(
+        top: 0,
+        left: 0,
+        child: SafeArea(
+          bottom: false,
+          top: true,
+          child: TS24Button(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(25),
+                  topRight: Radius.circular(25)),
+              color: Colors.black38,
+            ),
+            width: 70,
+            height: 50,
+            child: Container(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
+          ),
         ),
-      ),
-    );
+      );
+    }
     Widget _card(Driver driver) {
       return Container(
         margin: EdgeInsets.fromLTRB(25, 0, 25, 0),
@@ -194,29 +238,25 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
               child: Row(
                 children: <Widget>[
                   Flexible(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: <Widget>[
-                          Flexible(
-                            child: DropDownField(
-                              controller: viewModel.genderEditingController,
-                              itemsVisibleInDropdown: 3,
-                              value: viewModel.gender,
-                              labelText: 'Giới tính',
-                              items: viewModel.listGender,
-//                                setter: (dynamic value){
-//                                  viewModel.gender = value;
-//                                },
-                              onValueChanged: (v) {
-                                viewModel.gender = v;
-                                viewModel.genderEditingController.text =
-                                    v.displayName;
-                              },
-                            ),
-                          ),
-                        ],
+                    child: viewModel.loadingGender || viewModel.listGender.length == 0
+                        ? _textFormFieldLoading('Giới tính')
+                        : FormBuilderDropdown(
+                      attribute: 'Giới tính',
+                      decoration: InputDecoration(
+                        labelText: 'Giới tính',
+                        labelStyle:
+                        TextStyle(color: ThemePrimary.primaryColor),
                       ),
+                      initialValue: viewModel.gender,
+                      validators: [FormBuilderValidators.required()],
+                      items: viewModel.listGender
+                          .map((gender) =>
+                          DropdownMenuItem<ItemDropDownField>(
+                            value: gender,
+                            child: Text(gender.displayName),
+                          ))
+                          .toList(),
+                      onChanged: (gender) => viewModel.gender = gender,
                     ),
                   ),
                 ],
@@ -334,10 +374,11 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                       children: <Widget>[
                         Container(
                           height: 250,
+                          width: MediaQuery.of(context).size.width,
                           child: Stack(
                             children: <Widget>[
                               _avatar(),
-                              cancelBtn,
+                              _backButton(),
                             ],
                           ),
                         ),
@@ -350,51 +391,55 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 50,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: <Color>[
-                                  ThemePrimary.primaryColor,
-                                  ThemePrimary.primaryColor
-                                ],
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey[500],
-                                  offset: Offset(0.0, 1.5),
-                                  blurRadius: 1.5,
+                    child: SafeArea(
+                      top: false,
+                      bottom: true,
+                      child: Container(
+                        height: 50,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: <Color>[
+                                    ThemePrimary.primaryColor,
+                                    ThemePrimary.primaryColor
+                                  ],
                                 ),
-                              ],
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                                onTap: () async {
-                                  LoadingDialog.showLoadingDialog(
-                                      context, 'Đang xử lý...');
-                                  viewModel
-                                      .saveDriver(viewModel.driver)
-                                      .then((v) {
-                                    if (v) {
-                                      LoadingDialog.hideLoadingDialog(context);
-                                      Navigator.pop(context);
-                                    } else {
-                                      LoadingDialog.hideLoadingDialog(context);
-                                      Navigator.pop(context);
-                                    }
-                                  });
-                                },
-                                child: Center(
-                                  child: Text(
-                                    "LƯU",
-                                    style: TextStyle(color: Colors.white),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey[500],
+                                    offset: Offset(0.0, 1.5),
+                                    blurRadius: 1.5,
                                   ),
-                                )),
+                                ],
+                                borderRadius: BorderRadius.circular(10.0)),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                  onTap: () async {
+                                    LoadingDialog.showLoadingDialog(
+                                        context, 'Đang xử lý...');
+                                    viewModel
+                                        .saveDriver(viewModel.driver)
+                                        .then((v) {
+                                      if (v) {
+                                        LoadingDialog.hideLoadingDialog(context);
+                                        Navigator.pop(context);
+                                      } else {
+                                        LoadingDialog.hideLoadingDialog(context);
+                                        Navigator.pop(context);
+                                      }
+                                    });
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      "LƯU",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )),
+                            ),
                           ),
                         ),
                       ),

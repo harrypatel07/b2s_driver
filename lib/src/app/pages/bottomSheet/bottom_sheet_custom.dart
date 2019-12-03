@@ -113,58 +113,61 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                   bottom: -5,
                   right: 2,
                   left: 2,
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          blurRadius:
-                              2.0, // has the effect of softening the shadow
-                          spreadRadius:
-                              1.0, // has the effect of extending the shadow
-                          offset: Offset(
-                            2.0, // horizontal, move right 10
-                            2.0, // vertical, move down 10
+                  child: SafeArea(
+                    bottom: true,
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius:
+                                2.0, // has the effect of softening the shadow
+                            spreadRadius:
+                                1.0, // has the effect of extending the shadow
+                            offset: Offset(
+                              2.0, // horizontal, move right 10
+                              2.0, // vertical, move down 10
+                            ),
+                          )
+                        ],
+                        color:
+                            (viewModel.bottomSheetViewModelBase.routeBus.status)
+                                ? Colors.grey
+                                : ThemePrimary.primaryColor,
+                        borderRadius: BorderRadius.all(Radius.circular(
+                                25.0) //         <--- border radius here
+                            ),
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                          onTap: () {
+                            viewModel.onTapFinishRoute();
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            //color: Colors.orange[700],
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                      25.0) //         <--- border radius here
+                                  ),
+                            ),
+                            child: (viewModel
+                                    .bottomSheetViewModelBase.routeBus.status)
+                                ? Text('ĐÃ HOÀN THÀNH',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold))
+                                : Text(
+                                    'HOÀN THÀNH ĐIỂM ${viewModel.bottomSheetViewModelBase.position}',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                           ),
-                        )
-                      ],
-                      color:
-                          (viewModel.bottomSheetViewModelBase.routeBus.status)
-                              ? Colors.grey
-                              : ThemePrimary.primaryColor,
-                      borderRadius: BorderRadius.all(Radius.circular(
-                              25.0) //         <--- border radius here
-                          ),
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                        onTap: () {
-                          viewModel.onTapFinishRoute();
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          //color: Colors.orange[700],
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(
-                                    25.0) //         <--- border radius here
-                                ),
-                          ),
-                          child: (viewModel
-                                  .bottomSheetViewModelBase.routeBus.status)
-                              ? Text('ĐÃ HOÀN THÀNH',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold))
-                              : Text(
-                                  'HOÀN THÀNH ĐIỂM ${viewModel.bottomSheetViewModelBase.position}',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
                         ),
                       ),
                     ),

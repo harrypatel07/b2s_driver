@@ -86,6 +86,7 @@ class Driver {
     vehicleName = json['vehicleName'];
     List list = json['listVehicle'];
     listVehicle = list.map((item) => FleetVehicle.fromJson(item)).toList();
+    isDriver = json['isDriver'];
     driverId = json['driverId'];
   }
 
@@ -122,7 +123,8 @@ class Driver {
   }
 
   Future<dynamic> saveLocal() async {
-    return localStorage.setItem(Driver.aliasName, json.encode(this));
+    print(json.encode(this.toJson()));
+    return localStorage.setItem(Driver.aliasName, json.encode(this.toJson()));
   }
 
   Future<dynamic> clearLocal() async {

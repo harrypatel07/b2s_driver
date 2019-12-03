@@ -251,15 +251,13 @@ class _HomePageOldState extends State<HomePageOld> with TickerProviderStateMixin
       child: StreamBuilder<Object>(
           stream: viewModel.stream,
           builder: (context, snapshot) {
-            return MaterialApp(
-              home: DefaultTabController(
-                length: 2,
-                child: TS24Scaffold(
-                  appBar: _appBar(),
-                  body: TabBarView(
-                    controller: _tabController,
-                    children: _buildListDriverBusSession(),
-                  ),
+            return DefaultTabController(
+              length: 2,
+              child: TS24Scaffold(
+                appBar: _appBar(),
+                body: TabBarView(
+                  controller: _tabController,
+                  children: _buildListDriverBusSession(),
                 ),
               ),
             );

@@ -1,6 +1,8 @@
+import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/bottomSheetListChildrenEmergency/bottomSheet_listChildren_emergency.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
+import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_appbar_widget.dart';
 import 'package:flutter/material.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -213,6 +215,10 @@ class EmergencyPage extends StatelessWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.all(Radius.circular(25.0)),
                   onTap: (){
+                    api.postNotificationProblem(driverBusSession.listChildren,0);
+                    Future.delayed(Duration(milliseconds: 300)).then((_){
+                      LoadingDialog().showMsgDialogWithCloseButton(context, "Thành công.");
+                    });
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -262,6 +268,10 @@ class EmergencyPage extends StatelessWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.all(Radius.circular(25.0)),
                   onTap: (){
+                    api.postNotificationProblem(driverBusSession.listChildren, 1);
+                    Future.delayed(Duration(milliseconds: 300)).then((_){
+                      LoadingDialog().showMsgDialogWithCloseButton(context, "Thành công.");
+                    });
                   },
                   child: Container(
                     alignment: Alignment.center,

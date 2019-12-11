@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/pages/historyTripDetailPage/historyTrip_detail_viewmodel.dart';
@@ -21,10 +23,25 @@ class HistoryTripDetailPage extends StatefulWidget {
 class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
   HistoryTripDetailViewModel viewModel = HistoryTripDetailViewModel();
   GlobalKey _key = GlobalKey();
-    Size _size = Size(0, 0);
+  Size _size = Size(0, 0);
   _getPosition() {
     final RenderBox renderBox = _key.currentContext.findRenderObject();
     _size = renderBox.size;
+  }
+  ScrollController _scrollController;
+
+  bool lastStatus = true;
+
+  _scrollListener() {
+    if (isShrink != lastStatus) {
+        lastStatus = isShrink;
+        viewModel.updateState();
+    }
+  }
+
+  bool get isShrink {
+    return _scrollController.hasClients &&
+        (_scrollController.offset > (200 - kToolbarHeight));
   }
   final heightChildName = 35.0;
   final heightTitle = 44.0;
@@ -32,11 +49,21 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
   final heightLine = 1.0;
   @override
   void initState() {
-        WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-          _getPosition();
-        }));
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+      _getPosition();
+    }));
     super.initState();
   }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Widget _item(
@@ -44,39 +71,39 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
       Widget __image() {
         String url = GoogleMapService.getUrlImageFromMultiMarker(
           width: (MediaQuery.of(context).size.width.toInt() - 40) * 2,
-          height: 170 * 2,
+          height: 170,
           listLatLng: driverBusSession.listRouteBus
               .map((route) => LatLng(route.lat, route.lng))
               .toList(),
         );
-//       http.Response response
+
         return Positioned(
           top: 0,
           left: 0,
           right: 0,
           child: Container(
 //        color: Colors.orange,
-//            height: 170,
-            width: MediaQuery.of(context).size.width,
-            child: ClipRRect(
-                borderRadius: new BorderRadius.only(
-                    topLeft: Radius.circular(18),
-                    topRight: Radius.circular(18)),
-                child: CachedNetworkImage(
-                    imageUrl: url,
-                    imageBuilder: (context, imageProvider) => Image(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ))),
-          ),
+              height: 170 / 2 + 40,
+              width: MediaQuery.of(context).size.width,
+              child: CachedNetworkImage(
+                  imageUrl: url,
+                  imageBuilder: (context, imageProvider) => Image(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ))),
         );
       }
 
       Widget __right() {
         int countChild = 0;
-        driverBusSession.childDrenRoute.forEach((index){countChild+=index.listChildrenID.length;});
-        double widgetHeight = driverBusSession.childDrenRoute.length * heightRouteName + countChild * heightChildName +
-            driverBusSession.childDrenRoute.length * heightLine + 20;
+        driverBusSession.childDrenRoute.forEach((index) {
+          countChild += index.listChildrenID.length;
+        });
+        double widgetHeight =
+            driverBusSession.childDrenRoute.length * heightRouteName +
+                countChild * heightChildName +
+                driverBusSession.childDrenRoute.length * heightLine +
+                20;
         return Flexible(
           flex: 8,
           child: Container(
@@ -117,7 +144,8 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                                             routeBus.routeName,
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ),
                                       ),
@@ -211,7 +239,13 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                                   height: 10,
                                 )
                               : Dash(
-                                  length: driverBusSession.childDrenRoute[index-1].listChildrenID.length * heightChildName + heightLine+ heightRouteName*0.6,
+                                  length: driverBusSession
+                                              .childDrenRoute[index - 1]
+                                              .listChildrenID
+                                              .length *
+                                          heightChildName +
+                                      heightLine +
+                                      heightRouteName * 0.6,
                                   dashLength: 2,
                                   direction: Axis.vertical,
                                   dashColor: ThemePrimary.primaryColor,
@@ -303,10 +337,24 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
           ),
         );
       }
+
       return Container(
-        margin: EdgeInsets.all(20.0),
+//        margin: EdgeInsets.only(top: 100),
         width: MediaQuery.of(context).size.width,
-        child: __content(),
+        child: Stack(
+          children: <Widget>[
+//            __image(),
+            Column(
+              children: <Widget>[
+//                SizedBox(
+//                  height: 170 / 2 + 40,
+//                ),
+                __content(),
+//                        __buttonSupport(),
+              ],
+            ),
+          ],
+        ),
       );
     }
 
@@ -323,23 +371,50 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
     }
 
     Widget _body() {
-      return SingleChildScrollView(
-        child: _item(
-            driverBusSession: widget.driverBusSession,
-            title: widget.driverBusSession.listRouteBus[0].date,
-            onTap: () {}),
-      );
+      return _item(
+          driverBusSession: widget.driverBusSession,
+          title: widget.driverBusSession.listRouteBus[0].date,
+          onTap: () {});
     }
 
     viewModel.context = context;
+    viewModel.getUrlMaps(widget.driverBusSession);
     return ViewModelProvider(
       viewmodel: viewModel,
       child: StreamBuilder<Object>(
           stream: viewModel.stream,
           builder: (context, snapshot) {
             return TS24Scaffold(
-              appBar: _appBar(),
-              body: _body(),
+//              appBar: _appBar(),
+              body: NestedScrollView(
+                controller: _scrollController,
+                headerSliverBuilder:
+                    (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverAppBar(
+                      iconTheme: IconThemeData(color: isShrink ? Colors.white : Colors.black54),
+                      expandedHeight: 200.0,
+                      floating: false,
+                      pinned: true,
+                      flexibleSpace: FlexibleSpaceBar(
+                          centerTitle: true,
+                          title: Text("Chi tiết lịch sử chuyến",
+                              style: TextStyle(
+                                color: isShrink ? Colors.white : Colors.transparent,
+                                fontSize: 16.0,
+                              )),
+                          background: CachedNetworkImage(
+                              imageUrl: viewModel.urlMaps,
+                              imageBuilder: (context, imageProvider) => Image(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ))),
+                    ),
+                  ];
+                },
+                body: _body(),
+              ),
+              // _body(),
             );
           }),
     );

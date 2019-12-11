@@ -37,15 +37,15 @@ class DriverBusSession {
     this.status,
   });
 
-  DriverBusSession.fromJsonController({
-    String busID,
-    int type,
-    String date,
-    List<Children> listChildren,
-    List<ChildDrenStatus> childDrenStatus,
-    List<ChildDrenRoute> childDrenRoute,
-    List<RouteBus> listRouteBus,
-  }) {
+  DriverBusSession.fromJsonController(
+      {String busID,
+      int type,
+      String date,
+      List<Children> listChildren,
+      List<ChildDrenStatus> childDrenStatus,
+      List<ChildDrenRoute> childDrenRoute,
+      List<RouteBus> listRouteBus,
+      bool status = false}) {
     this.busID = busID;
     this.type = type;
     this.sessionID = md5.convert(utf8.encode("$busID$date$type")).toString();
@@ -58,7 +58,7 @@ class DriverBusSession {
     this.childDrenStatus = childDrenStatus;
     this.childDrenRoute = childDrenRoute;
     this.listRouteBus = listRouteBus;
-    this.status = false;
+    this.status = status;
   }
   fromJson(Map<dynamic, dynamic> json) {
     List list = [];

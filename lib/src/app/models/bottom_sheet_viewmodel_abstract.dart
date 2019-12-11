@@ -7,7 +7,7 @@ import 'package:b2s_driver/src/app/service/cloudFirestore-service.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
 
-class BottomSheetViewModelBase extends ViewModelBase{
+class BottomSheetViewModelBase extends ViewModelBase {
   DriverBusSession driverBusSession;
   CloudFiresStoreService cloudSerivce = CloudFiresStoreService();
   BottomSheetViewModelBase();
@@ -23,11 +23,13 @@ class BottomSheetViewModelBase extends ViewModelBase{
           driverBusSession.listChildren, _childrenRoute.listChildrenID);
     return _listChildren;
   }
+
   @override
   void dispose() {
     //streamCloud.cancel();
     super.dispose();
   }
+
   onCreateDriverBusSessionReport() {
     //listChildrenPaidTicket = Children.getListChildrenPaidTicket(driverBusSession.listChildren);
     driverBusSession.totalChildrenLeave = getCountChildrenByStatusBusId(3);
@@ -38,17 +40,19 @@ class BottomSheetViewModelBase extends ViewModelBase{
     driverBusSession.totalChildrenDrop =
         getCountChildrenByStatusBusId(2) + getCountChildrenByStatusBusId(4);
   }
+
   int getCountChildrenByStatusBusId(statusBusId) {
     int sum = 0;
     driverBusSession.listChildren.forEach((child) {
       List<ChildDrenStatus> checkConstraint = driverBusSession.childDrenStatus
           .where((status) =>
-      status.childrenID == child.id && status.statusID == statusBusId)
+              status.childrenID == child.id && status.statusID == statusBusId)
           .toList();
       if (checkConstraint.length > 0) sum++;
     });
     return sum;
   }
+
   onTap(RouteBus _route, int _pos) {
     this.position = _pos;
     this.routeBus = _route;
@@ -59,22 +63,23 @@ class BottomSheetViewModelBase extends ViewModelBase{
         LoadingDialog()
             .showMsgDialogWithButton(context, getTextPopupConfirm(_pos))
             .then((result) {
-              try {
-                if (result) showBottomSheet(_pos);
-              }catch(e){}
+          try {
+            if (result) showBottomSheet(_pos);
+          } catch (e) {}
         });
       }
     } else
       showBottomSheet(_pos);
   }
+
   String getTextPopupConfirm(int pos) {
     String listPoint = '';
     for (int i = 0; i < pos - 1; i++)
       if (!driverBusSession.listRouteBus[i].status) {
         (i > 0 && i < pos - 1)
             ? listPoint == ''
-            ? listPoint += '${i + 1}'
-            : listPoint += ' - ${i + 1}'
+                ? listPoint += '${i + 1}'
+                : listPoint += ' - ${i + 1}'
             : listPoint += '${i + 1}';
       }
     var many = '';
@@ -84,7 +89,8 @@ class BottomSheetViewModelBase extends ViewModelBase{
   $listPoint
 Bạn có muốn tiếp tục?
 """;
-    }else return """Bạn chưa hoàn thành $manyđiểm trước đó: $listPoint
+    } else
+      return """Bạn chưa hoàn thành $manyđiểm trước đó: $listPoint
 Bạn có muốn tiếp tục?
 """;
   }
@@ -105,10 +111,10 @@ Bạn có muốn tiếp tục?
           builder: (BuildContext bc) {
             return BottomSheetCustom(
                 arguments: BottomSheetCustomArgs(viewModel: this));
-          }).then((_){
-              this.updateState();
+          }).then((_) {
+        this.updateState();
       });
-    }catch(e){
+    } catch (e) {
       print(e);
     }
   }

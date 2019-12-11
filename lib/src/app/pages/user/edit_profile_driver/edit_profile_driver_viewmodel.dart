@@ -38,6 +38,13 @@ class EditProfileDriverViewModel extends ViewModelBase {
   dynamic pickImageError;
   String retrieveDataError;
   bool loadingGender = true;
+  final FocusNode nameFocus = FocusNode();
+  final FocusNode phoneFocus = FocusNode();
+  fieldFocusChange(
+      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+    currentFocus.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
+  }
   EditProfileDriverViewModel() {
     createEvent();
     getListGender();

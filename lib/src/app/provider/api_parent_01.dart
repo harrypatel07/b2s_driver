@@ -6,6 +6,7 @@ import 'package:b2s_driver/src/app/models/childrenBusSession.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/fleet-vehicle.dart';
+import 'package:b2s_driver/src/app/models/historyDriver.dart';
 import 'package:b2s_driver/src/app/models/parent.dart';
 import 'package:b2s_driver/src/app/models/picking-route.dart';
 import 'package:b2s_driver/src/app/models/picking-transport-info.dart';
@@ -704,6 +705,131 @@ class Api1 extends ApiMaster {
     });
   }
 
+  ///Lấy lịch sử chuyến đi của driver
+  Future<List<HistoryDriver>> getHistoryDriver({int take, int skip}) async {
+    var client = await this.authorizationOdoo();
+    Driver driver = Driver();
+    var _driverId = driver.isDriver == true ? driver.id : driver.driverId;
+    List<HistoryDriver> listResult = new List();
+    body = new Map();
+    body["driver_id"] = _driverId;
+    body["vehicle_id"] = driver.vehicleId;
+    body["take"] = take;
+    body["skip"] = skip;
+    return client
+        .callController("/handle_picking_info_request_history", body)
+        .then((onValue) async {
+      var result = onValue.getResult();
+      if (!(result is List)) return listResult;
+      for (var h = 0; h < result.length; h++) {
+        var data = result[h];
+        HistoryDriver historyDriver = HistoryDriver();
+        var date = data["transport_date"];
+        historyDriver.transportDate = date;
+        historyDriver.listHistory = [];
+        for (var i = 0; i < 2; i++) {
+          List resultData = (i == 0) ? data["outgoing"] : data["incoming"];
+          if (resultData.length > 0) {
+            List<ChildDrenStatus> listChildDrenStatus = List();
+            List<ChildDrenRoute> listChildDrenRoute = List();
+            List<RouteBus> listRouteBus = List();
+            List<Children> listChildren = List();
+            for (var j = 0; j < resultData.length; j++) {
+              var objPicking = resultData[j]["obj_picking"];
+              var partnerIds = objPicking["partner_ids"];
+              List<Children> listChildrenForRoute = List();
+              for (var k = 0; k < partnerIds.length; k++) {
+                var partnerId = partnerIds[k]["partner_id"];
+                //Tạo list Children
+                listChildren.add(Children.fromJsonController(partnerId));
+                //Tạo list Chidren for Route
+                listChildrenForRoute
+                    .add(Children.fromJsonController(partnerId));
+                //Tạo list Children Status
+                ChildDrenStatus childrenStatus = ChildDrenStatus();
+                var pickingTransportInfo =
+                    partnerIds[k]["picking_transport_info"];
+                childrenStatus.id =
+                    int.parse(pickingTransportInfo["id"].toString());
+                childrenStatus.childrenID =
+                    int.parse(partnerId["id"].toString());
+                childrenStatus.routeBusID =
+                    int.parse(objPicking["id"].toString());
+                childrenStatus.typePickDrop =
+                    partnerIds[k]["type"] == "pick" ? 0 : 1;
+                childrenStatus.note = pickingTransportInfo["note"] is bool
+                    ? ""
+                    : pickingTransportInfo["note"];
+                childrenStatus.pickingRoute = PickingRoute.fromJsonController(
+                    pickingTransportInfo["picking_route"]);
+                PickingTransportInfo_State.values.forEach((value) {
+                  if (Common.getValueEnum(value) ==
+                      pickingTransportInfo["state"])
+                    switch (value) {
+                      case PickingTransportInfo_State.draft:
+                        childrenStatus.statusID = 0;
+                        break;
+                      case PickingTransportInfo_State.halt:
+                        childrenStatus.statusID = 1;
+
+                        break;
+                      case PickingTransportInfo_State.done:
+                        if (i == 0)
+                          childrenStatus.statusID = 2;
+                        else
+                          childrenStatus.statusID = 4;
+                        break;
+                      case PickingTransportInfo_State.cancel:
+                        childrenStatus.statusID = 3;
+                        break;
+                      default:
+                    }
+                });
+                listChildDrenStatus.add(childrenStatus);
+              }
+              //Tạo list RouteBus
+              RouteBus routeBus = RouteBus();
+              routeBus.id = objPicking["id"];
+              routeBus.routeName = objPicking["name"];
+              routeBus.date = date;
+              routeBus.time = objPicking["time"];
+              routeBus.lat = double.parse(objPicking["lat"].toString());
+              routeBus.lng = double.parse(objPicking["lng"].toString());
+              routeBus.isSchool = false;
+              routeBus.type = i == 0 ? 0 : 1;
+              routeBus.status = false;
+              listRouteBus.add(routeBus);
+
+              //Tạo list Children Route
+              ChildDrenRoute childrenRoute = ChildDrenRoute();
+              childrenRoute.id = j + 1;
+              childrenRoute.routeBusID = int.parse(objPicking["id"].toString());
+              childrenRoute.listChildrenID =
+                  listChildrenForRoute.map((item) => item.id).toList();
+              listChildDrenRoute.add(childrenRoute);
+            }
+            //Xóa children đã tồn tại trong list children
+            listChildren = Common.distinceArray<Children>(listChildren, "id");
+
+            Driver driver = Driver();
+            historyDriver.listHistory.add(DriverBusSession.fromJsonController(
+                busID: driver.vehicleName,
+                date: date,
+                type: i == 0 ? 0 : 1,
+                listChildren: listChildren,
+                listRouteBus: listRouteBus,
+                childDrenRoute: listChildDrenRoute,
+                childDrenStatus: listChildDrenStatus,
+                status: true));
+          }
+        }
+        listResult.add(historyDriver);
+      }
+      return listResult;
+    });
+  }
+
+  ///Kiểm tra chuyến đi đã hoàn thành
   Future<bool> checkBusSessionFinished(
       {int vehicleId, int type, String date}) async {
     var client = await this.authorizationOdoo();
@@ -996,6 +1122,62 @@ class Api1 extends ApiMaster {
       String notification = isCome == false
           ? "Xe sắp đến trong vòng $time, mời em ${children.name} chuẩn bị ra xe."
           : "Xe đã đến, mời em ${children.name} nhanh chóng ra xe.";
+      BodyNotification body = BodyNotification();
+      body.headings = {"en": "Thông báo từ Bus2School"};
+      body.contents = {"en": notification};
+      body.filters = [
+        {
+          "field": "tag",
+          "key": "id",
+          "relation": "=",
+          "value": children.parent.id
+        }
+      ];
+      OneSignalService.postNotification(body);
+    }
+  }
+
+  ///Gửi thông báo các sự cố
+  ///@params.
+  ///listChildren
+  ///type
+  ///- 0: kẹt xe nghiêm trọng
+  //- 1: tai nạn giao thông
+  // - 2: học sinh cấp cứu
+  Future<dynamic> postNotificationProblem(
+      List<Children> listChildren, int type) async {
+    var myLoc = await Location().getLocation();
+    var placeMark = await Geolocator()
+        .placemarkFromCoordinates(myLoc.latitude, myLoc.longitude);
+    var addressLocation = placeMark[0].name +
+        placeMark[0].thoroughfare +
+        placeMark[0].subAdministrativeArea;
+    for (var i = 0; i < listChildren.length; i++) {
+      var children = listChildren[i];
+      String notification = "";
+
+      Driver driver = Driver();
+      switch (type) {
+        case 0:
+          notification =
+              """${driver.vehicleName} đang bị kẹt xe nghiêm trọng tại $addressLocation.
+          Vui lòng truy cập ứng dụng đê cập nhật vị trí xe.
+          """;
+          break;
+        case 1:
+          notification =
+              """${driver.vehicleName} đang bị tai nạn giao thông tại $addressLocation.
+          Vui lòng truy cập ứng dụng đê cập nhật vị trí xe.
+          """;
+          break;
+        case 2:
+          notification =
+              """Em ${children.name} đang gặp tai nạn tại $addressLocation.
+          Vui lòng truy cập ứng dụng đê cập nhật vị trí xe.
+          """;
+          break;
+        default:
+      }
       BodyNotification body = BodyNotification();
       body.headings = {"en": "Thông báo từ Bus2School"};
       body.contents = {"en": notification};

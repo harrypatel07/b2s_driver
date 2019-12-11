@@ -1,7 +1,9 @@
+import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
+import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:flutter/material.dart';
 
 class BottomSheetListChildrenEmergencyViewModel extends ViewModelBase{
@@ -19,8 +21,16 @@ class BottomSheetListChildrenEmergencyViewModel extends ViewModelBase{
     childrenWithSelect.isSelect = !childrenWithSelect.isSelect;
     this.updateState();
   }
+  List<Children> getListChildrenSelected(){
+    return listChildrenWithSelect.where((childrenWithSelect)=>childrenWithSelect.isSelect).map((child)=>child.children).toList();
+  }
   onSendListChildrenSOS(){
-    Navigator.pop(context);
+    api.postNotificationProblem(getListChildrenSelected(), 2);
+    Future.delayed(Duration(milliseconds: 300)).then((_){
+      LoadingDialog().showMsgDialogWithCloseButton(context, 'Gửi thành công.').then((_){
+        Navigator.pop(context);
+      });
+    });
   }
 }
 

@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+import 'package:b2s_driver/src/app/models/itemCustomPopupMenu.dart';
 import 'package:b2s_driver/src/app/pages/historyTrip/historyTrip_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/googlemap-service.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
@@ -69,46 +72,133 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
                       driverBusSession.childDrenRoute[index].routeBusID;
                   var routeBus = driverBusSession.listRouteBus
                       .firstWhere((route) => route.id == routeBusID);
-                  return Container(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 8,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(bottom: 0.0, top: 0.0),
-                            child: Container(
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    height: 43.5,
-                                    child: Text(
-                                      routeBus.routeName,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
+                  if (index == 0 ||
+                      index == driverBusSession.childDrenRoute.length - 1)
+                    return Container(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 8,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 0.0, top: 0.0),
+                              child: Container(
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      height: 43.5,
+                                      child: Text(
+                                        routeBus.routeName,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                      ),
                                     ),
-                                  ),
-                                  (index <
-                                          driverBusSession
-                                                  .childDrenRoute.length -
-                                              1)
-                                      ? Container(
-                                          height: 1,
-                                          color: Colors.grey[500],
-                                        )
-                                      : Container(
-                                          height: 1,
-                                        ),
-                                ],
+                                    (index <
+                                            driverBusSession
+                                                    .childDrenRoute.length -
+                                                1)
+                                        ? Container(
+                                            height: 1,
+                                            color: Colors.grey[500],
+                                          )
+                                        : Container(
+                                            height: 1,
+                                          ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                  );
+                          )
+                        ],
+                      ),
+                    );
+                  else if (driverBusSession.childDrenRoute.length > 3) {
+                    if (index == driverBusSession.childDrenRoute.length - 2) {
+                      return Container(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Expanded(
+                              flex: 8,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 0.0, top: 0.0),
+                                child: Container(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        height: 43.5,
+                                        child: Text(
+                                          '... $index trạm ...',
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      (index <
+                                              driverBusSession
+                                                      .childDrenRoute.length -
+                                                  1)
+                                          ? Container(
+                                              height: 1,
+                                              color: Colors.grey[500],
+                                            )
+                                          : Container(
+                                              height: 1,
+                                            ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    } else
+                      return SizedBox();
+                  } else
+                    return Container(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 8,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 0.0, top: 0.0),
+                              child: Container(
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      height: 43.5,
+                                      child: Text(
+                                        routeBus.routeName,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    (index <
+                                            driverBusSession
+                                                    .childDrenRoute.length -
+                                                1)
+                                        ? Container(
+                                            height: 1,
+                                            color: Colors.grey[500],
+                                          )
+                                        : Container(
+                                            height: 1,
+                                          ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    );
                 });
               },
             ),
@@ -163,11 +253,18 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
                                             color: ThemePrimary.primaryColor,
                                           ),
                                         )
-                                      : Icon(
-                                          Icons.radio_button_unchecked,
-                                          color: Colors.orange,
-                                          size: 15,
-                                        ),
+                                      : (index == 1 ||
+                                              index ==
+                                                  driverBusSession
+                                                          .childDrenRoute
+                                                          .length -
+                                                      1)
+                                          ? Icon(
+                                              Icons.radio_button_unchecked,
+                                              color: Colors.orange,
+                                              size: 15,
+                                            )
+                                          : SizedBox(),
                                 ],
                               ),
                             ),
@@ -339,38 +436,66 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
         ),
       );
     }
-
+    void _selectVehicle(CustomPopupMenu choice) {
+      viewModel.selectedVehicle = choice;
+      viewModel.onChangeVehicle();
+    }
     Widget _appBar() {
       return TS24AppBar(
         backgroundColorStart: ThemePrimary.primaryColor,
         backgroundColorEnd: ThemePrimary.primaryColor,
         title: Text('Lịch sử chuyến'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
+        actions: <Widget>[
+          PopupMenuButton<CustomPopupMenu>(
+            child: Container(
+              child: Row(
+                children: <Widget>[
+                  Text(viewModel.driver.vehicleName,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                  Icon(Icons.arrow_drop_down)
+                ],
+              ),
+            ),
+//          elevation:  30.2,
+            initialValue: viewModel.selectedVehicle,
+            onSelected: _selectVehicle,
+            itemBuilder: (BuildContext context) {
+              return viewModel.choicesVehicle.map((CustomPopupMenu vehicle) {
+                return PopupMenuItem<CustomPopupMenu>(
+                  value: vehicle,
+                  child: Text(vehicle.title),
+                );
+              }).toList();
+            },
+          )
+        ],
       );
     }
 
     Widget _body() {
       return RefreshIndicator(
         onRefresh: () async {
-          viewModel.onLoad(2, 15);
+          viewModel.onLoad();
         },
         child: viewModel.loading
             ? LoadingSpinner.loadingView(
                 context: context, loading: viewModel.loading)
-            : viewModel.listDriverBusSession.length > 0
+            : viewModel.listHistoryDriverBusSession.length > 0
                 ? ListView(
                     controller: viewModel.controller,
                     children: <Widget>[
-                      ...viewModel.listDriverBusSession
-                          .map((driverBusSession) => _item(
-                              driverBusSession: driverBusSession,
-                              title: driverBusSession.listRouteBus[0].date,
-                              onTap: () {
-                                viewModel.onTapHistory(driverBusSession);
-                              })),
+                      ...viewModel.listHistoryDriverBusSession
+                          .map((historyDriver) => Column(
+                                children: <Widget>[
+                                  ...historyDriver.listHistory
+                                      .map((driverBusSession) => _item(
+                                          driverBusSession: driverBusSession,
+                                          title: historyDriver.transportDate,
+                                          onTap: () {
+                                            viewModel
+                                                .onTapHistory(driverBusSession);
+                                          }))
+                                ],
+                              )),
                       if (viewModel.loadingMore)
                         Container(
                           width: MediaQuery.of(context).size.width,
@@ -380,7 +505,8 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(ThemePrimary.primaryColor),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    ThemePrimary.primaryColor),
                               ),
                               SizedBox(
                                 width: 15,

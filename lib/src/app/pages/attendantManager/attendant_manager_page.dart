@@ -135,7 +135,8 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
                   ),
                   child: Text(
                     'Chọn',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
               )
@@ -321,6 +322,13 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
             child: HomePageTimeLineV2(listTimeLine: listTimeLine)),
         __buildReport(),
         __buildButtonFinish(),
+        if (viewModel.loading)
+          Container(
+            color: Colors.black38,
+            alignment: Alignment.center,
+            child: LoadingIndicator.spinner(
+                context: context, loading: viewModel.loading),
+          )
       ],
     );
   }
@@ -338,12 +346,7 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
           builder: (context, snapshot) {
             return TS24Scaffold(
               appBar: _appBar(),
-              body: viewModel.loading
-                  ? Center(
-                      child: LoadingIndicator.spinner(
-                          context: context, loading: viewModel.loading),
-                    )
-                  : _buildBody(widget.driverBusSession),
+              body: _buildBody(widget.driverBusSession),
             );
           }),
     );

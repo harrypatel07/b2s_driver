@@ -141,6 +141,8 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
         ],
       );
     }
+    final __styleTextLabel =
+    TextStyle(color: ThemePrimary.primaryColor, fontWeight: FontWeight.bold,fontSize: 16);
     Widget _textFormFieldLoading(String text){
       return Container(
         child: Column(
@@ -148,7 +150,7 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
             Row(
               children: <Widget>[
                 Container(height: 45,),
-                Text(text,style: TextStyle(fontSize: 13,color: ThemePrimary.primaryColor),),
+                Text(text,style: __styleTextLabel,),
                 SizedBox(width: 10,),
                 SizedBox(
                   width: 15,
@@ -215,17 +217,21 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                     child: Align(
                       alignment: Alignment.center,
                       child: TextFormField(
+                        focusNode: viewModel.nameFocus,
                         controller: viewModel.nameEditingController,
                         style: TextStyle(fontSize: 18, color: Colors.black),
                         decoration: InputDecoration(
                           labelText: 'Họ và tên',
+                          labelStyle: __styleTextLabel,
                           hintText:
                               driver != null ? driver.name : "Nhập tên...",
                           errorText: viewModel.errorName,
                         ),
                         keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
-                        onFieldSubmitted: (v) {},
+                        onFieldSubmitted: (v) {
+                          viewModel.fieldFocusChange(context, viewModel.nameFocus, viewModel.phoneFocus);
+                        },
                       ),
                     ),
                   ),
@@ -244,8 +250,7 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                       attribute: 'Giới tính',
                       decoration: InputDecoration(
                         labelText: 'Giới tính',
-                        labelStyle:
-                        TextStyle(color: ThemePrimary.primaryColor),
+                        labelStyle:__styleTextLabel,
                       ),
                       initialValue: viewModel.gender,
                       validators: [FormBuilderValidators.required()],
@@ -272,17 +277,34 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                     child: Align(
                       alignment: Alignment.center,
                       child: TextFormField(
+                        focusNode: viewModel.phoneFocus,
                         controller: viewModel.phoneEditingController,
                         style: TextStyle(fontSize: 18, color: Colors.black),
                         decoration: InputDecoration(
                           labelText: 'Số điện thoại',
+                          labelStyle: __styleTextLabel,
                           hintText: driver != null
                               ? driver.phone.toString()
                               : "Nhập số điện thoại",
                           errorText: viewModel.errorPhone,
                         ),
-                        textInputAction: TextInputAction.next,
+                        textInputAction: TextInputAction.done,
                         keyboardType: TextInputType.number,
+                        onFieldSubmitted: (v){
+                          LoadingDialog.showLoadingDialog(
+                              context, 'Đang xử lý...');
+                          viewModel
+                              .saveDriver(viewModel.driver)
+                              .then((v) {
+                            if (v) {
+                              LoadingDialog.hideLoadingDialog(context);
+                              Navigator.pop(context);
+                            } else {
+                              LoadingDialog.hideLoadingDialog(context);
+                              Navigator.pop(context);
+                            }
+                          });
+                        },
                       ),
                     ),
                   ),
@@ -384,7 +406,7 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                         ),
                         _card(viewModel.driver),
                         SizedBox(
-                          height: 50,
+                          height: 70,
                         ),
                       ],
                     ),
@@ -436,7 +458,7 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                                   child: Center(
                                     child: Text(
                                       "LƯU",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: Colors.white,fontWeight: FontWeight.w900),
                                     ),
                                   )),
                             ),

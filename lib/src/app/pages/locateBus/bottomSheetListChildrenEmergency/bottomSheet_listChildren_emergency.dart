@@ -48,13 +48,12 @@ class _BottomSheetListChildrenEmergencyState
                   child: Text(
                     'CHỌN HỌC SINH CẤP CỨU',
                     style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.only(top: 10,left: 5,right: 5),
+                    padding: EdgeInsets.only(top: 10, left: 5, right: 5),
                     decoration: BoxDecoration(
                       color: Colors.grey[300],
                       borderRadius: new BorderRadius.only(
@@ -108,7 +107,9 @@ class _BottomSheetListChildrenEmergencyState
                     ),
                   )
                 ],
-                color: ThemePrimary.primaryColor,
+                color: viewModel.getListChildrenSelected().length > 0
+                    ? ThemePrimary.primaryColor
+                    : Colors.grey,
                 borderRadius: BorderRadius.all(
                     Radius.circular(25.0) //         <--- border radius here
                     ),
@@ -118,7 +119,8 @@ class _BottomSheetListChildrenEmergencyState
                 child: InkWell(
                   borderRadius: BorderRadius.all(Radius.circular(25.0)),
                   onTap: () {
-                    viewModel.onSendListChildrenSOS();
+                    if (viewModel.getListChildrenSelected().length > 0)
+                      viewModel.onSendListChildrenSOS();
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -148,6 +150,7 @@ class _BottomSheetListChildrenEmergencyState
         ],
       );
     }
+
     viewModel.context = context;
     return ViewModelProvider(
       viewmodel: viewModel,

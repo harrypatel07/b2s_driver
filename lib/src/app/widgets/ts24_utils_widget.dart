@@ -101,7 +101,7 @@ class LoadingDialog {
   }
 
   Future<bool> showMsgDialogWithButton(
-      BuildContext context, String msg) async{
+      BuildContext context, String msg,) async{
       return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -133,6 +133,37 @@ class LoadingDialog {
                 "Tiếp tục",
                 style:
                     TextStyle(fontSize: 16, color: ThemePrimary.primaryColor),
+              ),
+              onPressed: () {
+//                result = true;
+                Navigator.of(context).pop(true);
+              },
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(0.0))),
+        ],
+      ),
+    );
+  }
+  Future<bool> showMsgDialogWithCloseButton(
+      BuildContext context, String msg,) async{
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          "Thông báo",
+          style: TextStyle(color: ThemePrimary.primaryColor),
+        ),
+        content: Text(
+          msg,
+          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          OutlineButton(
+              borderSide: BorderSide(color: ThemePrimary.primaryColor),
+              child: new Text(
+                "Đóng",
+                style:
+                TextStyle(fontSize: 16, color: ThemePrimary.primaryColor),
               ),
               onPressed: () {
 //                result = true;

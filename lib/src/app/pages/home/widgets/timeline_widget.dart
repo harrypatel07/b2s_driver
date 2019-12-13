@@ -70,6 +70,7 @@ class HomePageTimeLineV2 extends StatelessWidget {
                       fontFamily: ThemePrimary.primaryFontFamily,
                     ),
                     textAlign: TextAlign.start,
+                    maxLines: 2,
                   ),
                 ),
               ),

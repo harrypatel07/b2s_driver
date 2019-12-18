@@ -149,7 +149,7 @@ class BottomSheetCustomViewModel extends ViewModelBase {
                 routeBus.id == bottomSheetViewModelBase.routeBus.id);
         route.status = true;
         bottomSheetViewModelBase.driverBusSession.saveLocal();
-        Navigator.pop(context);
+        Navigator.pop(context,true);
       }
     }
   }

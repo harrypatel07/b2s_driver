@@ -232,7 +232,7 @@ class HomePageCardTimeLine extends StatelessWidget {
                         ),
                         new Text(children.gender.toString(),
                             style: subHeaderTextStyle),
-                        (cardType == 1)
+                        (cardType == 1 && status!=null)
                             ? _status()
                             : Container(
                                 height: 11,
@@ -243,7 +243,7 @@ class HomePageCardTimeLine extends StatelessWidget {
                   // Spacer(),
                   // Expanded(
                   //   child:
-                  (status.statusID != 3)
+                  (status!=null && status.statusID != 3)
                       ? cardType == 1
                           ? Column(
                               children: <Widget>[
@@ -447,7 +447,7 @@ class HomePageCardTimeLine extends StatelessWidget {
                                                     color: Colors.white)),
                                       ),
                                     )
-                                  : Text(
+                                  :(status!=null)?Text(
                                       typePickDrop == 0 ? 'Đón' : 'Trả',
                                       style: new TextStyle(
                                           fontFamily:
@@ -455,7 +455,7 @@ class HomePageCardTimeLine extends StatelessWidget {
                                           fontSize: 14.0,
                                           color: ThemePrimary.primaryColor,
                                           fontWeight: FontWeight.bold),
-                                    ),
+                                    ):SizedBox(),
                             )
                       : (cardType == 1)
                           ? Container()
@@ -484,7 +484,7 @@ class HomePageCardTimeLine extends StatelessWidget {
                                           color: Colors.white)),
                                 ),
                               )
-                                  : Text(
+                                  :(status!=null)? Text(
                                       typePickDrop == 0 ? 'Đón' : 'Trả',
                                       style: new TextStyle(
                                           fontFamily:
@@ -492,7 +492,7 @@ class HomePageCardTimeLine extends StatelessWidget {
                                           fontSize: 14.0,
                                           color: ThemePrimary.primaryColor,
                                           fontWeight: FontWeight.bold),
-                                    ),
+                                    ):SizedBox(),
                             ),
                   // ),
                 ],

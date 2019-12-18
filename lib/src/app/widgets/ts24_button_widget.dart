@@ -7,13 +7,17 @@ class TS24Button extends StatelessWidget{
   final double height;
   final Function onTap;
   final Widget child;
+  final EdgeInsetsDirectional padding;
+  final EdgeInsetsGeometry margin;
 
-  const TS24Button({Key key,@required this.decoration,this.onTap,this.child,this.width,this.height}) : super(key: key);
+  const TS24Button({Key key,@required this.decoration,this.onTap,this.child,this.width,this.height,this.padding,this.margin}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
       width: width,
       height: height,
+      margin: margin,
+      padding: padding,
       decoration: decoration,
       child: Material(
         shape: decoration.border,

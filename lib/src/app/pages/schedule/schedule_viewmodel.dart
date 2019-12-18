@@ -37,6 +37,7 @@ class ScheduleViewModel extends ViewModelBase {
   onLoad(String date) {
     print('OnLoad');
     loading = true;
+    this.updateState();
     api
         .getListDriverBusSession(
             vehicleId: driver.vehicleId, driverId: driver.id, date: date)
@@ -48,7 +49,6 @@ class ScheduleViewModel extends ViewModelBase {
       loading = false;
       this.updateState();
     });
-    this.updateState();
   }
 
   List<Children> getListChildrenForTimeLine(

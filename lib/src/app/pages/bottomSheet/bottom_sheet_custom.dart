@@ -35,6 +35,7 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
 
   List<TimeLineEvent> _buildListTimeLine(
       DriverBusSession driverBusSession, RouteBus routeBus) {
+    var index = 0;
     return List()
       ..add(TimeLineEvent(
           time: routeBus.time,
@@ -42,6 +43,7 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
           content: viewModel
               .getListChildrenForTimeLine(driverBusSession, routeBus.id)
               .map((children) {
+            index++;
             var status = ChildDrenStatus.getStatusByChildrenID(
                 driverBusSession.childDrenStatus, children.id, routeBus.id);
             viewModel.listChildrenStatus.add(status);
@@ -49,7 +51,8 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                 StatusBus.getStatusByID(StatusBus.list, status.statusID);
             var tag = children.id.toString() +
                 routeBus.id.toString() +
-                driverBusSession.busID.toString();
+                driverBusSession.busID.toString() +
+                index.toString();
             return HomePageCardTimeLine(
                 children: children,
                 //isEnablePicked: status.statusID == 0 ? true : false,

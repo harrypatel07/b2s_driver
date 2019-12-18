@@ -1,12 +1,12 @@
-import 'dart:io';
-import 'dart:ui' as prefix0;
-
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
+import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
-import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
+import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
+import 'package:b2s_driver/src/app/widgets/notice_localbus_widget.dart';
+import 'package:b2s_driver/src/app/widgets/report_localbus_widget.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +28,7 @@ class _LocateBusPageState extends State<LocateBusPage>
   @override
   void initState() {
     viewModel.driverBusSession = widget.driverBusSession;
+    viewModel.driverBusSessionInput = viewModel.driverBusSession;
     //viewModel.listenData();
     viewModel.onCreateDriverBusSessionReport();
     super.initState();
@@ -54,209 +55,160 @@ class _LocateBusPageState extends State<LocateBusPage>
       );
     }
 
+    Widget __backButton() {
+      return Positioned(
+        bottom: 0,
+        left: 0,
+        child: SafeArea(
+          bottom: false,
+          top: true,
+          child: TS24Button(
+            onTap: () {
+              viewModel.onTapBackButton();
+            },
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(25),
+                  topRight: Radius.circular(25)),
+              color: ThemePrimary.primaryColor,
+            ),
+            width: 70,
+            height: 50,
+            child: Container(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget __ContentReport(List<Children> listChildren) {
+      return Container(
+        color: ThemePrimary.primaryColor,
+        height: MediaQuery.of(context).size.height * 0.87,
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              ...listChildren
+                  .asMap()
+                  .map((index, children) {
+//                  var status = ChildDrenStatus.getStatusByChildrenID(
+//                      viewModel.driverBusSession.childDrenStatus,
+//                      children.id,
+//                      children.id);
+//                  var statusBus =
+//                      StatusBus.getStatusByID(StatusBus.list, status.statusID);
+                    return MapEntry(
+                        index,
+                        HomePageCardTimeLine(
+                          children: children,
+                          isEnablePicked: false,
+                          heroTag: index.toString(),
+                          onTapPickUp: () {
+//                  viewModel.onTapPickUp(driverBusSession, children, item);
+                          },
+                          onTapChangeStatusLeave: () {
+//                  viewModel.onTapChangeChildrenStatus(
+//                      driverBusSession, children, item, 3);
+//                  print("show button call");
+                          },
+                          onTapShowChildrenProfile: () {
+//                viewModel.onTapShowChildrenProfile(children, tag);
+                          },
+                        ));
+                  })
+                  .values
+                  .toList(),
+            ],
+          ),
+        ),
+      );
+    }
+
+    Widget __notice() {
+      int pointNext = viewModel.getPointNextPick();
+      return Positioned(
+        top: 110,
+        child: NoticeLocalBus(
+          onTap: () {
+            if (pointNext != -1)
+              viewModel.onTapNoticeContent(
+                  viewModel.getRouteBusPointNext(), pointNext);
+          },
+          content: RichText(
+              text: (pointNext != -1)
+                  ? new TextSpan(
+                      style: new TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.black,
+                      ),
+                      children: <TextSpan>[
+                        new TextSpan(text: 'Điểm đón tiếp theo: '),
+                        new TextSpan(
+                            text: 'Điểm số ${pointNext.toString()}\n',
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: ThemePrimary.primaryColor)),
+                        new TextSpan(text: 'Địa chỉ: '),
+                        new TextSpan(
+                            text: '${viewModel.getAddressPointNext()}\n',
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: ThemePrimary.primaryColor)),
+                        new TextSpan(text: 'Học sinh cần đón: '),
+                        new TextSpan(
+                            text:
+                                '${viewModel.getCountChildrenPickPointNext().toString()}\n',
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: ThemePrimary.primaryColor)),
+                        new TextSpan(text: 'Học sinh phải trả: '),
+                        new TextSpan(
+                            text:
+                                '${viewModel.getCountChildrenDropPointNext().toString()}\n',
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: ThemePrimary.primaryColor)),
+                      ],
+                    )
+                  : new TextSpan(
+                      style: new TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.black,
+                      ),
+                      children: <TextSpan>[
+                          TextSpan(
+                            text:
+                                'Xin vui lòng bấm hoàn thành để kết thúc chuyến.',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: ThemePrimary.primaryColor,
+                            ),
+                          ),
+                        ])),
+        ),
+      );
+    }
+
     Widget __report() {
-      final ___textStyle =
-          TextStyle(fontSize: 16, color: ThemePrimary.primaryColor);
-      final ___numberStyle = TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w900,
-          color: ThemePrimary.primaryColor);
       return Positioned(
         top: 0,
-        child: (Platform.isAndroid || Platform.isFuchsia)
-            ? ClipRect(
-                child: BackdropFilter(
-                  filter: prefix0.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                    width: MediaQuery.of(context).size.width,
-//              color: Colors.transparent,
-                    child: SafeArea(
-                      top: true,
-                      bottom: false,
-                      child:Column(
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  padding: EdgeInsets.only(left: 20, right: 20),
-                                  child: Text(
-                                    "Học sinh đăng ký",
-                                    textAlign: TextAlign.center,
-                                    style: ___textStyle,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  padding: EdgeInsets.only(left: 20, right: 20),
-                                  child: Text(
-                                    "Học sinh trên xe",
-                                    textAlign: TextAlign.center,
-                                    style: ___textStyle,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  padding: EdgeInsets.only(left: 20, right: 20),
-                                  child: Text(
-                                    "Học sinh báo nghỉ",
-                                    textAlign: TextAlign.center,
-                                    style: ___textStyle,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                      left: 20, right: 20),
-                                  child: Text(
-                                    viewModel
-                                        .driverBusSession.totalChildrenRegistered
-                                        .toString(),
-                                    textAlign: TextAlign.center,
-                                    style: ___numberStyle,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                      left: 20, right: 20),
-                                  child: Text(
-                                    viewModel.driverBusSession.totalChildrenInBus
-                                        .toString(),
-                                    textAlign: TextAlign.center,
-                                    style: ___numberStyle,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                      left: 20, right: 20),
-                                  child: Text(
-                                    viewModel.driverBusSession.totalChildrenLeave
-                                        .toString(),
-                                    textAlign: TextAlign.center,
-                                    style: ___numberStyle,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            : Container(
-                color: Colors.white60,
-                padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                width: MediaQuery.of(context).size.width,
-//              color: Colors.transparent,
-                child: SafeArea(
-                  top: true,
-                  bottom: false,
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: Text(
-                                "Học sinh đăng ký",
-                                textAlign: TextAlign.center,
-                                style: ___textStyle,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: Text(
-                                "Học sinh trên xe",
-                                textAlign: TextAlign.center,
-                                style: ___textStyle,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              padding: EdgeInsets.only(left: 25, right: 25),
-                              child: Text(
-                                "Học sinh báo nghỉ",
-                                textAlign: TextAlign.center,
-                                style: ___textStyle,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              padding:
-                              EdgeInsets.only(left: 20, right: 20,bottom: 5),
-                              child: Text(
-                                viewModel.driverBusSession.totalChildrenRegistered
-                                    .toString(),
-                                textAlign: TextAlign.center,
-                                style: ___numberStyle,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              padding:
-                              EdgeInsets.only(left: 20, right: 20,bottom: 5),
-                              child: Text(
-                                viewModel.driverBusSession.totalChildrenInBus
-                                    .toString(),
-                                textAlign: TextAlign.center,
-                                style: ___numberStyle,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              padding:
-                              EdgeInsets.only(left: 20, right: 20,bottom: 5),
-                              child: Text(
-                                viewModel.driverBusSession.totalChildrenLeave
-                                    .toString(),
-                                textAlign: TextAlign.center,
-                                style: ___numberStyle,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+        child: ReportLocalBus(
+          title1: 'Học sinh đăng ký',
+          title2: 'Học sinh trên xe',
+          title3: 'Học sinh báo nghỉ',
+          value1: viewModel.driverBusSession.totalChildrenRegistered.toString(),
+          value2: viewModel.driverBusSession.totalChildrenInBus.toString(),
+          value3: viewModel.driverBusSession.totalChildrenLeave.toString(),
+          content1: __ContentReport(viewModel.driverBusSession.listChildren),
+          content2: __ContentReport(viewModel.getListChildrenByStatusID(1)),
+          content3: __ContentReport(viewModel.getListChildrenByStatusID(3)),
+        ),
       );
     }
 
@@ -347,7 +299,9 @@ class _LocateBusPageState extends State<LocateBusPage>
                     ),
                   )
                 ],
-                borderRadius: BorderRadius.only(topRight:Radius.circular(50),topLeft: Radius.circular(50)),
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(50),
+                    topLeft: Radius.circular(50)),
                 color: ThemePrimary.primaryColor),
             child: Stack(
               children: <Widget>[
@@ -511,26 +465,35 @@ class _LocateBusPageState extends State<LocateBusPage>
       child: StreamBuilder<Object>(
           stream: viewModel.stream,
           builder: (context, snapshot) {
-            return TS24Scaffold(
-              body: Stack(
-                children: <Widget>[
-                  viewModel.showGoolgeMap ? __buildGoogleMap() : Container(),
-                  __report(),
-                  __sosButton(),
-                  __buildIconLocation(),
-                  __navigateGoogleMap(),
-                  __finishButton(),
-                  viewModel.showSpinner
-                      ? LoadingIndicator.progress(
-                      context: context,
-                      loading: true,
-                      position: Alignment.topCenter)
-                      : Container(),
+            return WillPopScope(
+                child: new TS24Scaffold(
+                  body: Stack(
+                    children: <Widget>[
+                      viewModel.showGoolgeMap
+                          ? __buildGoogleMap()
+                          : Container(),
+                      __backButton(),
+                      __sosButton(),
+                      __buildIconLocation(),
+                      __navigateGoogleMap(),
+                      __finishButton(),
+                      __notice(),
+                      __report(),
+                      viewModel.showSpinner
+                          ? LoadingIndicator.progress(
+                              context: context,
+                              loading: true,
+                              position: Alignment.topCenter)
+                          : Container(),
 //                    if(viewModel.listTimeLine!=null)_builBottomSheet()
-                ],
-              ),
-              //body: Container()
-            );
+                    ],
+                  ),
+                  //body: Container()
+                ),
+                onWillPop: () async {
+                  viewModel.onTapBackButton();
+                  return false;
+                });
           }),
     );
   }

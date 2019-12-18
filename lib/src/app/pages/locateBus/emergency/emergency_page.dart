@@ -217,7 +217,7 @@ class EmergencyPage extends StatelessWidget {
                   onTap: (){
                     api.postNotificationProblem(driverBusSession.listChildren,0);
                     Future.delayed(Duration(milliseconds: 300)).then((_){
-                      LoadingDialog().showMsgDialogWithCloseButton(context, "Thành công.");
+                      LoadingDialog().showMsgDialogWithCloseButton(context, "Đã gủi tin thành công.");
                     });
                   },
                   child: Container(
@@ -270,7 +270,7 @@ class EmergencyPage extends StatelessWidget {
                   onTap: (){
                     api.postNotificationProblem(driverBusSession.listChildren, 1);
                     Future.delayed(Duration(milliseconds: 300)).then((_){
-                      LoadingDialog().showMsgDialogWithCloseButton(context, "Thành công.");
+                      LoadingDialog().showMsgDialogWithCloseButton(context, "Đã gửi tin thành công.");
                     });
                   },
                   child: Container(

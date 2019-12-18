@@ -27,7 +27,7 @@ class BottomSheetListChildrenEmergencyViewModel extends ViewModelBase{
   onSendListChildrenSOS(){
     api.postNotificationProblem(getListChildrenSelected(), 2);
     Future.delayed(Duration(milliseconds: 300)).then((_){
-      LoadingDialog().showMsgDialogWithCloseButton(context, 'Gửi thành công.').then((_){
+      LoadingDialog().showMsgDialogWithCloseButton(context, 'Đã gửi tin thành công.').then((_){
         Navigator.pop(context);
       });
     });

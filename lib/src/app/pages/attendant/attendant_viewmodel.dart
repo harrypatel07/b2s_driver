@@ -19,11 +19,12 @@ class AttendantPageViewModel extends ViewModelBase {
   Driver driver = Driver();
   AttendantPageViewModel() {
     choicesVehicle = driver.listVehicle
-        .map((vehicle) => CustomPopupMenu(id: vehicle.id, title: vehicle.name))
+        .map((vehicle) =>
+            CustomPopupMenu(id: vehicle.id, title: vehicle.licensePlate))
         .toList();
     selectedVehicle = CustomPopupMenu(
         id: driver.listVehicle[0].id,
-        title: driver.listVehicle[0].name,
+        title: driver.listVehicle[0].licensePlate,
         subTitle: DateFormat('yyyy-MM-dd').format(DateTime.now()));
     onLoad(selectedVehicle.subTitle);
   }

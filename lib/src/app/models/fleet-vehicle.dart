@@ -223,9 +223,10 @@ class FleetVehicle {
     messageUnreadCounter = json['message_unread_counter'];
     modelId = json['model_id'];
     modelYear = json['model_year'];
-    name = json['name'] != null
-        ? json['name'].toString().split('/').last
-        : json['name'];
+    // name = json['name'] != null
+    //     ? json['name'].toString().split('/').last
+    //     : json['name'];
+    name = json['name'];
     odometer = json['odometer'];
     odometerCount = json['odometer_count'];
     odometerUnit = json['odometer_unit'];
@@ -282,8 +283,8 @@ class FleetVehicle {
     data['id'] = this.id;
     // data['image'] = this.image;
     // data['image_medium'] = this.imageMedium;
-    // data['image_small'] = this.imageSmall;
-    // data['license_plate'] = this.licensePlate;
+    data['image_small'] = this.imageSmall;
+    data['license_plate'] = this.licensePlate;
     // data['location'] = this.location;
     // data['log_contracts'] = this.logContracts;
     // data['log_drivers'] = this.logDrivers;

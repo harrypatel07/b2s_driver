@@ -1,12 +1,15 @@
 import 'dart:ui';
 
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
+import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/pages/historyTripDetailPage/historyTrip_detail_viewmodel.dart';
+import 'package:b2s_driver/src/app/service/common-service.dart';
 import 'package:b2s_driver/src/app/service/googlemap-service.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/dash.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -28,46 +31,244 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
     final RenderBox renderBox = _key.currentContext.findRenderObject();
     _size = renderBox.size;
   }
-  ScrollController _scrollController;
 
+  GlobalKey _keyContent = GlobalKey();
+  Size _sizeContent = Size(0, 0);
+  _getSizeContent() {
+    final RenderBox renderBox = _keyContent.currentContext.findRenderObject();
+    _sizeContent = renderBox.size;
+  }
   bool lastStatus = true;
 
   _scrollListener() {
+    print("HIEP:"+viewModel.scrollController.offset.toString());
     if (isShrink != lastStatus) {
-        lastStatus = isShrink;
-        viewModel.updateState();
+      lastStatus = isShrink;
+      viewModel.updateState();
     }
   }
 
   bool get isShrink {
-    return _scrollController.hasClients &&
-        (_scrollController.offset > (200 - kToolbarHeight));
+    return viewModel.scrollController.hasClients &&
+        (viewModel.scrollController.offset > (200 - kToolbarHeight));
   }
+
   final heightChildName = 35.0;
   final heightTitle = 44.0;
   final heightRouteName = 43.5;
   final heightLine = 1.0;
+  final heightTable = 120.0;
+  final heightMargin = 10.0;
+  final gridViewHeight = 60.0;
+  final gridViewHeightExtend = 120.0;
   @override
   void initState() {
-    _scrollController = ScrollController();
-    _scrollController.addListener(_scrollListener);
+    viewModel.scrollController = ScrollController();
+    viewModel.scrollController.addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-      _getPosition();
-    }));
+          _getPosition();
+          _getSizeContent();
+        }));
     super.initState();
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_scrollListener);
+    viewModel.scrollController.removeListener(_scrollListener);
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
+    Widget _tablePickDrop(ChildDrenStatus childDrenStatus, int typeBus) {
+      String __estimateStartTime =
+          childDrenStatus.pickingRoute.startTime != '' &&
+                  childDrenStatus.pickingRoute.startTime != null
+              ? childDrenStatus.pickingRoute.startTime
+              : '';
+      String __estimateEndTime = childDrenStatus.pickingRoute.endTime != '' &&
+              childDrenStatus.pickingRoute.endTime != null
+          ? childDrenStatus.pickingRoute.endTime
+          : '';
+      String __realStartTime =
+          childDrenStatus.pickingRoute.xRealStartTime != '' &&
+                  childDrenStatus.pickingRoute.xRealStartTime != null
+              ? childDrenStatus.pickingRoute.xRealStartTime
+              : __estimateStartTime;
+      String __realEndTime = childDrenStatus.pickingRoute.xRealEndTime != '' &&
+              childDrenStatus.pickingRoute.xRealEndTime != null
+          ? childDrenStatus.pickingRoute.xRealEndTime
+          : __estimateEndTime;
+      return Container(
+          margin: EdgeInsets.fromLTRB(5, heightMargin, 5, 0),
+//          color: Colors.pink,
+          padding: EdgeInsets.all(5),
+          height: heightTable,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              boxShadow: [
+                BoxShadow(
+                    offset: Offset(0, 2),
+                    color: Color(0x20000000),
+                    blurRadius: 5),
+                BoxShadow(
+                    offset: Offset(2, 0),
+                    color: Color(0x20000000),
+                    blurRadius: 5),
+              ]),
+          child: Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            border: TableBorder(
+                horizontalInside:
+                    BorderSide(width: 1.0, color: Colors.grey[300])),
+            children: [
+              TableRow(children: [
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: Text(
+                    'Thời gian',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    'Đến trạm',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ]),
+              TableRow(children: [
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: Text(
+                    'Dự kiến',
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Text(
+                  Common.removeMiliSecond(
+                      typeBus == 0 ? __estimateStartTime : __estimateEndTime),
+                  textAlign: TextAlign.center,
+                ),
+              ]),
+              TableRow(children: [
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: Text(
+                    'Thực tế',
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Text(
+                  Common.removeMiliSecond(
+                      typeBus == 0 ? __realStartTime : __realEndTime),
+                  textAlign: TextAlign.center,
+                ),
+              ]),
+              TableRow(children: [
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: Text(
+                    'Chênh lệch',
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                typeBus == 0
+                    ? Center(
+                        child: Text(
+                          (__estimateStartTime != '' && __realStartTime != '')
+                              ? viewModel.getDifferenceTime(
+                                  __estimateStartTime, __realStartTime)
+                              : '',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: ThemePrimary.primaryColor),
+                        ),
+                      )
+                    : Center(
+                        child: Text(
+                          (__estimateEndTime != '' && __realEndTime != '')
+                              ? viewModel.getDifferenceTime(
+                                  __estimateEndTime, __realEndTime)
+                              : '',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: ThemePrimary.primaryColor),
+                        ),
+                      ),
+              ])
+            ],
+          ));
+    }
+
     Widget _item(
         {DriverBusSession driverBusSession, String title, Function onTap}) {
+      Widget __gridView(List<Children> listChildren, int indexRoute) {
+        double ___gridViewHeight = gridViewHeight;
+        int ___gridViewCol = 0;
+        if (MediaQuery.of(context).orientation == Orientation.portrait) {
+          ___gridViewCol = 6;
+          if (listChildren.length > 6) ___gridViewHeight = gridViewHeightExtend;
+        } else {
+          ___gridViewCol = 10;
+          if (listChildren.length > 10)
+            ___gridViewHeight = gridViewHeightExtend;
+        }
+        return Container(
+          height: ___gridViewHeight,
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.fromLTRB(5, heightMargin, 5, 0),
+          child: OrientationBuilder(
+            builder: (context, orientation) {
+              return GridView.builder(
+                  itemCount: listChildren.length,
+                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: ___gridViewCol,
+//                    childAspectRatio: 2.44,
+                    crossAxisSpacing: 1,
+//                    mainAxisSpacing: 12,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return TS24Button(
+                      decoration: BoxDecoration(
+//                        shape: BoxShape.circle,
+                          borderRadius: BorderRadius.circular(25)),
+                      onTap: () {
+                        viewModel.onTapChildren(
+                            listChildren[index],
+                            index.toString() +
+                                listChildren[index].id.toString() +
+                                indexRoute.toString());
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(5),
+                        child: Hero(
+                          tag: index.toString() +
+                              listChildren[index].id.toString() +
+                              indexRoute.toString(),
+                          child: CachedNetworkImage(
+                            imageUrl: listChildren[index].photo,
+                            imageBuilder: (context, imageProvider) =>
+                                CircleAvatar(
+                              radius: 35.0,
+                              backgroundImage: imageProvider,
+                              backgroundColor: Colors.transparent,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  });
+            },
+          ),
+        );
+      }
+
       Widget __image() {
         String url = GoogleMapService.getUrlImageFromMultiMarker(
           width: (MediaQuery.of(context).size.width.toInt() - 40) * 2,
@@ -95,15 +296,25 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
       }
 
       Widget __right() {
-        int countChild = 0;
+//        int countChild = 0;
+        double widgetHeight = driverBusSession.childDrenRoute.length *
+                (heightRouteName + heightLine + heightTable + heightMargin) +
+//            countChild * heightChildName +
+            30;
         driverBusSession.childDrenRoute.forEach((index) {
-          countChild += index.listChildrenID.length;
+//          countChild += index.listChildrenID.length;
+          if (MediaQuery.of(context).orientation == Orientation.portrait) {
+            if (index.listChildrenID.length > 6)
+              widgetHeight += gridViewHeightExtend + heightMargin;
+            else
+              widgetHeight += gridViewHeight + heightMargin;
+          } else {
+            if (index.listChildrenID.length > 10)
+              widgetHeight += gridViewHeightExtend + heightMargin;
+            else
+              widgetHeight += gridViewHeight + heightMargin;
+          }
         });
-        double widgetHeight =
-            driverBusSession.childDrenRoute.length * heightRouteName +
-                countChild * heightChildName +
-                driverBusSession.childDrenRoute.length * heightLine +
-                20;
         return Flexible(
           flex: 8,
           child: Container(
@@ -121,6 +332,27 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                       .firstWhere((route) => route.id == routeBusID);
                   var listChildren = viewModel.getListChildrenForTimeLine(
                       driverBusSession, routeBusID);
+                  var childDrenStatus = driverBusSession.childDrenStatus
+                      .firstWhere((status) => status.routeBusID == routeBusID);
+                  var listChildDrenStatus = driverBusSession.childDrenStatus
+                      .where((status) => status.routeBusID == routeBusID)
+                      .toList();
+                  int countChildLeave = listChildDrenStatus
+                      .where((childDrenStatus) => childDrenStatus.statusID == 3)
+                      .toList()
+                      .length;
+                  int countChildPick = listChildDrenStatus
+                      .where((childDrenStatus) =>
+                          childDrenStatus.statusID != 3 &&
+                          childDrenStatus.typePickDrop == 0)
+                      .toList()
+                      .length;
+                  int countChildDrop = listChildDrenStatus
+                      .where((childDrenStatus) =>
+                          childDrenStatus.statusID != 3 &&
+                          childDrenStatus.typePickDrop == 1)
+                      .toList()
+                      .length;
                   return Container(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,9 +375,10 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                                           child: Text(
                                             routeBus.routeName,
                                             overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.center,
+                                            textAlign: TextAlign.left,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
+                                            maxLines: 2,
                                           ),
                                         ),
                                       ),
@@ -156,7 +389,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                                               Icons.arrow_upward,
                                               color: Colors.green,
                                             ),
-                                            Text('10'),
+                                            Text(countChildPick.toString()),
                                             SizedBox(
                                               width: 5,
                                             ),
@@ -164,15 +397,15 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                                               Icons.arrow_downward,
                                               color: Colors.yellow[700],
                                             ),
-                                            Text('10'),
+                                            Text(countChildDrop.toString()),
                                             SizedBox(
                                               width: 5,
                                             ),
                                             Icon(
-                                              Icons.cancel,
+                                              Icons.home,
                                               color: Colors.red,
                                             ),
-                                            Text('0')
+                                            Text(countChildLeave.toString())
                                           ],
                                         ),
                                       )
@@ -182,22 +415,10 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                                     height: heightLine,
                                     color: Colors.grey[500],
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        ...listChildren
-                                            .map((child) => Container(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  height: heightChildName,
-                                                  child: Text(child.name),
-                                                )),
-                                      ],
-                                    ),
-                                  ),
+                                  if (childDrenStatus != null)
+                                    _tablePickDrop(
+                                        childDrenStatus, driverBusSession.type),
+                                  __gridView(listChildren, index),
                                 ],
                               ),
                             ),
@@ -224,7 +445,29 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
               itemBuilder: (context, index) {
                 return new LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints constraints) {
-//                  int heightDash = ;
+                  double ___heightDash = 0;
+                  if (index > 0) {
+                    ___heightDash = heightLine +
+                        heightTable +
+                        heightMargin +
+                        heightRouteName * 0.6;
+                    if (MediaQuery.of(context).orientation ==
+                        Orientation.portrait) {
+                      if (driverBusSession
+                              .childDrenRoute[index - 1].listChildrenID.length >
+                          6)
+                        ___heightDash += gridViewHeightExtend + heightMargin;
+                      else
+                        ___heightDash += gridViewHeight + heightMargin;
+                    } else {
+                      if (driverBusSession
+                              .childDrenRoute[index - 1].listChildrenID.length >
+                          10)
+                        ___heightDash += gridViewHeightExtend + heightMargin;
+                      else
+                        ___heightDash += gridViewHeight + heightMargin;
+                    }
+                  }
                   return Container(
                     child: Container(
                       child: Column(
@@ -239,13 +482,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                                   height: 10,
                                 )
                               : Dash(
-                                  length: driverBusSession
-                                              .childDrenRoute[index - 1]
-                                              .listChildrenID
-                                              .length *
-                                          heightChildName +
-                                      heightLine +
-                                      heightRouteName * 0.6,
+                                  length: ___heightDash,
                                   dashLength: 2,
                                   direction: Axis.vertical,
                                   dashColor: ThemePrimary.primaryColor,
@@ -276,7 +513,8 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
       }
 
       Widget __content() {
-        return Padding(
+        return Container(
+          key: _keyContent,
           padding: EdgeInsets.only(left: 10, right: 10),
           child: Column(
             children: <Widget>[
@@ -385,36 +623,38 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
           stream: viewModel.stream,
           builder: (context, snapshot) {
             return TS24Scaffold(
-//              appBar: _appBar(),
-              body: NestedScrollView(
-                controller: _scrollController,
-                headerSliverBuilder:
-                    (BuildContext context, bool innerBoxIsScrolled) {
-                  return <Widget>[
-                    SliverAppBar(
-                      iconTheme: IconThemeData(color: isShrink ? Colors.white : Colors.black54),
-                      expandedHeight: 200.0,
-                      floating: false,
-                      pinned: true,
-                      flexibleSpace: FlexibleSpaceBar(
-                          centerTitle: true,
-                          title: Text("Chi tiết lịch sử chuyến",
-                              style: TextStyle(
-                                color: isShrink ? Colors.white : Colors.transparent,
-                                fontSize: 16.0,
-                              )),
-                          background: CachedNetworkImage(
-                              imageUrl: viewModel.urlMaps,
-                              imageBuilder: (context, imageProvider) => Image(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                  ))),
-                    ),
-                  ];
-                },
-                body: _body(),
+              body: CustomScrollView(
+                controller: viewModel.scrollController,
+                slivers: <Widget>[
+                  SliverAppBar(
+                    iconTheme: IconThemeData(
+                        color: isShrink ? Colors.white : Colors.black54),
+                    expandedHeight: 200.0,
+//                    floating: true,
+                    pinned: true,
+//                    snap: true,
+                    elevation: 50,
+                    flexibleSpace: FlexibleSpaceBar(
+                        centerTitle: true,
+                        title: Text("Chi tiết lịch sử chuyến",
+                            style: TextStyle(
+                              color:
+                              isShrink ? Colors.white : Colors.black54,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold
+                            )),
+                        background: CachedNetworkImage(
+                            imageUrl: viewModel.urlMaps,
+                            imageBuilder: (context, imageProvider) => Image(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ))),
+                  ),
+                  new SliverList(
+                      delegate: new SliverChildListDelegate([_body()])
+                  ),
+                ],
               ),
-              // _body(),
             );
           }),
     );

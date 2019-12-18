@@ -48,7 +48,9 @@ class DriverBusSession {
       bool status = false}) {
     this.busID = busID;
     this.type = type;
-    this.sessionID = md5.convert(utf8.encode("$busID$date$type")).toString();
+    this.sessionID = md5
+        .convert(utf8.encode("$busID$date${listRouteBus[0].time}$type"))
+        .toString();
     this.totalChildrenRegistered = listChildren.length;
     this.totalChildrenInBus = 0;
     this.totalChildrenLeave = 0;

@@ -6,6 +6,8 @@ class ThemePrimary {
 
   static const primaryFontFamily = "Quicksand";
 
+  static const colorParentApp = Color(0xFFfdb615);
+
   static const appBar_textTheme = TextTheme(
     title: TextStyle(
         fontFamily: primaryFontFamily,

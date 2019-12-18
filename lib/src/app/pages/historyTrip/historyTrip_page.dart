@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/itemCustomPopupMenu.dart';
@@ -13,6 +11,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 
 class HistoryTripPage extends StatefulWidget {
   static const String routeName = "/historyTrip";
@@ -31,6 +30,9 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
           width: (MediaQuery.of(context).size.width.toInt() - 40) * 2,
           height: 170 * 2,
           listLatLng: driverBusSession.listRouteBus
+              .map((route) => LatLng(route.lat, route.lng))
+              .toList(),
+          listPosition: driverBusSession.listRouteBus
               .map((route) => LatLng(route.lat, route.lng))
               .toList(),
         );
@@ -61,7 +63,9 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
         return Flexible(
           flex: 8,
           child: Container(
-            height: driverBusSession.childDrenRoute.length * 44.0,
+            height: driverBusSession.childDrenRoute.length < 3
+                ? driverBusSession.childDrenRoute.length * 44.0
+                : 3 * 44.0,
             child: ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               itemCount: driverBusSession.childDrenRoute.length,
@@ -210,7 +214,9 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
         return Flexible(
           flex: 1,
           child: Container(
-            height: driverBusSession.childDrenRoute.length * 44.0,
+            height: driverBusSession.childDrenRoute.length <= 3
+                ? driverBusSession.childDrenRoute.length * 44.0
+                : 3 * 44.0,
             child: ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               itemCount: driverBusSession.childDrenRoute.length,
@@ -238,13 +244,16 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
                                       ? SizedBox(
                                           height: 10,
                                         )
-                                      : Dash(
-                                          length: 25.0 + index * 1.0,
-                                          dashLength: 2,
-                                          direction: Axis.vertical,
-                                          dashColor: ThemePrimary.primaryColor,
-                                          dashThickness: 1,
-                                        ),
+                                      : (index <= 2)
+                                          ? Dash(
+                                              length: 25.0 + index * 1.0,
+                                              dashLength: 2,
+                                              direction: Axis.vertical,
+                                              dashColor:
+                                                  ThemePrimary.primaryColor,
+                                              dashThickness: 1,
+                                            )
+                                          : SizedBox(),
                                   (index == 0)
                                       ? Transform.rotate(
                                           angle: 3.14,
@@ -436,10 +445,12 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
         ),
       );
     }
+
     void _selectVehicle(CustomPopupMenu choice) {
       viewModel.selectedVehicle = choice;
       viewModel.onChangeVehicle();
     }
+
     Widget _appBar() {
       return TS24AppBar(
         backgroundColorStart: ThemePrimary.primaryColor,
@@ -450,7 +461,10 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
             child: Container(
               child: Row(
                 children: <Widget>[
-                  Text(viewModel.driver.vehicleName,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                  Text(
+                    viewModel.driver.vehicleName,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
                   Icon(Icons.arrow_drop_down)
                 ],
               ),
@@ -486,10 +500,12 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
                       ...viewModel.listHistoryDriverBusSession
                           .map((historyDriver) => Column(
                                 children: <Widget>[
-                                  ...historyDriver.listHistory
-                                      .map((driverBusSession) => _item(
+                                  ...historyDriver.listHistory.map(
+                                      (driverBusSession) => _item(
                                           driverBusSession: driverBusSession,
-                                          title: historyDriver.transportDate,
+                                          title: DateFormat('dd/MM/yyyy')
+                                              .format(DateTime.parse(
+                                                  historyDriver.transportDate)),
                                           onTap: () {
                                             viewModel
                                                 .onTapHistory(driverBusSession);
@@ -521,8 +537,13 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
                         ),
                     ],
                   )
-                : Center(
-                    child: Text('Chưa có lịch sử chuyến.'),
+                : SingleChildScrollView(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.9,
+                      alignment: Alignment.center,
+                      child: Text('Chưa có lịch sử chuyến.'),
+                    ),
                   ),
 //              ),
       );

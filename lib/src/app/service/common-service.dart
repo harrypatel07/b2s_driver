@@ -38,7 +38,9 @@ class Common {
   static Image convertImageFromBase64(String base64) {
     return Image.memory(base64Decode(base64));
   }
-
+  static removeMiliSecond(String time){
+    return time.substring(0,time.length - 3);
+  }
   static Future<String> getJsonFile(String path) async {
     return await rootBundle.loadString(path);
   }

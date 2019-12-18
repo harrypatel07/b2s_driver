@@ -7,8 +7,8 @@ import 'package:b2s_driver/src/app/models/models-traccar/position.dart';
 class TracCarService {
   static String _urlOsmAnd = "traccar.bus2school.vn";
   static String _url = "http://traccar.bus2school.vn/api";
-  static String _username = "";
-  static String _password = "";
+  static String _username = "bus2school";
+  static String _password = "bus2school";
   static String _basicAuth =
       'Basic ' + base64Encode(utf8.encode('$_username:$_password'));
   static Map<String, String> _headers = {
@@ -58,15 +58,66 @@ class TracCarService {
     });
   }
 
-  static Future<dynamic> createDevice(Device device) async {
+  static Future<bool> createDevice(Device device) async {
     _body = new Map();
-    _body["body"] = device.toJson();
+    _body = device.toJson();
     return http
-        .post("$_url/devices?${_convertSerialize(_body)}", headers: _headers)
+        .post("$_url/devices", body: jsonEncode(_body), headers: _headers)
         .then((http.Response response) {
       return true;
     }).catchError((error) {
-      return null;
+      return false;
+    });
+  }
+
+  static Future<Device> getDeviceByUniqueId(String uniqueId) async {
+    _body = new Map();
+    _body["uniqueId"] = uniqueId;
+    var device = Device();
+    return http
+        .get("$_url/devices${_convertSerialize(_body)}", headers: _headers)
+        .then((http.Response response) {
+      if (response.statusCode == 200) {
+        List list = json.decode(response.body);
+        if (list.length > 0) {
+          List<Device> listDevice =
+              list.map((item) => Device.fromJson(item)).toList();
+          device = listDevice[0];
+        }
+      }
+      return device;
+    }).catchError((error) {
+      return device;
+    });
+  }
+
+  ///Hàm lấy danh sách vị trí của xe theo sessionId
+  ///@params
+  ///
+  ///String date format (yyyy-mm-dd)
+  static Future<List<Positions>> getPositions(
+      {String sessionId, int deviceId, String date}) async {
+    _body = new Map();
+    _body["deviceId"] = deviceId;
+    _body["from"] = DateTime.parse("$date 00:00:00").toIso8601String();
+    _body["to"] = DateTime.parse("$date 23:59:59").toIso8601String();
+    List<Positions> listResult = new List();
+    return http
+        .get("$_url/devices?${_convertSerialize(_body)}", headers: _headers)
+        .then((http.Response response) {
+      if (response.statusCode == 200) {
+        List list = json.decode(response.body);
+        if (list.length > 0) {
+          listResult = list.map((item) => Positions.fromJson(item)).toList();
+          listResult = listResult
+              .where(
+                  (positions) => positions.attributes["sessionId"] == sessionId)
+              .toList();
+        }
+      }
+      return listResult;
+    }).catchError((error) {
+      return listResult;
     });
   }
 }

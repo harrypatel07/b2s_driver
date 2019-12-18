@@ -17,7 +17,7 @@ class Positions {
   dynamic network;
   dynamic attributes;
   dynamic battery;
-
+  dynamic sessionId;
   Positions(
       {this.id,
       this.deviceId,
@@ -36,7 +36,8 @@ class Positions {
       this.accuracy,
       this.network,
       this.attributes,
-      this.battery});
+      this.battery,
+      this.sessionId});
 
   Positions.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -57,6 +58,7 @@ class Positions {
     network = json['network'];
     attributes = json['attributes'];
     battery = json['battery'];
+    sessionId = json['sessionId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -94,6 +96,7 @@ class Positions {
     if (this.altitude != null) data['altitude'] = this.altitude.toString();
     if (this.accuracy != null) data['accuracy'] = this.accuracy.toString();
     if (this.battery != null) data['batt'] = this.battery.toString();
+    if (this.sessionId != null) data['sessionId'] = this.sessionId.toString();
     return data;
   }
 }

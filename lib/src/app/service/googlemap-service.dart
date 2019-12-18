@@ -131,7 +131,10 @@ class GoogleMapService {
 
   //Lấy hình marker static map
   static String getUrlImageFromMultiMarker(
-      {List<LatLng> listLatLng, int width = 400, int height = 400}) {
+      {List<LatLng> listLatLng,
+      int width = 400,
+      int height = 400,
+      List<LatLng> listPosition}) {
     var url =
         "http://maps.googleapis.com/maps/api/staticmap?size=${width}x$height&key=$ggKey";
     var style =
@@ -148,6 +151,19 @@ class GoogleMapService {
       markers += "${item.latitude},${item.longitude}";
     }
     url += markers;
+    var path = "";
+    if (listPosition != null) if (listPosition.length > 0) {
+      path +=
+          "&path=color:0x${ThemePrimary.colorParentApp.value.toRadixString(16)}";
+      path = path.replaceAll("0xff", "0x");
+      for (var i = 0; i < listPosition.length; i++) {
+        var item = listPosition[i];
+
+        path += "|";
+        path += "${item.latitude},${item.longitude}";
+      }
+      url += path;
+    }
     print(url);
     return url;
   }

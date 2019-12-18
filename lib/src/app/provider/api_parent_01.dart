@@ -55,7 +55,14 @@ class Api1 extends ApiMaster {
     body["domain"] = [
       ['driver_id', '=', id]
     ];
-    body["fields"] = ["name", "id", "x_posx", "x_posy", "x_posz"];
+    body["fields"] = [
+      "name",
+      "id",
+      "x_posx",
+      "x_posy",
+      "x_posz",
+      "license_plate"
+    ];
     var params = convertSerialize(body);
     return http
         .get('${this.api}/search_read/fleet.vehicle?$params',
@@ -69,7 +76,8 @@ class Api1 extends ApiMaster {
           Driver driver = Driver();
           driver.listVehicle = listFleetVehicle;
           driver.vehicleId = listFleetVehicle[0].id;
-          driver.vehicleName = listFleetVehicle[0].name;
+          driver.vehicleName = listFleetVehicle[0].licensePlate;
+          driver.vehicleNameTracCar = listFleetVehicle[0].name;
           driver.isDriver = true;
           await driver.saveLocal();
           return true;
@@ -88,7 +96,15 @@ class Api1 extends ApiMaster {
     body["domain"] = [
       ['x_manager_shuttle', '=', id]
     ];
-    body["fields"] = ["name", "id", "x_posx", "x_posy", "x_posz", "driver_id"];
+    body["fields"] = [
+      "name",
+      "id",
+      "x_posx",
+      "x_posy",
+      "x_posz",
+      "driver_id",
+      "license_plate"
+    ];
     var params = convertSerialize(body);
     return http
         .get('${this.api}/search_read/fleet.vehicle?$params',
@@ -102,7 +118,8 @@ class Api1 extends ApiMaster {
           Driver driver = Driver();
           driver.listVehicle = listFleetVehicle;
           driver.vehicleId = listFleetVehicle[0].id;
-          driver.vehicleName = listFleetVehicle[0].name;
+          driver.vehicleName = listFleetVehicle[0].licensePlate;
+          driver.vehicleNameTracCar = listFleetVehicle[0].name;
           driver.isDriver = false;
           driver.driverId = listFleetVehicle[0].driverId[0];
           await driver.saveLocal();

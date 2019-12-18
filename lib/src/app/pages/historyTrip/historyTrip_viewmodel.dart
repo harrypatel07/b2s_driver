@@ -12,59 +12,63 @@ import 'package:intl/intl.dart';
 
 class HistoryTripViewModel extends ViewModelBase {
   List<HistoryDriver> listHistoryDriverBusSession = List();
-  List<DriverBusSession> listDriverBusSessionLoadMore = List();
   List<CustomPopupMenu> choicesVehicle;
   CustomPopupMenu selectedVehicle;
 
   Driver driver = Driver();
-  String dateTimeCurrent =
-      DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
-  String dateTimePrevious = '';
   bool loadingMore = false;
   ScrollController controller = ScrollController();
-  int _take = 0;
+  int _take = 10;
   int _skip = 0;
   HistoryTripViewModel() {
     choicesVehicle = driver.listVehicle
-        .map((vehicle) => CustomPopupMenu(id: vehicle.id, title: vehicle.name))
+        .map((vehicle) => CustomPopupMenu(id: vehicle.id, title: vehicle.licensePlate))
         .toList();
     controller.addListener(() {
-      if(controller.offset == controller.position.maxScrollExtent)
-        onLoadMore();
+      if (controller.offset == controller.position.maxScrollExtent &&
+          !controller.position.outOfRange) onLoadMore();
     });
     selectedVehicle = CustomPopupMenu(
         id: driver.listVehicle[0].id,
-        title: driver.listVehicle[0].name,
+        title: driver.listVehicle[0].licensePlate,
         subTitle: DateFormat('yyyy-MM-dd').format(DateTime.now()));
     onLoad();
   }
-  void onLoad(){
+  void onLoad() {
     loading = true;
+    this.updateState();
     _take = 10;
     _skip = 0;
-    api.getHistoryDriver(take: _take,skip: _skip).then((list){
-      listHistoryDriverBusSession = list;
-      _skip += _take;
+    listHistoryDriverBusSession = List();
+    api.getHistoryDriver(take: _take, skip: _skip).then((list) {
+      list.forEach((historyDriver) {
+        listHistoryDriverBusSession.add(historyDriver);
+        _skip += historyDriver.listHistory.length;
+      });
       loading = false;
       this.updateState();
     });
-    this.updateState();
   }
-  void onLoadMore(){
+
+  void onLoadMore() {
     loadingMore = true;
-    api.getHistoryDriver(take: _take,skip: _skip).then((list){
-      listHistoryDriverBusSession.addAll(list);
-      _skip += _take;
+    this.updateState();
+    api.getHistoryDriver(take: _take, skip: _skip).then((list) {
+      list.forEach((historyDriver) {
+        listHistoryDriverBusSession.add(historyDriver);
+        _skip += historyDriver.listHistory.length;
+      });
       loadingMore = false;
       this.updateState();
     });
-    this.updateState();
   }
+
   onChangeVehicle() {
     driver.vehicleId = selectedVehicle.id;
     driver.vehicleName = selectedVehicle.title;
     onLoad();
   }
+
 //  onLoad(int number, int countDay){
 //    loading = true;
 //    dateTimeCurrent =

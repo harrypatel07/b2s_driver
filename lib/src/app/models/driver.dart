@@ -13,6 +13,8 @@ class Driver {
   dynamic phone;
   dynamic vehicleId;
   dynamic vehicleName;
+  dynamic vehicleNameTracCar;
+  dynamic vehicleIdTracCar;
   List<FleetVehicle> listVehicle;
   bool isDriver = false;
   dynamic driverId;
@@ -38,7 +40,9 @@ class Driver {
       this.vehicleId,
       this.vehicleName,
       this.isDriver,
-      this.driverId}) {
+      this.driverId,
+      this.vehicleNameTracCar,
+      this.vehicleIdTracCar}) {
     id = id;
     name = name;
     photo = photo;
@@ -49,6 +53,8 @@ class Driver {
     vehicleId = vehicleId;
     isDriver = isDriver;
     driverId = driverId;
+    vehicleNameTracCar = vehicleNameTracCar;
+    vehicleIdTracCar = vehicleIdTracCar;
   }
 
   Driver.fromResPartner(ResPartner resPartner) {

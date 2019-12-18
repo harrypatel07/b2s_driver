@@ -252,7 +252,7 @@ class _ReportLocalBusState extends State<ReportLocalBus> {
                   ),
                 )
               : Container(
-                  height: 100,
+//                  height: 110,
                   color: Colors.white54,
                   padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                   width: MediaQuery.of(context).size.width,

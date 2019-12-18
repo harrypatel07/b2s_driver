@@ -28,21 +28,21 @@ class Routes {
   static navigateDefaultPage() async {
     Driver driver = new Driver();
     bool result = await driver.checkDriverExist();
-    if (result) {
-      //Kiểm tra bus session chưa kết thúc.
-      DriverBusSession driverBusSession = DriverBusSession();
-      result = await driverBusSession.checkDriverBusSessionExists();
-      if (result) if (driver.isDriver) {
-        Routes.defaultPage = LocateBusPage(driverBusSession: driverBusSession);
-      } else {
-        Routes.defaultPage =
-            AttendantManagerPage(driverBusSession: driverBusSession);
-      }
-      else
-        Routes.defaultPage =
-            TabsPage(TabsArgument(routeChildName: HomePage.routeName));
-    } else
-      Routes.defaultPage = LoginPage();
+    // if (result) {
+    //   //Kiểm tra bus session chưa kết thúc.
+    //   DriverBusSession driverBusSession = DriverBusSession();
+    //   result = await driverBusSession.checkDriverBusSessionExists();
+    //   if (result) if (driver.isDriver) {
+    //     Routes.defaultPage = LocateBusPage(driverBusSession: driverBusSession);
+    //   } else {
+    //     Routes.defaultPage =
+    //         AttendantManagerPage(driverBusSession: driverBusSession);
+    //   }
+    //   else
+    //     Routes.defaultPage =
+    //         TabsPage(TabsArgument(routeChildName: HomePage.routeName));
+    // } else
+    Routes.defaultPage = LoginPage();
   }
 
   static final Map<String, WidgetBuilder> route = {
@@ -56,7 +56,9 @@ class Routes {
     LocateBusPage.routeName: (context) => LocateBusPage(
           driverBusSession: ModalRoute.of(context).settings.arguments,
         ),
-    EmergencyPage.routeName: (context) => EmergencyPage(driverBusSession: ModalRoute.of(context).settings.arguments,),
+    EmergencyPage.routeName: (context) => EmergencyPage(
+          driverBusSession: ModalRoute.of(context).settings.arguments,
+        ),
     ProfileChildrenPage.routeName: (context) =>
         ProfileChildrenPage(args: ModalRoute.of(context).settings.arguments),
     HistoryTripPage.routeName: (context) => HistoryTripPage(),

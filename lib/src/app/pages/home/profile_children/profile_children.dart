@@ -460,7 +460,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
               child: Column(
                 children: <Widget>[
                   rowTitle('THÔNG TIN HỌC SINH'),
-                  row1('Họ và tên :', children.name),
+                  row1('Họ và tên :', children.name.toString()),
                   hr,
                   row1('Lớp :', children.classes.toString()),
                   hr,
@@ -468,7 +468,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                   hr,
                   row1('Địa chỉ :', children.location.toString()),
                   hr,
-                  rowIcon('Phụ huynh :', children.parent.name,
+                  rowIcon('Phụ huynh :', children.parent.name.toString(),
                       children.parent.phone.toString(), () {
                     onTapChatParent();
                   }),

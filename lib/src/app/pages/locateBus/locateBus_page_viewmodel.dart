@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
@@ -32,7 +33,6 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   Geolocator geolocator = Geolocator();
   //List<Children> listChildrenPaidTicket;
   StreamSubscription streamLocation;
-
 
   //Tạo list routeBus cho thông báo khi xe sắp đến.
   Map _listRouteBusPushed = Map();
@@ -91,7 +91,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
     markers.clear();
     for (int i = 0; i < driverBusSession.listRouteBus.length; i++) {
       var route = driverBusSession.listRouteBus[i];
-      if(!route.status) {
+      if (!route.status) {
         markers[MarkerId(route.id.toString())] = Marker(
             markerId: MarkerId(route.id.toString()),
             consumeTapEvents: true,
@@ -158,7 +158,11 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   }
 
   onTapFinish() async {
-    if (driverBusSession.totalChildrenPick == driverBusSession.totalChildrenDrop && (driverBusSession.totalChildrenPick + driverBusSession.totalChildrenLeave) == driverBusSession.totalChildrenRegistered) {
+    if (driverBusSession.totalChildrenPick ==
+            driverBusSession.totalChildrenDrop &&
+        (driverBusSession.totalChildrenPick +
+                driverBusSession.totalChildrenLeave) ==
+            driverBusSession.totalChildrenRegistered) {
       driverBusSession.status = true;
       showSpinner = true;
       this.updateState();
@@ -303,66 +307,87 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
         arguments: driverBusSession);
     print("On tab SOS");
   }
-  showNotifyCantBack(){
-    LoadingDialog().showMsgDialogWithCloseButton(context, "Chuyến xe vẫn chưa hoàn thành, bạn không thể thực hiện thao tác này.");
+
+  showNotifyCantBack() {
+    LoadingDialog().showMsgDialogWithCloseButton(context,
+        "Chuyến xe vẫn chưa hoàn thành, bạn không thể thực hiện thao tác này.");
   }
-  onTapBackButton(){
-    var listCheck = driverBusSession.childDrenStatus.where((status)=>status.statusID == 1).toList();
-    if(listCheck.length == 0 || listCheck == null)
-      Navigator.of(context).pop();
-    else showNotifyCantBack();
+
+  onTapBackButton() {
+    var listCheck = driverBusSession.childDrenStatus
+        .where((status) => status.statusID != 0)
+        .toList();
+    if (listCheck.length == 0 || listCheck == null) {
+      if (Navigator.canPop(context))
+        Navigator.pop(context);
+      else
+        exit(0);
+    } else
+      showNotifyCantBack();
   }
-  List<Children> getListChildrenByStatusID(int statusID){
+
+  List<Children> getListChildrenByStatusID(int statusID) {
     return driverBusSession.listChildren
         .where((children) => (driverBusSession.childDrenStatus
-        .where((status) =>
-    status.childrenID == children.id && status.statusID == statusID)
-        .toList()
-        .length >
-        0)).toList();
+                .where((status) =>
+                    status.childrenID == children.id &&
+                    status.statusID == statusID)
+                .toList()
+                .length >
+            0))
+        .toList();
   }
-  onTapNoticeContent(RouteBus routeBus,int position){
-    onTapMaker(routeBus,position);
+
+  onTapNoticeContent(RouteBus routeBus, int position) {
+    onTapMaker(routeBus, position);
   }
-  int getPointNextPick(){
+
+  int getPointNextPick() {
     int result = -1;
-    for(int i = 0 ;i< driverBusSession.listRouteBus.length; i++)
-      if(driverBusSession.listRouteBus[i].status == false) {
+    for (int i = 0; i < driverBusSession.listRouteBus.length; i++)
+      if (driverBusSession.listRouteBus[i].status == false) {
         result = i + 1;
         break;
       }
-      return result;
+    return result;
   }
-  String getAddressPointNext(){
-     return driverBusSession.listRouteBus.firstWhere((routeBus)=>routeBus.status == false).routeName;
+
+  String getAddressPointNext() {
+    return driverBusSession.listRouteBus
+        .firstWhere((routeBus) => routeBus.status == false)
+        .routeName;
   }
-  int getCountChildrenPickPointNext(){
-    RouteBus routeBus = driverBusSession.listRouteBus.firstWhere((routeBus)=>routeBus.status == false);
+
+  int getCountChildrenPickPointNext() {
+    RouteBus routeBus = driverBusSession.listRouteBus
+        .firstWhere((routeBus) => routeBus.status == false);
     var listChildDrenStatus = driverBusSession.childDrenStatus
         .where((status) => status.routeBusID == routeBus.id)
         .toList();
     int countChildPick = listChildDrenStatus
         .where((childDrenStatus) =>
-    childDrenStatus.statusID != 3 &&
-        childDrenStatus.typePickDrop == 0)
+            childDrenStatus.statusID != 3 && childDrenStatus.typePickDrop == 0)
         .toList()
         .length;
     return countChildPick;
   }
-  int getCountChildrenDropPointNext(){
-    RouteBus routeBus = driverBusSession.listRouteBus.firstWhere((routeBus)=>routeBus.status == false);
+
+  int getCountChildrenDropPointNext() {
+    RouteBus routeBus = driverBusSession.listRouteBus
+        .firstWhere((routeBus) => routeBus.status == false);
     var listChildDrenStatus = driverBusSession.childDrenStatus
         .where((status) => status.routeBusID == routeBus.id)
         .toList();
     int countChildDrop = listChildDrenStatus
         .where((childDrenStatus) =>
-    childDrenStatus.statusID != 3 &&
-        childDrenStatus.typePickDrop == 1)
+            childDrenStatus.statusID != 3 && childDrenStatus.typePickDrop == 1)
         .toList()
         .length;
     return countChildDrop;
   }
-  RouteBus getRouteBusPointNext(){
-    return driverBusSession.listRouteBus.firstWhere((routeBus)=>routeBus.status == false);
+
+  RouteBus getRouteBusPointNext() {
+    return driverBusSession.listRouteBus
+        .firstWhere((routeBus) => routeBus.status == false);
   }
 }

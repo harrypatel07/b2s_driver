@@ -86,7 +86,7 @@ class _LocateBusPageState extends State<LocateBusPage>
       );
     }
 
-    Widget __ContentReport(List<Children> listChildren) {
+    Widget __contentReport(List<Children> listChildren) {
       return Container(
         color: ThemePrimary.primaryColor,
         height: MediaQuery.of(context).size.height * 0.87,
@@ -108,7 +108,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                         HomePageCardTimeLine(
                           children: children,
                           isEnablePicked: false,
-                          heroTag: index.toString(),
+                          //heroTag: index.toString(),
                           onTapPickUp: () {
 //                  viewModel.onTapPickUp(driverBusSession, children, item);
                           },
@@ -205,9 +205,9 @@ class _LocateBusPageState extends State<LocateBusPage>
           value1: viewModel.driverBusSession.totalChildrenRegistered.toString(),
           value2: viewModel.driverBusSession.totalChildrenInBus.toString(),
           value3: viewModel.driverBusSession.totalChildrenLeave.toString(),
-          content1: __ContentReport(viewModel.driverBusSession.listChildren),
-          content2: __ContentReport(viewModel.getListChildrenByStatusID(1)),
-          content3: __ContentReport(viewModel.getListChildrenByStatusID(3)),
+          content1: __contentReport(viewModel.driverBusSession.listChildren),
+          content2: __contentReport(viewModel.getListChildrenByStatusID(1)),
+          content3: __contentReport(viewModel.getListChildrenByStatusID(3)),
         ),
       );
     }

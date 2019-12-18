@@ -61,6 +61,9 @@ class Children {
     this.genderId = partner["title"]["id"];
     this.gender = partner["title"]["name"];
     var _parent = partner["parent_id"];
+    if(_parent["id"] is bool)
+      this.parent = Parent.newInstance();
+      else
     this.parent = Parent.newInstance(
         id: _parent["id"],
         email: _parent["email"],

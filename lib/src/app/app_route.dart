@@ -28,21 +28,21 @@ class Routes {
   static navigateDefaultPage() async {
     Driver driver = new Driver();
     bool result = await driver.checkDriverExist();
-    // if (result) {
-    //   //Kiểm tra bus session chưa kết thúc.
-    //   DriverBusSession driverBusSession = DriverBusSession();
-    //   result = await driverBusSession.checkDriverBusSessionExists();
-    //   if (result) if (driver.isDriver) {
-    //     Routes.defaultPage = LocateBusPage(driverBusSession: driverBusSession);
-    //   } else {
-    //     Routes.defaultPage =
-    //         AttendantManagerPage(driverBusSession: driverBusSession);
-    //   }
-    //   else
-    //     Routes.defaultPage =
-    //         TabsPage(TabsArgument(routeChildName: HomePage.routeName));
-    // } else
-    Routes.defaultPage = LoginPage();
+    if (result) {
+      //Kiểm tra bus session chưa kết thúc.
+      DriverBusSession driverBusSession = DriverBusSession();
+      result = await driverBusSession.checkDriverBusSessionExists();
+      if (result) if (driver.isDriver) {
+        Routes.defaultPage = LocateBusPage(driverBusSession: driverBusSession);
+      } else {
+        Routes.defaultPage =
+            AttendantManagerPage(driverBusSession: driverBusSession);
+      }
+      else
+        Routes.defaultPage =
+            TabsPage(TabsArgument(routeChildName: HomePage.routeName));
+    } else
+      Routes.defaultPage = LoginPage();
   }
 
   static final Map<String, WidgetBuilder> route = {

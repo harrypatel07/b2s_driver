@@ -7,7 +7,10 @@ import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/historyDriver.dart';
 import 'package:b2s_driver/src/app/models/itemCustomPopupMenu.dart';
 import 'package:b2s_driver/src/app/pages/historyTripDetailPage/historyTrip_detail_page.dart';
+import 'package:b2s_driver/src/app/service/googlemap-service.dart';
+import 'package:b2s_driver/src/app/service/traccar-service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 class HistoryTripViewModel extends ViewModelBase {
@@ -22,7 +25,8 @@ class HistoryTripViewModel extends ViewModelBase {
   int _skip = 0;
   HistoryTripViewModel() {
     choicesVehicle = driver.listVehicle
-        .map((vehicle) => CustomPopupMenu(id: vehicle.id, title: vehicle.licensePlate))
+        .map((vehicle) =>
+            CustomPopupMenu(id: vehicle.id, title: vehicle.licensePlate))
         .toList();
     controller.addListener(() {
       if (controller.offset == controller.position.maxScrollExtent &&
@@ -45,8 +49,11 @@ class HistoryTripViewModel extends ViewModelBase {
         listHistoryDriverBusSession.add(historyDriver);
         _skip += historyDriver.listHistory.length;
       });
+
       loading = false;
+      _getImageHistory();
       this.updateState();
+      // _getImageHistoryPositions();
     });
   }
 
@@ -59,6 +66,8 @@ class HistoryTripViewModel extends ViewModelBase {
         _skip += historyDriver.listHistory.length;
       });
       loadingMore = false;
+      _getImageHistory();
+      //  _getImageHistoryPositions();
       this.updateState();
     });
   }
@@ -159,5 +168,44 @@ class HistoryTripViewModel extends ViewModelBase {
   onTapHistory(DriverBusSession driverBusSession) {
     Navigator.pushNamed(context, HistoryTripDetailPage.routeName,
         arguments: driverBusSession);
+  }
+
+  // Lấy hình các điểm đã đi trong chuyến
+  _getImageHistory() {
+    for (var i = 0; i < listHistoryDriverBusSession.length; i++) {
+      var historyDriverBusSession = listHistoryDriverBusSession[i];
+      for (var j = 0; j < historyDriverBusSession.listHistory.length; j++) {
+        var driverBusSession = historyDriverBusSession.listHistory[j];
+        historyDriverBusSession.listUrlHistoryPositions[j] =
+            GoogleMapService.getUrlImageFromMultiMarker(
+          width: (MediaQuery.of(context).size.width.toInt() - 40) * 2,
+          height: 170 * 2,
+          listLatLng: driverBusSession.listRouteBus
+              .map((route) => LatLng(route.lat, route.lng))
+              .toList(),
+        );
+        TracCarService.getPositions(
+                sessionId: driverBusSession.sessionID,
+                date: DateFormat('yyyy-MM-dd').format(
+                    DateTime.parse(historyDriverBusSession.transportDate)),
+                uniqueId: driver.vehicleName)
+            .then((data) {
+          if (data.length > 0) {
+            historyDriverBusSession.listUrlHistoryPositions[j] =
+                GoogleMapService.getUrlImageFromMultiMarker(
+              width: (MediaQuery.of(context).size.width.toInt() - 40) * 2,
+              height: 170 * 2,
+              listLatLng: driverBusSession.listRouteBus
+                  .map((route) => LatLng(route.lat, route.lng))
+                  .toList(),
+              listPosition: data
+                  .map((route) => LatLng(route.latitude, route.longitude))
+                  .toList(),
+            );
+            this.updateState();
+          }
+        });
+      }
+    }
   }
 }

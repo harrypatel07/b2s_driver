@@ -37,11 +37,11 @@ class UserPageViewModel extends ViewModelBase {
         yes: 'Có',
         no: 'Không',
         onTap: () async {
-          // Navigator.pop(context);
-          // driver.clearLocal();
-          // DriverBusSession driverBusSession = DriverBusSession();
-          // driverBusSession.clearLocal();
-          // Navigator.pushReplacementNamed(context, LoginPage.routeName);
+          Navigator.pop(context);
+          driver.clearLocal();
+          DriverBusSession driverBusSession = DriverBusSession();
+          driverBusSession.clearLocal();
+          Navigator.pushReplacementNamed(context, LoginPage.routeName);
           // Location().getLocation().then((onValue) {
           //   Positions positions = Positions();
           //   positions.deviceId = "52S-12345";
@@ -49,22 +49,22 @@ class UserPageViewModel extends ViewModelBase {
           //   positions.longitude = onValue.longitude;
           //   TracCarService.updatePosition(positions);
           // });
-          Device device = Device();
-          device.uniqueId = driver.vehicleName;
-          device.name = driver.vehicleNameTracCar;
-          await TracCarService.createDevice(device);
-          var result =
-              await TracCarService.getDeviceByUniqueId(device.uniqueId);
-          print(result.id);
-          Location().getLocation().then((onValue) {
-            Positions positions = Positions();
-            positions.deviceId = driver.vehicleName;
-            positions.latitude = onValue.latitude;
-            positions.longitude = onValue.longitude;
-            positions.sessionId = "abcd";
-            positions.speed = onValue.speed;
-            TracCarService.updatePosition(positions);
-          });
+          // Device device = Device();
+          // device.uniqueId = driver.vehicleName;
+          // device.name = driver.vehicleNameTracCar;
+          // await TracCarService.createDevice(device);
+          // var result =
+          //     await TracCarService.getDeviceByUniqueId(device.uniqueId);
+          // print(result.id);
+          // Location().getLocation().then((onValue) {
+          //   Positions positions = Positions();
+          //   positions.deviceId = driver.vehicleName;
+          //   positions.latitude = onValue.latitude;
+          //   positions.longitude = onValue.longitude;
+          //   positions.sessionId = "abcd";
+          //   positions.speed = onValue.speed;
+          //   TracCarService.updatePosition(positions);
+          // });
         });
   }
 

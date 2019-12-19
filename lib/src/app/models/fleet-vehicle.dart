@@ -284,7 +284,8 @@ class FleetVehicle {
     // data['image'] = this.image;
     // data['image_medium'] = this.imageMedium;
 //    data['image_small'] = this.imageSmall;
-//    data['license_plate'] = this.licensePlate;
+    if (this.licensePlate != null) if (!(this.licensePlate is bool))
+      data['license_plate'] = this.licensePlate;
     // data['location'] = this.location;
     // data['log_contracts'] = this.logContracts;
     // data['log_drivers'] = this.logDrivers;

@@ -112,7 +112,7 @@ class _ReportLocalBusState extends State<ReportLocalBus> {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
                     child: Container(
-                      height: 100,
+                      // height: 100,
                       padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                       width: MediaQuery.of(context).size.width,
 //              color: Colors.transparent,

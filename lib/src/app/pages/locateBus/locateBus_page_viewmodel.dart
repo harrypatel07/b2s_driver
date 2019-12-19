@@ -5,6 +5,7 @@ import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+import 'package:b2s_driver/src/app/models/models-traccar/devices.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/pages/bottomSheet/bottom_sheet_custom.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
@@ -12,6 +13,7 @@ import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart
 import 'package:b2s_driver/src/app/pages/locateBus/widgets/icon_marker_custom.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
+import 'package:b2s_driver/src/app/service/traccar-service.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
@@ -199,6 +201,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   }
 
   listenLocation() async {
+    await TracCarService.initDeviceTracCar();
     if (streamLocation != null) streamLocation.cancel();
     streamLocation = geolocator.getPositionStream().listen((onData) {
       // final _marker = markers[MarkerId("location")];
@@ -208,6 +211,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
       Driver driver = Driver();
       api.updateCoordinateVehicle(driver.vehicleId, onData);
       checkBusLocationWithRoute(LatLng(onData.latitude, onData.longitude));
+      TracCarService.updateDeviceTracCar(onData, driverBusSession.sessionID);
     });
     // this.updateState();
   }

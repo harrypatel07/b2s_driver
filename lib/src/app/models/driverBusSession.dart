@@ -21,6 +21,7 @@ class DriverBusSession {
   List<RouteBus> listRouteBus;
   bool status; // false: chưa hoàn thành, true: hoàn thành
   static dynamic aliasName = "DriverBusSession";
+
   DriverBusSession({
     this.sessionID,
     this.busID,

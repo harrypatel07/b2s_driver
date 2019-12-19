@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/models-traccar/devices.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:b2s_driver/src/app/models/models-traccar/position.dart';
 
@@ -49,7 +51,7 @@ class TracCarService {
     return str;
   }
 
-  static Future<dynamic> updatePosition(Positions position) async {
+  static Future<dynamic> _updatePosition(Positions position) async {
     String url = _formatRequestOsmAnd(position: position);
     return http.post(url, headers: _headers).then((http.Response response) {
       return true;
@@ -58,7 +60,7 @@ class TracCarService {
     });
   }
 
-  static Future<bool> createDevice(Device device) async {
+  static Future<bool> _createDevice(Device device) async {
     _body = new Map();
     _body = device.toJson();
     return http
@@ -70,12 +72,31 @@ class TracCarService {
     });
   }
 
+  static initDeviceTracCar() async {
+    Device device = Device();
+    Driver driver = Driver();
+    device.uniqueId = driver.vehicleName;
+    device.name = driver.vehicleNameTracCar;
+    await _createDevice(device);
+  }
+
+  static updateDeviceTracCar(Position position, [String sessionId = ""]) async {
+    Positions positions = Positions();
+    Driver driver = Driver();
+    positions.deviceId = driver.vehicleName;
+    positions.latitude = position.latitude;
+    positions.longitude = position.longitude;
+    positions.speed = position.speed;
+    positions.sessionId = sessionId;
+    await _updatePosition(positions);
+  }
+
   static Future<Device> getDeviceByUniqueId(String uniqueId) async {
     _body = new Map();
     _body["uniqueId"] = uniqueId;
     var device = Device();
     return http
-        .get("$_url/devices${_convertSerialize(_body)}", headers: _headers)
+        .get("$_url/devices?${_convertSerialize(_body)}", headers: _headers)
         .then((http.Response response) {
       if (response.statusCode == 200) {
         List list = json.decode(response.body);
@@ -96,14 +117,19 @@ class TracCarService {
   ///
   ///String date format (yyyy-mm-dd)
   static Future<List<Positions>> getPositions(
-      {String sessionId, int deviceId, String date}) async {
-    _body = new Map();
-    _body["deviceId"] = deviceId;
-    _body["from"] = DateTime.parse("$date 00:00:00").toIso8601String();
-    _body["to"] = DateTime.parse("$date 23:59:59").toIso8601String();
+      {String sessionId, String uniqueId, String date}) async {
     List<Positions> listResult = new List();
+    var device = await getDeviceByUniqueId(uniqueId);
+    var fromDate = DateTime.parse("$date 00:00:00").toIso8601String();
+    var toDate = DateTime.parse("$date 23:59:59").toIso8601String();
+    if (device.id == null) return listResult;
+    _body = new Map();
+    _body["deviceId"] = device.id;
+    _body["from"] = fromDate.substring(0, fromDate.length) + "Z";
+    _body["to"] = toDate.substring(0, toDate.length) + "Z";
+
     return http
-        .get("$_url/devices?${_convertSerialize(_body)}", headers: _headers)
+        .get("$_url/positions?${_convertSerialize(_body)}", headers: _headers)
         .then((http.Response response) {
       if (response.statusCode == 200) {
         List list = json.decode(response.body);

@@ -744,6 +744,7 @@ class Api1 extends ApiMaster {
         var date = data["transport_date"];
         historyDriver.transportDate = date;
         historyDriver.listHistory = [];
+        historyDriver.listUrlHistoryPositions = [];
         for (var i = 0; i < 2; i++) {
           List resultData = (i == 0) ? data["outgoing"] : data["incoming"];
           if (resultData.length > 0) {
@@ -839,6 +840,9 @@ class Api1 extends ApiMaster {
                 childDrenStatus: listChildDrenStatus,
                 status: true));
           }
+          historyDriver.listHistory.forEach((driverBusSession) {
+            historyDriver.listUrlHistoryPositions.add("");
+          });
         }
         listResult.add(historyDriver);
       }

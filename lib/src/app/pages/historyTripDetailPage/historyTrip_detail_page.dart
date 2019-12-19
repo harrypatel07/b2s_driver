@@ -13,6 +13,7 @@ import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 
 class HistoryTripDetailPage extends StatefulWidget {
   static const String routeName = "/historyDetailTrip";
@@ -38,10 +39,11 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
     final RenderBox renderBox = _keyContent.currentContext.findRenderObject();
     _sizeContent = renderBox.size;
   }
+
   bool lastStatus = true;
 
   _scrollListener() {
-    print("HIEP:"+viewModel.scrollController.offset.toString());
+    print("HIEP:" + viewModel.scrollController.offset.toString());
     if (isShrink != lastStatus) {
       lastStatus = isShrink;
       viewModel.updateState();
@@ -59,8 +61,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
   final heightLine = 1.0;
   final heightTable = 120.0;
   final heightMargin = 10.0;
-  final gridViewHeight = 60.0;
-  final gridViewHeightExtend = 120.0;
+  final listViewHeight = 60.0;
   @override
   void initState() {
     viewModel.scrollController = ScrollController();
@@ -208,62 +209,44 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
 
     Widget _item(
         {DriverBusSession driverBusSession, String title, Function onTap}) {
-      Widget __gridView(List<Children> listChildren, int indexRoute) {
-        double ___gridViewHeight = gridViewHeight;
-        int ___gridViewCol = 0;
-        if (MediaQuery.of(context).orientation == Orientation.portrait) {
-          ___gridViewCol = 6;
-          if (listChildren.length > 6) ___gridViewHeight = gridViewHeightExtend;
-        } else {
-          ___gridViewCol = 10;
-          if (listChildren.length > 10)
-            ___gridViewHeight = gridViewHeightExtend;
-        }
+      Widget __listViewChildren(List<Children> listChildren, int indexRoute) {
         return Container(
-          height: ___gridViewHeight,
+          height: listViewHeight,
           width: MediaQuery.of(context).size.width,
           margin: EdgeInsets.fromLTRB(5, heightMargin, 5, 0),
-          child: OrientationBuilder(
-            builder: (context, orientation) {
-              return GridView.builder(
-                  itemCount: listChildren.length,
-                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: ___gridViewCol,
-//                    childAspectRatio: 2.44,
-                    crossAxisSpacing: 1,
-//                    mainAxisSpacing: 12,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    return TS24Button(
-                      decoration: BoxDecoration(
+          child: ListView.builder(
+            itemCount: listChildren.length,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (BuildContext context, int index) {
+              return TS24Button(
+                width: listViewHeight,
+                decoration: BoxDecoration(
 //                        shape: BoxShape.circle,
-                          borderRadius: BorderRadius.circular(25)),
-                      onTap: () {
-                        viewModel.onTapChildren(
-                            listChildren[index],
-                            index.toString() +
-                                listChildren[index].id.toString() +
-                                indexRoute.toString());
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(5),
-                        child: Hero(
-                          tag: index.toString() +
-                              listChildren[index].id.toString() +
-                              indexRoute.toString(),
-                          child: CachedNetworkImage(
-                            imageUrl: listChildren[index].photo,
-                            imageBuilder: (context, imageProvider) =>
-                                CircleAvatar(
-                              radius: 35.0,
-                              backgroundImage: imageProvider,
-                              backgroundColor: Colors.transparent,
-                            ),
-                          ),
-                        ),
+                    borderRadius: BorderRadius.circular(25)),
+                onTap: () {
+                  viewModel.onTapChildren(
+                      listChildren[index],
+                      index.toString() +
+                          listChildren[index].id.toString() +
+                          indexRoute.toString());
+                },
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  child: Hero(
+                    tag: index.toString() +
+                        listChildren[index].id.toString() +
+                        indexRoute.toString(),
+                    child: CachedNetworkImage(
+                      imageUrl: listChildren[index].photo,
+                      imageBuilder: (context, imageProvider) => CircleAvatar(
+                        radius: 35.0,
+                        backgroundImage: imageProvider,
+                        backgroundColor: Colors.transparent,
                       ),
-                    );
-                  });
+                    ),
+                  ),
+                ),
+              );
             },
           ),
         );
@@ -302,18 +285,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
 //            countChild * heightChildName +
             30;
         driverBusSession.childDrenRoute.forEach((index) {
-//          countChild += index.listChildrenID.length;
-          if (MediaQuery.of(context).orientation == Orientation.portrait) {
-            if (index.listChildrenID.length > 6)
-              widgetHeight += gridViewHeightExtend + heightMargin;
-            else
-              widgetHeight += gridViewHeight + heightMargin;
-          } else {
-            if (index.listChildrenID.length > 10)
-              widgetHeight += gridViewHeightExtend + heightMargin;
-            else
-              widgetHeight += gridViewHeight + heightMargin;
-          }
+          widgetHeight += listViewHeight + heightMargin;
         });
         return Flexible(
           flex: 8,
@@ -418,7 +390,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                                   if (childDrenStatus != null)
                                     _tablePickDrop(
                                         childDrenStatus, driverBusSession.type),
-                                  __gridView(listChildren, index),
+                                  __listViewChildren(listChildren, index),
                                 ],
                               ),
                             ),
@@ -451,22 +423,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                         heightTable +
                         heightMargin +
                         heightRouteName * 0.6;
-                    if (MediaQuery.of(context).orientation ==
-                        Orientation.portrait) {
-                      if (driverBusSession
-                              .childDrenRoute[index - 1].listChildrenID.length >
-                          6)
-                        ___heightDash += gridViewHeightExtend + heightMargin;
-                      else
-                        ___heightDash += gridViewHeight + heightMargin;
-                    } else {
-                      if (driverBusSession
-                              .childDrenRoute[index - 1].listChildrenID.length >
-                          10)
-                        ___heightDash += gridViewHeightExtend + heightMargin;
-                      else
-                        ___heightDash += gridViewHeight + heightMargin;
-                    }
+                    ___heightDash += listViewHeight + heightMargin;
                   }
                   return Container(
                     child: Container(
@@ -611,7 +568,8 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
     Widget _body() {
       return _item(
           driverBusSession: widget.driverBusSession,
-          title: widget.driverBusSession.listRouteBus[0].date,
+          title: DateFormat('dd/MM/yyyy').format(
+              DateTime.parse(widget.driverBusSession.listRouteBus[0].date)),
           onTap: () {});
     }
 
@@ -638,21 +596,20 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                         centerTitle: true,
                         title: Text("Chi tiết lịch sử chuyến",
                             style: TextStyle(
-                              color:
-                              isShrink ? Colors.white : Colors.black54,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold
-                            )),
+                                color: isShrink
+                                    ? Colors.white
+                                    : Colors.transparent,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold)),
                         background: CachedNetworkImage(
                             imageUrl: viewModel.urlMaps,
                             imageBuilder: (context, imageProvider) => Image(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ))),
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                ))),
                   ),
                   new SliverList(
-                      delegate: new SliverChildListDelegate([_body()])
-                  ),
+                      delegate: new SliverChildListDelegate([_body()])),
                 ],
               ),
             );

@@ -24,18 +24,21 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
   @override
   Widget build(BuildContext context) {
     Widget _item(
-        {DriverBusSession driverBusSession, String title, Function onTap}) {
+        {DriverBusSession driverBusSession,
+        String url,
+        String title,
+        Function onTap}) {
       Widget __image() {
-        String url = GoogleMapService.getUrlImageFromMultiMarker(
-          width: (MediaQuery.of(context).size.width.toInt() - 40) * 2,
-          height: 170 * 2,
-          listLatLng: driverBusSession.listRouteBus
-              .map((route) => LatLng(route.lat, route.lng))
-              .toList(),
-          listPosition: driverBusSession.listRouteBus
-              .map((route) => LatLng(route.lat, route.lng))
-              .toList(),
-        );
+        // String url = GoogleMapService.getUrlImageFromMultiMarker(
+        //   width: (MediaQuery.of(context).size.width.toInt() - 40) * 2,
+        //   height: 170 * 2,
+        //   listLatLng: driverBusSession.listRouteBus
+        //       .map((route) => LatLng(route.lat, route.lng))
+        //       .toList(),
+        //   listPosition: driverBusSession.listRouteBus
+        //       .map((route) => LatLng(route.lat, route.lng))
+        //       .toList(),
+        // );
 //       http.Response response
         return Positioned(
           top: 0,
@@ -500,16 +503,28 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
                       ...viewModel.listHistoryDriverBusSession
                           .map((historyDriver) => Column(
                                 children: <Widget>[
-                                  ...historyDriver.listHistory.map(
-                                      (driverBusSession) => _item(
-                                          driverBusSession: driverBusSession,
-                                          title: DateFormat('dd/MM/yyyy')
-                                              .format(DateTime.parse(
-                                                  historyDriver.transportDate)),
-                                          onTap: () {
-                                            viewModel
-                                                .onTapHistory(driverBusSession);
-                                          }))
+                                  ...historyDriver.listHistory
+                                      .asMap()
+                                      .map(
+                                        (index, driverBusSession) => MapEntry(
+                                          index,
+                                          _item(
+                                            driverBusSession: driverBusSession,
+                                            url: historyDriver
+                                                .listUrlHistoryPositions[index],
+                                            title: DateFormat('dd/MM/yyyy')
+                                                .format(DateTime.parse(
+                                                    historyDriver
+                                                        .transportDate)),
+                                            onTap: () {
+                                              viewModel.onTapHistory(
+                                                  driverBusSession);
+                                            },
+                                          ),
+                                        ),
+                                      )
+                                      .values
+                                      .toList()
                                 ],
                               )),
                       if (viewModel.loadingMore)

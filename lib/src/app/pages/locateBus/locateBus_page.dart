@@ -170,7 +170,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                         new TextSpan(text: 'Học sinh phải trả: '),
                         new TextSpan(
                             text:
-                                '${viewModel.getCountChildrenDropPointNext().toString()}\n',
+                                '${viewModel.getCountChildrenDropPointNext().toString()}',
                             style: new TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: ThemePrimary.primaryColor)),
@@ -184,7 +184,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                       children: <TextSpan>[
                           TextSpan(
                             text:
-                                'Xin vui lòng bấm hoàn thành để kết thúc chuyến.',
+                                '\nXin vui lòng bấm kết thúc để hoàn thành chuyến đi.\n\n',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: ThemePrimary.primaryColor,

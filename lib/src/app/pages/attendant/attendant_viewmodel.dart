@@ -5,6 +5,7 @@ import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/itemCustomPopupMenu.dart';
 import 'package:b2s_driver/src/app/pages/attendantManager/attendant_manager_page.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -82,5 +83,9 @@ class AttendantPageViewModel extends ViewModelBase {
     listDriverBusSession[1].saveLocal();
     Navigator.pushReplacementNamed(context, AttendantManagerPage.routeName,
         arguments: listDriverBusSession[1]);
+  }
+  showNoticeCantStart() {
+    LoadingDialog().showMsgDialogWithCloseButton(
+        context, 'Không thể bắt đầu chuyến đi của ngày mai.');
   }
 }

@@ -27,6 +27,7 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
   void initState() {
     viewModel.driverBusSession = widget.driverBusSession;
     viewModel.onCreateDriverBusSessionReport();
+    viewModel.listenData();
     super.initState();
   }
 

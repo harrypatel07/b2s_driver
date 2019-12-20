@@ -31,6 +31,7 @@ class _LocateBusPageState extends State<LocateBusPage>
     viewModel.driverBusSessionInput = viewModel.driverBusSession;
     //viewModel.listenData();
     viewModel.onCreateDriverBusSessionReport();
+    viewModel.listenData();
     super.initState();
   }
 
@@ -133,7 +134,8 @@ class _LocateBusPageState extends State<LocateBusPage>
     Widget __notice() {
       int pointNext = viewModel.getPointNextPick();
       return Positioned(
-        top: 110,
+        right: 0,
+        top: 10,
         child: NoticeLocalBus(
           onTap: () {
             if (pointNext != -1)
@@ -144,7 +146,7 @@ class _LocateBusPageState extends State<LocateBusPage>
               text: (pointNext != -1)
                   ? new TextSpan(
                       style: new TextStyle(
-                        fontSize: 14.0,
+                        fontSize: 16.0,
                         color: Colors.black,
                       ),
                       children: <TextSpan>[
@@ -178,7 +180,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                     )
                   : new TextSpan(
                       style: new TextStyle(
-                        fontSize: 14.0,
+                        fontSize: 16.0,
                         color: Colors.black,
                       ),
                       children: <TextSpan>[
@@ -214,8 +216,8 @@ class _LocateBusPageState extends State<LocateBusPage>
 
     Widget __navigateGoogleMap() {
       return Positioned(
-        bottom: MediaQuery.of(context).size.height / 2 - 70,
         right: 0,
+        top: 175,
         child: Stack(
           children: <Widget>[
             Container(
@@ -386,7 +388,7 @@ class _LocateBusPageState extends State<LocateBusPage>
 
     Widget __sosButton() {
       return Positioned(
-        bottom: MediaQuery.of(context).size.height / 2,
+        top: 100,
         right: 0,
         child: Stack(
           children: <Widget>[
@@ -442,8 +444,8 @@ class _LocateBusPageState extends State<LocateBusPage>
 
     Widget __buildIconLocation() {
       return Positioned(
-        right: 10.0,
-        bottom: MediaQuery.of(context).size.height / 2 - 120,
+        right: 15,
+        top: 250,
         child: SizedBox(
           width: 40,
           height: 40,
@@ -472,12 +474,24 @@ class _LocateBusPageState extends State<LocateBusPage>
                       viewModel.showGoolgeMap
                           ? __buildGoogleMap()
                           : Container(),
+                      Positioned(
+                        right: 0,
+                        top: MediaQuery.of(context).size.height * 0.2,
+                        child: Container(
+                          height: 300,
+                          width: MediaQuery.of(context).size.width,
+                          child: Stack(
+                            children: <Widget>[
+                              __navigateGoogleMap(),
+                              __sosButton(),
+                              __buildIconLocation(),
+                              __notice(),
+                            ],
+                          ),
+                        ),
+                      ),
                       __backButton(),
-                      __sosButton(),
-                      __buildIconLocation(),
-                      __navigateGoogleMap(),
                       __finishButton(),
-                      __notice(),
                       __report(),
                       viewModel.showSpinner
                           ? LoadingIndicator.progress(

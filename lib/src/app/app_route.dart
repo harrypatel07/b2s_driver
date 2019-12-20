@@ -51,7 +51,7 @@ class Routes {
     TabsPage.routeName: (context) =>
         TabsPage(ModalRoute.of(context).settings.arguments),
     HomePage.routeName: (context) => HomePage(
-          driverBusSession: ModalRoute.of(context).settings.arguments,
+          args: ModalRoute.of(context).settings.arguments,
         ),
     LocateBusPage.routeName: (context) => LocateBusPage(
           driverBusSession: ModalRoute.of(context).settings.arguments,

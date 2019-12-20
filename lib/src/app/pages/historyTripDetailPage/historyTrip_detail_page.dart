@@ -67,6 +67,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
     viewModel.scrollController = ScrollController();
     viewModel.scrollController.addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+      viewModel.getUrlMaps(widget.driverBusSession);
           _getPosition();
           _getSizeContent();
         }));
@@ -574,7 +575,6 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
     }
 
     viewModel.context = context;
-    viewModel.getUrlMaps(widget.driverBusSession);
     return ViewModelProvider(
       viewmodel: viewModel,
       child: StreamBuilder<Object>(

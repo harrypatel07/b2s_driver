@@ -441,7 +441,9 @@ class _AttendantPageState extends State<AttendantPage> {
                                     viewModel.listDriverBusSession[0],
                                 title: _selectedChoices.title,
                                 onTap: () {
+                                  if(_selectedChoices.id==0)
                                   viewModel.onTapItemPick();
+                                  else viewModel.showNoticeCantStart();
                                 }),
                             SizedBox(
                               height: 20,
@@ -452,7 +454,9 @@ class _AttendantPageState extends State<AttendantPage> {
                                         viewModel.listDriverBusSession[1],
                                     title: _selectedChoices.title,
                                     onTap: () {
+                                      if(_selectedChoices.id == 0)
                                       viewModel.onTapItemDrop();
+                                      else viewModel.showNoticeCantStart();
                                     })
                                 : Container(
                                     height: MediaQuery.of(context).size.height *

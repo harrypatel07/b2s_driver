@@ -7,11 +7,10 @@ import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/menu.dart';
 import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page.dart';
-import 'package:b2s_driver/src/app/pages/schedule/schedule_page.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
+import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class HomePageViewModel extends ViewModelBase {
   List<DriverBusSession> listDriverBusSession = [];
@@ -151,5 +150,10 @@ class HomePageViewModel extends ViewModelBase {
     // Navigator.pushNamedAndRemoveUntil(context, LocateBusPage.routeName,
     //     ModalRoute.withName(SchedulePage.routeName),
     //     arguments: driverBusSession);
+  }
+
+  showNoticeCantStart() {
+    LoadingDialog().showMsgDialogWithCloseButton(
+        context, 'Không thể bắt đầu chuyến đi của ngày mai.');
   }
 }

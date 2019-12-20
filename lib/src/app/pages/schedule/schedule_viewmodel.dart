@@ -68,17 +68,19 @@ class ScheduleViewModel extends ViewModelBase {
     super.dispose();
   }
 
-  onTapItemPick() {
+  onTapItemPick(bool canStart) {
     cloudService.busSession
         .createListBusSessionFromDriverBusSession(listDriverBusSession[0]);
     Navigator.pushNamed(context, HomePage.routeName,
-        arguments: listDriverBusSession[0]);
+        arguments: HomePageArgs(
+            driverBusSession: listDriverBusSession[0], canStart: canStart));
   }
 
-  onTapItemDrop() {
+  onTapItemDrop(bool canStart) {
     cloudService.busSession
         .createListBusSessionFromDriverBusSession(listDriverBusSession[1]);
     Navigator.pushNamed(context, HomePage.routeName,
-        arguments: listDriverBusSession[1]);
+        arguments: HomePageArgs(
+            driverBusSession: listDriverBusSession[1], canStart: canStart));
   }
 }

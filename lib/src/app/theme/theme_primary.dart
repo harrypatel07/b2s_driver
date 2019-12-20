@@ -30,7 +30,7 @@ class ThemePrimary {
   );
 
   static const chatBubbleGradient = const LinearGradient(
-    colors: const [Color(0xFFf7e572), Color(0xFFFF8961)],
+    colors: const [Color(0xFFa8ddf7), Color(0xFFa8ddf7)],
     begin: Alignment.topRight,
     end: Alignment.bottomLeft,
   );

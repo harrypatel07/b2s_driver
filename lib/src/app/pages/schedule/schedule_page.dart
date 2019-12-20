@@ -327,16 +327,16 @@ class _SchedulePageState extends State<SchedulePage> {
     Widget __buttonSupport() {
       return ClipRRect(
         borderRadius: new BorderRadius.only(
-            bottomRight: Radius.circular(18),
-            bottomLeft: Radius.circular(18)),
+            bottomRight: Radius.circular(18), bottomLeft: Radius.circular(18)),
         child: Container(
 //          padding: EdgeInsets.only(right: 10,left: 10),
           child: Container(
             alignment: Alignment.center,
             width: MediaQuery.of(context).size.width - 25,
             height: 50,
-            color:
-                driverBusSession.status ? ThemePrimary.primaryColor : Colors.black87,
+            color: driverBusSession.status
+                ? ThemePrimary.primaryColor
+                : Colors.black87,
             child: driverBusSession.status
                 ? Text(
                     'ĐÃ HOÀN THÀNH',
@@ -356,16 +356,15 @@ class _SchedulePageState extends State<SchedulePage> {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: TS24Button(
-        onTap: driverBusSession.status?(){}:onTap,
+        onTap: driverBusSession.status ? () {} : onTap,
 //        child: Container(
-          decoration: new BoxDecoration(boxShadow: [
-            new BoxShadow(
-              color: Colors.black26,
-              blurRadius: 20.0,
-            ),
-          ]
+        decoration: new BoxDecoration(boxShadow: [
+          new BoxShadow(
+            color: Colors.black26,
+            blurRadius: 20.0,
           ),
-          child: Card(
+        ]),
+        child: Card(
 //            decoration: new BoxDecoration(
 //                boxShadow: [
 //                  BoxShadow(
@@ -392,25 +391,25 @@ class _SchedulePageState extends State<SchedulePage> {
 //                color: Colors.grey[200],
 
 //                shape: new BorderRadius.circular(25),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-              ),
-              margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
-              child: Stack(
-                children: <Widget>[
-                  __image(),
-                  Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 170,
-                      ),
-                      __content(),
-                      __buttonSupport(),
-                    ],
-                  ),
-                ],
-              )),
-        ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18.0),
+            ),
+            margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
+            child: Stack(
+              children: <Widget>[
+                __image(),
+                Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 170,
+                    ),
+                    __content(),
+                    __buttonSupport(),
+                  ],
+                ),
+              ],
+            )),
+      ),
 //      ),
     );
   }
@@ -426,7 +425,7 @@ class _SchedulePageState extends State<SchedulePage> {
                 loading: viewModel.loading,
               )
             : SingleChildScrollView(
-                child: ( viewModel.listDriverBusSession.length == 0)
+                child: (viewModel.listDriverBusSession.length == 0)
                     ? Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.9,
@@ -442,7 +441,10 @@ class _SchedulePageState extends State<SchedulePage> {
                                     viewModel.listDriverBusSession[0],
                                 title: _selectedChoices.title,
                                 onTap: () {
-                                  viewModel.onTapItemPick();
+                                  if (_selectedChoices.id == 0)
+                                    viewModel.onTapItemPick(true);
+                                  else
+                                    viewModel.onTapItemPick(false);
                                 }),
                             SizedBox(
                               height: 20,
@@ -453,7 +455,10 @@ class _SchedulePageState extends State<SchedulePage> {
                                         viewModel.listDriverBusSession[1],
                                     title: _selectedChoices.title,
                                     onTap: () {
-                                      viewModel.onTapItemDrop();
+                                      if (_selectedChoices.id == 0)
+                                        viewModel.onTapItemDrop(true);
+                                      else
+                                        viewModel.onTapItemDrop(false);
                                     })
                                 : Container(
                                     height: MediaQuery.of(context).size.height *
@@ -484,4 +489,3 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 }
-

@@ -2,7 +2,6 @@ import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/itemCustomPopupMenu.dart';
 import 'package:b2s_driver/src/app/pages/historyTrip/historyTrip_viewmodel.dart';
-import 'package:b2s_driver/src/app/service/googlemap-service.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/dash.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
@@ -10,7 +9,6 @@ import 'package:b2s_driver/src/app/widgets/ts24_scaffold_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 class HistoryTripPage extends StatefulWidget {
@@ -465,7 +463,7 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
               child: Row(
                 children: <Widget>[
                   Text(
-                    viewModel.driver.vehicleName,
+                    viewModel.driver.vehicleName.toString(),
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                   Icon(Icons.arrow_drop_down)
@@ -479,7 +477,7 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
               return viewModel.choicesVehicle.map((CustomPopupMenu vehicle) {
                 return PopupMenuItem<CustomPopupMenu>(
                   value: vehicle,
-                  child: Text(vehicle.title),
+                  child: Text(vehicle.title.toString()),
                 );
               }).toList();
             },

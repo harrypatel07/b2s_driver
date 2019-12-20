@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
@@ -13,6 +15,7 @@ class BottomSheetViewModelBase extends ViewModelBase {
   BottomSheetViewModelBase();
   int position;
   RouteBus routeBus;
+  StreamSubscription streamCloud;
   List<Children> getListChildrenForTimeLine(
       DriverBusSession driverBusSession, int routeBusID) {
     List<Children> _listChildren = [];
@@ -25,8 +28,8 @@ class BottomSheetViewModelBase extends ViewModelBase {
   }
 
   @override
-  void dispose() {
-    //streamCloud.cancel();
+  dispose() {
+    if (streamCloud != null) streamCloud.cancel();
     super.dispose();
   }
 
@@ -117,5 +120,16 @@ Bạn có muốn tiếp tục?
     } catch (e) {
       print(e);
     }
+  }
+
+  listenData() async {
+    if (streamCloud != null) streamCloud.cancel();
+    streamCloud = await cloudService.busSession
+        .listenBusSessionForDriver(this.driverBusSession, () {
+      this.updateState();
+      this.onCreateDriverBusSessionReport();
+      this.driverBusSession.saveLocal();
+      this.updateState();
+    });
   }
 }

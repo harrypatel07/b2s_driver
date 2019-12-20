@@ -40,6 +40,8 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   Map _listRouteBusPushed = Map();
   LocateBusPageViewModel();
 
+  //Tracking my location
+  bool _trackingMyLoc = false;
   @override
   dispose() {
     //  if (streamCloud != null) streamCloud.cancel();
@@ -65,8 +67,9 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   Future animateMyLocation({bool animate = true}) async {
     var myLoc = await location.getLocation();
     if (animate) {
+      _trackingMyLoc = true;
       center = LatLng(myLoc.latitude, myLoc.longitude);
-      _animateCamera(center);
+      _animateCamera(center, bearing: 120, tilt: 90);
     }
     myLocationEnabled = true;
 //    childrenBus.status = StatusBus.list[0];
@@ -113,6 +116,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   }
 
   onTapMaker(RouteBus _route, int _pos) {
+    _trackingMyLoc = false;
     this.position = _pos;
     this.routeBus = _route;
     if (_pos >= 2) {
@@ -185,7 +189,8 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
           driverBusSession.clearLocal();
         } else
           return false;
-      }
+      } else
+        driverBusSession.clearLocal();
       Navigator.pushReplacementNamed(context, TabsPage.routeName,
           arguments: TabsArgument(routeChildName: HomePage.routeName));
     } else
@@ -208,6 +213,10 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
       // markers[MarkerId("location")] = _marker.copyWith(
       //     rotationParam: onData.heading,
       //     positionParam: LatLng(onData.latitude, onData.longitude));
+      if (_trackingMyLoc) {
+        _animateCamera(LatLng(onData.latitude, onData.longitude),
+            bearing: onData.heading, tilt: 90);
+      }
       Driver driver = Driver();
       api.updateCoordinateVehicle(driver.vehicleId, onData);
       checkBusLocationWithRoute(LatLng(onData.latitude, onData.longitude));
@@ -216,10 +225,10 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
     // this.updateState();
   }
 
-  _animateCamera(LatLng latlng) {
+  _animateCamera(LatLng latlng, {double bearing = 0.0, double tilt = 0.0}) {
     if (mapController != null)
-      mapController.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(target: latlng, zoom: 14.0)));
+      mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+          bearing: bearing, tilt: tilt, target: latlng, zoom: 16.5)));
   }
 
   @override

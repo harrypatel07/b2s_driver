@@ -1,10 +1,10 @@
+import 'dart:math';
+
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
-import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page.dart';
-import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
@@ -15,10 +15,16 @@ import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   static const String routeName = "/home";
-  final DriverBusSession driverBusSession;
-  const HomePage({Key key, this.driverBusSession}) : super(key: key);
+  final HomePageArgs args;
+  const HomePage({Key key, this.args}) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
+}
+
+class HomePageArgs {
+  final DriverBusSession driverBusSession;
+  final bool canStart;
+  HomePageArgs({this.driverBusSession, this.canStart});
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
@@ -143,10 +149,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       return Positioned(
         bottom: 0,
         right: 0,
-        child:
-        TS24Button(
+        child: TS24Button(
           onTap: () {
-            viewModel.onStart();
+            if (widget.args.canStart)
+              viewModel.onStart();
+            else
+              viewModel.showNoticeCantStart();
           },
           decoration: new BoxDecoration(
               boxShadow: [
@@ -162,8 +170,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ],
               color: ThemePrimary.primaryColor,
               borderRadius: new BorderRadius.only(
-                  topLeft: Radius.circular(200),
-                  topRight: Radius.circular(0))),
+                  topLeft: Radius.circular(200), topRight: Radius.circular(0))),
           width: 70,
           height: 70,
           //color: Colors.white,
@@ -172,8 +179,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               padding: EdgeInsets.only(left: 32, top: 20),
               child: Text(
                 'BẮT ĐẦU',
-                style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w900),
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.w900),
               )),
         ),
       );
@@ -196,7 +203,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     //tabsPageViewModel = ViewModelProvider.of(context);
     //viewModel = tabsPageViewModel.homePageViewModel;
     viewModel.context = context;
-    viewModel.driverBusSession = widget.driverBusSession;
+    viewModel.driverBusSession = widget.args.driverBusSession;
     return ViewModelProvider(
       viewmodel: viewModel,
       child: StreamBuilder<Object>(
@@ -204,7 +211,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           builder: (context, snapshot) {
             return TS24Scaffold(
               appBar: _appBar(),
-              body: _buildBody(widget.driverBusSession),
+              body: _buildBody(widget.args.driverBusSession),
             );
           }),
     );

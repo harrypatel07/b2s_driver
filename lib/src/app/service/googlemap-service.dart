@@ -154,7 +154,7 @@ class GoogleMapService {
     var path = "";
     if (listPosition != null) if (listPosition.length > 0) {
       path +=
-          "&path=color:0x${ThemePrimary.colorParentApp.value.toRadixString(16)}";
+          "&path=color:0x${ThemePrimary.primaryColor.value.toRadixString(16)}|weight:2";
       path = path.replaceAll("0xff", "0x");
       for (var i = 0; i < listPosition.length; i++) {
         var item = listPosition[i];

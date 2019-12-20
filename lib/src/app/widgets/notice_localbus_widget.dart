@@ -44,120 +44,65 @@ class _NoticeLocalBusState extends State<NoticeLocalBus> {
               ),
             ),
           Positioned(
-              right: 10,
-              top: 10,
-              child: TS24Button(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: ThemePrimary.primaryColor,
-                    borderRadius: BorderRadius.circular(25),
+            top: 10,
+            right: 0,
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(left: 20),
+                  decoration: new BoxDecoration(
+//                  boxShadow: [
+//                    BoxShadow(
+//                      color: Colors.black38,
+//                      blurRadius: 1.0, // has the effect of softening the shadow
+//                      spreadRadius:
+//                          1.0, // has the effect of extending the shadow
+//                      offset: Offset(
+//                        -1.0, // horizontal, move right 10
+//                        -1.0, // vertical, move down 10
+//                      ),
+//                    )
+//                  ],
+                      color: Colors.black12,
+                      borderRadius: new BorderRadius.only(
+                          topLeft: Radius.circular(40),
+                          bottomLeft: Radius.circular(40))),
+                  width: 60,
+                  height: 60,
+                ),
+                Positioned(
+                  top: 4,
+                  left: 2,
+                  child: TS24Button(
+                    width: 50,
+                    height: 50,
+                    onTap: () {
+                      setState(() {
+                        isShow = !isShow;
+                      });
+                    },
+                    decoration: BoxDecoration(
+                      color: ThemePrimary.primaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                    ),
+                    child: Center(
+                      child: isShow
+                          ? Icon(
+                        FontAwesomeIcons.angleDoubleRight,
+                        size: 17,
+                        color: Colors.white,
+                      )
+                          : Icon(
+                        FontAwesomeIcons.angleDoubleLeft,
+                        size: 17,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                  onTap: () {
-                    setState(() {
-                      isShow = !isShow;
-                    });
-                  },
-                  child: isShow
-                      ? Icon(
-                          FontAwesomeIcons.angleDoubleRight,
-                          size: 17,
-                          color: Colors.white,
-                        )
-                      : Icon(
-                          FontAwesomeIcons.angleDoubleLeft,
-                          size: 17,
-                          color: Colors.white,
-                        )
-                  // child: isShow
-                  //     ?
-                  //     Container(
-                  //         margin: EdgeInsets.all(8),
-                  //         child: Center(
-                  //           child: Column(
-                  //             children: <Widget>[
-                  //               Row(
-                  //                 children: <Widget>[
-                  //                   Expanded(
-                  //                     child: SizedBox(),
-                  //                   ),
-                  //                   Expanded(
-                  //                     child: Transform.rotate(
-                  //                       angle: 3.14 / 360 * 90,
-                  //                       child: Icon(
-                  //                         Icons.arrow_downward,
-                  //                         size: 17,
-                  //                         color: Colors.white,
-                  //                       ),
-                  //                     ),
-                  //                   ),
-                  //                 ],
-                  //               ),
-                  //               Row(
-                  //                 children: <Widget>[
-                  //                   Expanded(
-                  //                     child: Transform.rotate(
-                  //                       angle: 3.14 / 360 * 90,
-                  //                       child: Icon(
-                  //                         Icons.arrow_upward,
-                  //                         size: 17,
-                  //                         color: Colors.white,
-                  //                       ),
-                  //                     ),
-                  //                   ),
-                  //                   Expanded(
-                  //                     child: SizedBox(),
-                  //                   ),
-                  //                 ],
-                  //               )
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       )
-                  //     : Container(
-                  //         margin: EdgeInsets.all(8),
-                  //         child: Center(
-                  //           child: Column(
-                  //             children: <Widget>[
-                  //               Row(
-                  //                 children: <Widget>[
-                  //                   Expanded(
-                  //                     child: SizedBox(),
-                  //                   ),
-                  //                   Expanded(
-                  //                     child: Transform.rotate(
-                  //                       angle: 3.14 / 360 * 90,
-                  //                       child: Icon(
-                  //                         Icons.arrow_upward,
-                  //                         size: 17,
-                  //                         color: Colors.white,
-                  //                       ),
-                  //                     ),
-                  //                   ),
-                  //                 ],
-                  //               ),
-                  //               Row(
-                  //                 children: <Widget>[
-                  //                   Expanded(
-                  //                     child: Transform.rotate(
-                  //                       angle: 3.14 / 360 *90 ,
-                  //                       child: Icon(
-                  //                         Icons.arrow_downward,
-                  //                         size: 17,
-                  //                         color: Colors.white,
-                  //                       ),
-                  //                     ),
-                  //                   ),
-                  //                   Expanded(
-                  //                     child: SizedBox(),
-                  //                   ),
-                  //                 ],
-                  //               )
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       ),
-                  ))
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );

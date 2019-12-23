@@ -59,25 +59,25 @@ class Driver {
 
   Driver.fromResPartner(ResPartner resPartner) {
     id = resPartner.id;
-    name = resPartner.name;
+    name = (resPartner.name is bool) ? "" : resPartner.name;
     photo = resPartner.image;
     if (resPartner.title is List) {
       gender = resPartner.title[1];
       genderId = resPartner.title[0];
     }
-    phone = resPartner.phone;
+    phone = (resPartner.phone is bool) ? "" : resPartner.phone;
     // if (resPartner.vehicleIds is List) vehicleId = resPartner.vehicleIds[0];
   }
 
   fromResPartner(ResPartner resPartner) {
     id = resPartner.id;
-    name = resPartner.name;
+    name = (resPartner.name is bool) ? "" : resPartner.name;
     photo = resPartner.image;
     if (resPartner.title is List) {
       gender = resPartner.title[1];
       genderId = resPartner.title[0];
     }
-    phone = resPartner.phone;
+    phone = (resPartner.phone is bool) ? "" : resPartner.phone;
     // if (resPartner.vehicleIds is List) vehicleId = resPartner.vehicleIds[0];
   }
 

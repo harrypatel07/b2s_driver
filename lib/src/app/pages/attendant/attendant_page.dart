@@ -128,9 +128,9 @@ class _AttendantPageState extends State<AttendantPage> {
               child: CachedNetworkImage(
                   imageUrl: url,
                   imageBuilder: (context, imageProvider) => Image(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
-                  ))),
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ))),
         ),
       );
     }
@@ -146,49 +146,49 @@ class _AttendantPageState extends State<AttendantPage> {
             itemBuilder: (context, index) {
               return new LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                    int routeBusID =
-                        driverBusSession.childDrenRoute[index].routeBusID;
-                    var routeBus = driverBusSession.listRouteBus
-                        .firstWhere((route) => route.id == routeBusID);
-                    return Container(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 8,
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 0.0, top: 0.0),
-                              child: Container(
-                                child: Column(
-                                  children: <Widget>[
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      height: 43.5,
-                                      child: Text(
-                                        routeBus.routeName,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    (index <
+                int routeBusID =
+                    driverBusSession.childDrenRoute[index].routeBusID;
+                var routeBus = driverBusSession.listRouteBus
+                    .firstWhere((route) => route.id == routeBusID);
+                return Container(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        flex: 8,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 0.0, top: 0.0),
+                          child: Container(
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  height: 43.5,
+                                  child: Text(
+                                    routeBus.routeName,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                (index <
                                         driverBusSession.childDrenRoute.length -
                                             1)
-                                        ? Container(
-                                      height: 1,
-                                      color: Colors.grey[500],
-                                    )
-                                        : Container(
-                                      height: 1,
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                    ? Container(
+                                        height: 1,
+                                        color: Colors.grey[500],
+                                      )
+                                    : Container(
+                                        height: 1,
+                                      ),
+                              ],
                             ),
-                          )
-                        ],
-                      ),
-                    );
-                  });
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              });
             },
           ),
         ),
@@ -206,55 +206,55 @@ class _AttendantPageState extends State<AttendantPage> {
             itemBuilder: (context, index) {
               return new LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                    return Container(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 0.0, top: 0.0),
-                              child: Container(
-                                child: Column(
-                                  children: <Widget>[
-                                    (index == 0)
-                                        ? Container(
-                                      width: 10,
-                                    )
-                                        : Container(),
-                                    (index == 0)
-                                        ? SizedBox(
-                                      height: 10,
-                                    )
-                                        : Dash(
-                                      length: 25.0 + index * 1.0,
-                                      dashLength: 2,
-                                      direction: Axis.vertical,
-                                      dashColor: ThemePrimary.primaryColor,
-                                      dashThickness: 1,
-                                    ),
-                                    (index == 0)
-                                        ? Transform.rotate(
-                                      angle: 3.14,
-                                      child: Icon(
-                                        Icons.navigation,
-                                        color: ThemePrimary.primaryColor,
+                return Container(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 0.0, top: 0.0),
+                          child: Container(
+                            child: Column(
+                              children: <Widget>[
+                                (index == 0)
+                                    ? Container(
+                                        width: 10,
+                                      )
+                                    : Container(),
+                                (index == 0)
+                                    ? SizedBox(
+                                        height: 10,
+                                      )
+                                    : Dash(
+                                        length: 25.0 + index * 1.0,
+                                        dashLength: 2,
+                                        direction: Axis.vertical,
+                                        dashColor: ThemePrimary.primaryColor,
+                                        dashThickness: 1,
                                       ),
-                                    )
-                                        : Icon(
-                                      Icons.radio_button_unchecked,
-                                      color: Colors.orange,
-                                      size: 15,
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                (index == 0)
+                                    ? Transform.rotate(
+                                        angle: 3.14,
+                                        child: Icon(
+                                          Icons.navigation,
+                                          color: ThemePrimary.primaryColor,
+                                        ),
+                                      )
+                                    : Icon(
+                                        Icons.radio_button_unchecked,
+                                        color: Colors.orange,
+                                        size: 15,
+                                      ),
+                              ],
                             ),
-                          )
-                        ],
-                      ),
-                    );
-                  });
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              });
             },
           ),
         ),
@@ -327,27 +327,27 @@ class _AttendantPageState extends State<AttendantPage> {
     Widget __buttonSupport() {
       return ClipRRect(
         borderRadius: new BorderRadius.only(
-            bottomRight: Radius.circular(18),
-            bottomLeft: Radius.circular(18)),
+            bottomRight: Radius.circular(18), bottomLeft: Radius.circular(18)),
         child: Container(
 //          padding: EdgeInsets.only(right: 10,left: 10),
           child: Container(
             alignment: Alignment.center,
             width: MediaQuery.of(context).size.width - 25,
             height: 50,
-            color:
-            driverBusSession.status ? ThemePrimary.primaryColor : Colors.black87,
+            color: driverBusSession.status
+                ? ThemePrimary.primaryColor
+                : Colors.black87,
             child: driverBusSession.status
                 ? Text(
-              'ĐÃ HOÀN THÀNH',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white),
-            )
+                    'ĐÃ HOÀN THÀNH',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white),
+                  )
                 : Text(
-              'CHỌN',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white),
-            ),
+                    'CHỌN',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white),
+                  ),
           ),
         ),
       );
@@ -356,7 +356,7 @@ class _AttendantPageState extends State<AttendantPage> {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: InkWell(
-        onTap: driverBusSession.status?(){}:onTap,
+        onTap: driverBusSession.status ? () {} : onTap,
         child: Container(
           decoration: new BoxDecoration(boxShadow: [
             new BoxShadow(
@@ -421,11 +421,11 @@ class _AttendantPageState extends State<AttendantPage> {
         },
         child: viewModel.loading
             ? LoadingSpinner.loadingView(
-          context: context,
-          loading: viewModel.loading,
-        )
+                context: context,
+                loading: viewModel.loading,
+              )
             : SingleChildScrollView(
-                child: ( viewModel.listDriverBusSession.length == 0)
+                child: (viewModel.listDriverBusSession.length == 0)
                     ? Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.9,
@@ -436,32 +436,30 @@ class _AttendantPageState extends State<AttendantPage> {
                     : Container(
                         child: Column(
                           children: <Widget>[
-                            _item(
-                                driverBusSession:
-                                    viewModel.listDriverBusSession[0],
-                                title: _selectedChoices.title,
-                                onTap: () {
-                                  if(_selectedChoices.id==0)
-                                  viewModel.onTapItemPick();
-                                  else viewModel.showNoticeCantStart();
-                                }),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            (viewModel.listDriverBusSession.length > 1)
-                                ? _item(
-                                    driverBusSession:
-                                        viewModel.listDriverBusSession[1],
-                                    title: _selectedChoices.title,
-                                    onTap: () {
-                                      if(_selectedChoices.id == 0)
-                                      viewModel.onTapItemDrop();
-                                      else viewModel.showNoticeCantStart();
-                                    })
-                                : Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.5,
-                                  ),
+                            ...viewModel.listDriverBusSession
+                                .map((driverBusSession) => Column(
+                                      children: <Widget>[
+                                        _item(
+                                            driverBusSession: driverBusSession,
+                                            title: _selectedChoices.title,
+                                            onTap: () {
+                                              if (_selectedChoices.id == 0)
+                                                viewModel.onTapItemPickDrop(
+                                                    driverBusSession);
+                                              else
+                                                viewModel.onTapItemPickDrop(
+                                                    driverBusSession);
+                                            }),
+                                        SizedBox(
+                                          height: 5,
+                                        )
+                                      ],
+                                    )),
+                            if (viewModel.listDriverBusSession.length == 1)
+                              Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.4,
+                              ),
                             SizedBox(
                               height: 35,
                             )

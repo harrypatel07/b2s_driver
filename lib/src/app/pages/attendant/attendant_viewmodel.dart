@@ -69,21 +69,14 @@ class AttendantPageViewModel extends ViewModelBase {
     super.dispose();
   }
 
-  onTapItemPick() {
+  onTapItemPickDrop(DriverBusSession driverBusSession) {
     cloudService.busSession
-        .createListBusSessionFromDriverBusSession(listDriverBusSession[0]);
-    listDriverBusSession[0].saveLocal();
-    Navigator.pushReplacementNamed(context, AttendantManagerPage.routeName,
-        arguments: listDriverBusSession[0]);
+        .createListBusSessionFromDriverBusSession(driverBusSession);
+    driverBusSession.saveLocal();
+    Navigator.pushNamed(context, AttendantManagerPage.routeName,
+        arguments: driverBusSession);
   }
 
-  onTapItemDrop() {
-    cloudService.busSession
-        .createListBusSessionFromDriverBusSession(listDriverBusSession[1]);
-    listDriverBusSession[1].saveLocal();
-    Navigator.pushReplacementNamed(context, AttendantManagerPage.routeName,
-        arguments: listDriverBusSession[1]);
-  }
   showNoticeCantStart() {
     LoadingDialog().showMsgDialogWithCloseButton(
         context, 'Không thể bắt đầu chuyến đi của ngày mai.');

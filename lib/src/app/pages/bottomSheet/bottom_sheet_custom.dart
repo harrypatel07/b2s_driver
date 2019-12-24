@@ -75,7 +75,8 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                           children: children, heroTag: tag));
                 },
                 onTapScan: () {
-                  viewModel.onTapScanQRCode();
+                  viewModel.onTapScanQRCode(
+                      driverBusSession, children, routeBus);
                 });
           }).toList(),
           isFinish: routeBus.status));

@@ -147,7 +147,7 @@ class _MessagePageState extends State<MessagePage> {
                 var _model = viewModel.listChat[index];
                 return WidgetANimator(_buildMessageRow(_model));
               },
-            ):Container(),
+            ):Container(child: Center(child: Text('Không có tin nhắn.'),),),
     );
   }
 

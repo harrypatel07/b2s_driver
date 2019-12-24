@@ -249,6 +249,7 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                         : FormBuilderDropdown(
                       attribute: 'Giới tính',
                       decoration: InputDecoration(
+                        errorText: viewModel.errorGender,
                         labelText: 'Giới tính',
                         labelStyle:__styleTextLabel,
                       ),
@@ -283,9 +284,7 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                         decoration: InputDecoration(
                           labelText: 'Số điện thoại',
                           labelStyle: __styleTextLabel,
-                          hintText: driver != null
-                              ? driver.phone.toString()
-                              : "Nhập số điện thoại",
+                          hintText:"Nhập số điện thoại",
                           errorText: viewModel.errorPhone,
                         ),
                         textInputAction: TextInputAction.done,
@@ -451,7 +450,7 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                                         Navigator.pop(context);
                                       } else {
                                         LoadingDialog.hideLoadingDialog(context);
-                                        Navigator.pop(context);
+//                                        Navigator.pop(context);
                                       }
                                     });
                                   },

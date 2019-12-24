@@ -52,7 +52,7 @@ class Children {
     this.birthday = partner["date_of_birth"];
     this.email = (partner["email"] is bool) ? "" : partner["email"];
     this.photo = partner["image"];
-    this.classes = (partner["classes"] is bool) ? "" : partner["classes"];
+    this.classes = (partner["class"] is bool) ? "" : partner["class"];
     if (this.birthday != null) if (!(this.birthday is bool)) {
       var date = DateTime.parse(this.birthday);
       var dateNow = DateTime.now();

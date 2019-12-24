@@ -149,14 +149,17 @@ class BottomSheetCustomViewModel extends ViewModelBase {
                 routeBus.id == bottomSheetViewModelBase.routeBus.id);
         route.status = true;
         bottomSheetViewModelBase.driverBusSession.saveLocal();
-        Navigator.pop(context,true);
+        Navigator.pop(context, true);
       }
     }
   }
 
-  Future onTapScanQRCode() async {
-    String barCode = await BarCodeService.scan();
-    if (barCode != null) return 0;
+  Future onTapScanQRCode(DriverBusSession driverBusSession, Children children,
+      RouteBus routeBus) async {
+    String qrResult = await BarCodeService.scan();
+    if (qrResult != null) {
+      onTapPickUpLocateBus(driverBusSession, children, routeBus);
+    }
   }
 //  onTapChangeChildrenStatus(DriverBusSession driverBusSession,
 //      Children children, RouteBus routeBus, int statusID) {

@@ -436,34 +436,30 @@ class _SchedulePageState extends State<SchedulePage> {
                     : Container(
                         child: Column(
                           children: <Widget>[
-                            _item(
-                                driverBusSession:
-                                    viewModel.listDriverBusSession[0],
-                                title: _selectedChoices.title,
-                                onTap: () {
-                                  if (_selectedChoices.id == 0)
-                                    viewModel.onTapItemPick(true);
-                                  else
-                                    viewModel.onTapItemPick(false);
-                                }),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            (viewModel.listDriverBusSession.length > 1)
-                                ? _item(
-                                    driverBusSession:
-                                        viewModel.listDriverBusSession[1],
-                                    title: _selectedChoices.title,
-                                    onTap: () {
-                                      if (_selectedChoices.id == 0)
-                                        viewModel.onTapItemDrop(true);
-                                      else
-                                        viewModel.onTapItemDrop(false);
-                                    })
-                                : Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.5,
-                                  ),
+                            ...viewModel.listDriverBusSession
+                                .map((driverBusSession) => Column(
+                                      children: <Widget>[
+                                        _item(
+                                            driverBusSession: driverBusSession,
+                                            title: _selectedChoices.title,
+                                            onTap: () {
+                                              if (_selectedChoices.id == 0)
+                                                viewModel.onTapItemPickDrop(
+                                                    driverBusSession, true);
+                                              else
+                                                viewModel.onTapItemPickDrop(
+                                                    driverBusSession, false);
+                                            }),
+                                        SizedBox(
+                                          height: 5,
+                                        )
+                                      ],
+                                    )),
+                            if (viewModel.listDriverBusSession.length == 1)
+                              Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.4,
+                              ),
                             SizedBox(
                               height: 35,
                             )

@@ -34,10 +34,10 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
   Widget _appBar() {
     return TS24AppBar(
       title: Text('Lịch trình'),
-      // leading: IconButton(
-      //   icon: Icon(Icons.arrow_back),
-      //   onPressed: () => Navigator.pop(context),
-      // ),
+       leading: IconButton(
+         icon: Icon(Icons.arrow_back),
+         onPressed: () => viewModel.onTapBackButton(),
+       ),
     );
   }
 
@@ -345,9 +345,15 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
       child: StreamBuilder<Object>(
           stream: viewModel.stream,
           builder: (context, snapshot) {
-            return TS24Scaffold(
-              appBar: _appBar(),
-              body: _buildBody(widget.driverBusSession),
+            return WillPopScope(
+              child: TS24Scaffold(
+                  appBar: _appBar(),
+                  body: _buildBody(widget.driverBusSession),
+              ),
+              onWillPop: ()async{
+                viewModel.onTapBackButton();
+                return false;
+              },
             );
           }),
     );

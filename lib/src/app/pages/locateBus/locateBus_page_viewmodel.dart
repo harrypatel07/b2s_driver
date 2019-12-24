@@ -334,7 +334,8 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
       if (Navigator.canPop(context))
         Navigator.pop(context);
       else
-        exit(0);
+        Navigator.pushReplacementNamed(context, TabsPage.routeName,
+            arguments: TabsArgument(routeChildName: HomePage.routeName));
     } else
       showNotifyCantBack();
   }

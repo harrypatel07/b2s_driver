@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
 import 'package:b2s_driver/src/app/pages/attendant/attendant_page.dart';
+import 'package:b2s_driver/src/app/pages/home/home_page.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
 import 'package:b2s_driver/src/app/service/barcode-service.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
@@ -56,5 +59,24 @@ class AttendantManagerViewModel extends BottomSheetViewModelBase {
     //Kiểm tra attendant đã hoàn thành chuyến
     bool result = await api.checkUserRoleFinishedBusSession(listIdPicking);
     return result;
+  }
+
+  showNotifyCantBack() {
+    LoadingDialog().showMsgDialogWithCloseButton(context,
+        "Chuyến xe vẫn chưa hoàn thành, bạn không thể thực hiện thao tác này.");
+  }
+
+  onTapBackButton() {
+    var listCheck = driverBusSession.childDrenStatus
+        .where((status) => status.statusID != 0)
+        .toList();
+    if (listCheck.length == 0 || listCheck == null) {
+      if (Navigator.canPop(context))
+        Navigator.pop(context);
+      else
+        Navigator.pushReplacementNamed(context, TabsPage.routeName,
+            arguments: TabsArgument(routeChildName: HomePage.routeName));
+    } else
+      showNotifyCantBack();
   }
 }

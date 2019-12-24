@@ -186,7 +186,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                       children: <TextSpan>[
                           TextSpan(
                             text:
-                                '\nXin vui lòng bấm kết thúc để hoàn thành chuyến đi.\n\n',
+                                '\nXin vui lòng bấm kết thúc để hoàn thành chuyến đi.\n',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: ThemePrimary.primaryColor,
@@ -476,16 +476,16 @@ class _LocateBusPageState extends State<LocateBusPage>
                           : Container(),
                       Positioned(
                         right: 0,
-                        top: MediaQuery.of(context).size.height * 0.2,
+                        top: 90,
                         child: Container(
                           height: 300,
                           width: MediaQuery.of(context).size.width,
                           child: Stack(
                             children: <Widget>[
+                              __notice(),
                               __navigateGoogleMap(),
                               __sosButton(),
                               __buildIconLocation(),
-                              __notice(),
                             ],
                           ),
                         ),

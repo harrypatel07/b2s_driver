@@ -28,6 +28,7 @@ class EditProfileDriverViewModel extends ViewModelBase {
   Uint8List imagePicker;
   String errorName;
   String _errorEmail;
+  String errorGender;
   ItemDropDownField gender;
   get errorEmail => _errorEmail;
   String _errorPhone;
@@ -45,6 +46,7 @@ class EditProfileDriverViewModel extends ViewModelBase {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
   }
+
   EditProfileDriverViewModel() {
     createEvent();
     getListGender();
@@ -91,7 +93,6 @@ class EditProfileDriverViewModel extends ViewModelBase {
       this.updateState();
     return true;
   }
-
 //  bool isValidAddress() {
 //    _errorAddress = null;
 //    var result = Validator.validAddress(_addressEditingController.text);
@@ -103,7 +104,17 @@ class EditProfileDriverViewModel extends ViewModelBase {
 //      this.updateState();
 //    return true;
 //  }
-
+    bool isValidGender(){
+      errorGender = null;
+      if(gender != null && gender.id !=-1) {
+        this.updateState();
+        return true;
+      }else{
+        errorGender = "Giới tính không đúng.";
+        this.updateState();
+        return false;
+      }
+    }
   @override
   void dispose() {
     super.dispose();
@@ -114,8 +125,7 @@ class EditProfileDriverViewModel extends ViewModelBase {
   }
 
   bool isValidInfo() {
-    if (isValidName() &&
-        isValidPhone() /* && isValidEmail() && isValidAddress()*/) {
+    if (isValidName() && isValidPhone()  /* && isValidEmail() && isValidAddress()*/) {
       this.updateState();
       return true;
     }
@@ -132,17 +142,21 @@ class EditProfileDriverViewModel extends ViewModelBase {
       driver.phone = _phoneEditingController.text;
 //    if (driver.email != _emailEditingController.text)
 //      driver.email = _emailEditingController.text;
-    if (gender != null) {
+    if (gender != null && gender.id != -1) {
       driver.genderId = gender.id;
       driver.photo = imagePicker;
       driver.gender = gender.displayName;
+      errorGender = null;
+    }else{
+      errorGender = 'Giới tính không đúng.';
+      this.updateState();
     }
   }
 
   Future<bool> saveDriver(Driver driver) async {
     print("save profile Parent");
     //this.updateState();
-    if (isValidInfo()) {
+    if (isValidInfo() && isValidGender()) {
       if (driver != null) {
         if (_nameEditingController.text != "") {
           Driver _driver = Driver();
@@ -213,7 +227,9 @@ class EditProfileDriverViewModel extends ViewModelBase {
         listGender
             .add(ItemDropDownField(id: item.id, displayName: item.displayName));
       });
-      if (driver != null)
+      listGender.insert(
+          0, ItemDropDownField(id: -1, displayName: 'Chọn giới tính...'));
+      if (driver.genderId != null)
         gender = getGenderFromID(driver.genderId);
       else
         gender = listGender[0];

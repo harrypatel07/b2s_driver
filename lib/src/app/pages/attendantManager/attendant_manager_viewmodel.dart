@@ -41,8 +41,11 @@ class AttendantManagerViewModel extends BottomSheetViewModelBase {
         String barcode = await BarCodeService.scan();
         print(barcode);
         if (barcode != null) {
-          driverBusSession.clearLocal();
-          api.updateUserRoleFinishedBusSession(listIdPicking, 1);
+          if (checkTicketCodeWhenTapFinished(barcode)) {
+            driverBusSession.clearLocal();
+            api.updateUserRoleFinishedBusSession(listIdPicking, 1);
+          } else
+            return false;
         } else
           return false;
       } else

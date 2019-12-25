@@ -130,7 +130,7 @@ class Driver {
 
   Future<dynamic> saveLocal() async {
     print(json.encode(this.toJson()));
-    return localStorage.setItem(Driver.aliasName, json.encode(this.toJson()));
+    return localStorage.setItem(Driver.aliasName, json.encode(this));
   }
 
   Future<dynamic> clearLocal() async {

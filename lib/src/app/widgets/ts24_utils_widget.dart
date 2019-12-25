@@ -101,7 +101,7 @@ class LoadingDialog {
   }
 
   Future<bool> showMsgDialogWithButton(
-      BuildContext context, String msg,) async{
+      BuildContext context, String msg,{String textYes = "Tiếp tục",String textNo = "Hủy"}) async{
       return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -117,7 +117,7 @@ class LoadingDialog {
           OutlineButton(
               borderSide: BorderSide(color: ThemePrimary.primaryColor),
               child: new Text(
-                "Hủy",
+                textNo,
                 style:
                     TextStyle(fontSize: 16, color: ThemePrimary.primaryColor),
               ),
@@ -130,7 +130,7 @@ class LoadingDialog {
           OutlineButton(
               borderSide: BorderSide(color: ThemePrimary.primaryColor),
               child: new Text(
-                "Tiếp tục",
+                textYes,
                 style:
                     TextStyle(fontSize: 16, color: ThemePrimary.primaryColor),
               ),

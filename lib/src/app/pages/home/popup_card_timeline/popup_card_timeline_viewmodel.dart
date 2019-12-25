@@ -4,6 +4,7 @@ import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/pages/home/popup_card_timeline/popup_card_timeline.dart';
 import 'package:b2s_driver/src/app/pages/message/messageDetail/message_detail_page.dart';
 import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
 
 class PopupCardTimeLineViewModel extends ViewModelBase {
@@ -57,9 +58,17 @@ class PopupCardTimeLineViewModel extends ViewModelBase {
     Navigator.pushNamed(context, MessageDetailPage.routeName, arguments: chatting,);
   }
   onTapLeave(){
-    if(homePageCardTimeLine.status == StatusBus.list[0]) {
-      onTapChangeStatus(3);
-      homePageCardTimeLine.onTapChangeStatusLeave();
-    }
+    LoadingDialog()
+        .showMsgDialogWithButton(context,
+        "Bạn đang báo học sinh nghỉ học. Chọn có để xác nhận thao tác này.",
+        textNo: 'Không', textYes: 'Có')
+        .then((result){
+          if(result){
+            if(homePageCardTimeLine.status == StatusBus.list[0]) {
+              onTapChangeStatus(3);
+              homePageCardTimeLine.onTapChangeStatusLeave();
+            }
+          }
+    });
   }
 }

@@ -61,7 +61,8 @@ class Api1 extends ApiMaster {
       "x_posx",
       "x_posy",
       "x_posz",
-      "license_plate"
+      "license_plate",
+      "x_qr_code"
     ];
     var params = convertSerialize(body);
     return http
@@ -103,7 +104,8 @@ class Api1 extends ApiMaster {
       "x_posy",
       "x_posz",
       "driver_id",
-      "license_plate"
+      "license_plate",
+      "x_qr_code"
     ];
     var params = convertSerialize(body);
     return http

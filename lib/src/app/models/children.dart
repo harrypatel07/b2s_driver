@@ -18,6 +18,7 @@ class Children {
   dynamic email;
   dynamic parentId;
   dynamic paidTicket;
+  dynamic ticketCode;
   dynamic lat;
   dynamic lng;
   dynamic classes;
@@ -38,6 +39,7 @@ class Children {
       this.email,
       this.parentId,
       this.paidTicket,
+      this.ticketCode,
       this.lat,
       this.lng,
       this.classes,
@@ -72,6 +74,7 @@ class Children {
           phone: _parent["phone"],
           name: _parent["name"],
           photo: _parent["image"]);
+    this.ticketCode = partner["qr_code"];
   }
 
   Children.fromResPartner(ResPartner resPartner, {bool primary}) {
@@ -100,6 +103,7 @@ class Children {
       var dateNow = DateTime.now();
       this.age = dateNow.year - date.year;
     }
+    ticketCode = (resPartner.xQrCode is bool) ? "" : resPartner.xQrCode;
   }
 
   Children.fromJson(Map<dynamic, dynamic> json) {
@@ -121,6 +125,7 @@ class Children {
     email = json['email'];
     parentId = json['parentId'];
     paidTicket = json['paidTicket'];
+    ticketCode = json['ticketCode'];
     lat = json['lat'];
     lng = json['lng'];
     classes = json['classes'];
@@ -145,6 +150,7 @@ class Children {
     data["email"] = this.email;
     data["parentId"] = this.parentId;
     data["paidTicket"] = this.paidTicket;
+    data["ticketCode"] = this.ticketCode;
     data["lat"] = this.lat;
     data["lng"] = this.lng;
     data["birthday"] = this.birthday;

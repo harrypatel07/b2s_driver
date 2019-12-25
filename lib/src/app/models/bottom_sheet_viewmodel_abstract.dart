@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
+import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
+import 'package:b2s_driver/src/app/models/ticketCode.dart';
 import 'package:b2s_driver/src/app/pages/bottomSheet/bottom_sheet_custom.dart';
 import 'package:b2s_driver/src/app/service/cloudFirestore-service.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
@@ -131,5 +133,27 @@ Bạn có muốn tiếp tục?
       this.driverBusSession.saveLocal();
       this.updateState();
     });
+  }
+
+  bool checkTicketCodeWhenTapFinished(String qrResult) {
+    TicketCode ticketCode = TicketCode();
+    bool checkCode = ticketCode.checkTicketCode(qrResult);
+    Driver driver = Driver();
+
+    if (checkCode) {
+      var _vehicle =
+          driver.listVehicle.firstWhere((item) => item.id == driver.vehicleId);
+      if (_vehicle.xQrCode != null && qrResult == _vehicle.xQrCode)
+        return true;
+      else {
+        LoadingDialog.showMsgDialog(context,
+            "Mã này không phải của xe ${driver.vehicleName}.Xin vui lòng kiểm tra lại.");
+        return false;
+      }
+    } else {
+      LoadingDialog.showMsgDialog(
+          context, "Mã này không hợp lệ.Xin vui lòng thử lại.");
+      return false;
+    }
   }
 }

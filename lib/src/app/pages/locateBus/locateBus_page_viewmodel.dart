@@ -183,10 +183,14 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
         String barcode = await BarCodeService.scan();
         print(barcode);
         if (barcode != null) {
-          List<int> listIdPicking =
-              driverBusSession.childDrenStatus.map((item) => item.id).toList();
-          api.updateUserRoleFinishedBusSession(listIdPicking, 0);
-          driverBusSession.clearLocal();
+          if (checkTicketCodeWhenTapFinished(barcode)) {
+            List<int> listIdPicking = driverBusSession.childDrenStatus
+                .map((item) => item.id)
+                .toList();
+            api.updateUserRoleFinishedBusSession(listIdPicking, 0);
+            driverBusSession.clearLocal();
+          } else
+            return false;
         } else
           return false;
       } else

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:b2s_driver/src/app/app_localizations.dart';
 import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
@@ -7,6 +8,7 @@ import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/picking-transport-info.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
+import 'package:b2s_driver/src/app/models/ticketCode.dart';
 import 'package:b2s_driver/src/app/pages/attendantManager/attendant_manager_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/barcode-service.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
@@ -38,12 +40,16 @@ class BottomSheetCustomViewModel extends ViewModelBase {
 
   onTapLeave(
       DriverBusSession driverBusSession, Children children, RouteBus routeBus) {
-    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
-        item.childrenID == children.id && item.routeBusID == routeBus.id);
+    var childrenStatus = driverBusSession.childDrenStatus.singleWhere(
+            (item) =>
+        item.childrenID == children.id &&
+            item.routeBusID == routeBus.id);
     DriverBusSession.updateChildrenStatusIdByLeave(
-        driverBusSession: driverBusSession, childDrenStatus: childrenStatus);
+        driverBusSession: driverBusSession,
+        childDrenStatus: childrenStatus);
     //Đồng bộ firestore
-    cloudService.busSession.updateBusSessionFromChildrenStatus(childrenStatus);
+    cloudService.busSession
+        .updateBusSessionFromChildrenStatus(childrenStatus);
     //Push thông báo
     api.postNotificationChangeStatus(children, childrenStatus);
 //    updateStatusLeaveChildren(childrenStatus.id);
@@ -158,7 +164,19 @@ class BottomSheetCustomViewModel extends ViewModelBase {
       RouteBus routeBus) async {
     String qrResult = await BarCodeService.scan();
     if (qrResult != null) {
-      onTapPickUpLocateBus(driverBusSession, children, routeBus);
+      // onTapPickUpLocateBus(driverBusSession, children, routeBus);
+      TicketCode ticketCode = TicketCode();
+      bool checkCode = ticketCode.checkTicketCode(qrResult);
+      if (checkCode) {
+        if (qrResult == children.ticketCode)
+          onTapPickUpLocateBus(driverBusSession, children, routeBus);
+        else
+          return LoadingDialog.showMsgDialog(context,
+              "Mã vé này không phải của em ${children.name}.Xin vui lòng kiểm tra lại.");
+      } else {
+        return LoadingDialog.showMsgDialog(
+            context, "Mã vé này không hợp lệ.Xin vui lòng thử lại.");
+      }
     }
   }
 //  onTapChangeChildrenStatus(DriverBusSession driverBusSession,

@@ -385,9 +385,62 @@ class _ReportLocalBusState extends State<ReportLocalBus> {
                   ),
                 ),
           if (positionClick != -1)
-            positionClick == 1
-                ? widget.content1
-                : positionClick == 2 ? widget.content2 : widget.content3
+          Container(
+            color: ThemePrimary.primaryColor,
+            child: Column(
+              children: <Widget>[
+                  positionClick == 1
+                      ? widget.content1
+                      : positionClick == 2 ? widget.content2 : widget.content3,
+                  InkWell(
+                    onTap: (){
+                      setState(() {
+                        positionClick = -1;
+                      });
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: ThemePrimary.colorParentApp, shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 1.0, // has the effect of softening the shadow
+                                spreadRadius: 1.0, // has the effect of extending the shadow
+                                offset: Offset(
+                                  -1.0, // horizontal, move right 10
+                                  -1.0, // vertical, move down 10
+                                ),
+                              ),
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 1.0, // has the effect of softening the shadow
+                                spreadRadius: 1.0, // has the effect of extending the shadow
+                                offset: Offset(
+                                  1.0, // horizontal, move right 10
+                                  1.0, // vertical, move down 10
+                                ),
+                              )
+                            ],
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+              ],
+            ),
+          ),
         ],
       );
     }

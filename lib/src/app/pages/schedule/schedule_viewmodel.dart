@@ -19,12 +19,19 @@ class ScheduleViewModel extends ViewModelBase {
   Driver driver = Driver();
   ScheduleViewModel() {
     choicesVehicle = driver.listVehicle
-        .map((vehicle) =>
-            CustomPopupMenu(id: vehicle.id, title: vehicle.licensePlate))
+        .map((vehicle) => CustomPopupMenu(
+            id: vehicle.id,
+            title:
+                (vehicle.licensePlate is bool || vehicle.licensePlate == null)
+                    ? ''
+                    : vehicle.licensePlate.toString()))
         .toList();
     selectedVehicle = CustomPopupMenu(
         id: driver.listVehicle[0].id,
-        title: driver.listVehicle[0].licensePlate,
+        title: (driver.listVehicle[0].licensePlate is bool ||
+                driver.listVehicle[0].licensePlate == null)
+            ? ''
+            : driver.listVehicle[0].licensePlate.toString(),
         subTitle: DateFormat('yyyy-MM-dd').format(DateTime.now()));
     onLoad(selectedVehicle.subTitle);
   }
@@ -68,7 +75,7 @@ class ScheduleViewModel extends ViewModelBase {
     super.dispose();
   }
 
-  onTapItemPickDrop(DriverBusSession driverBusSession,bool canStart) {
+  onTapItemPickDrop(DriverBusSession driverBusSession, bool canStart) {
     cloudService.busSession
         .createListBusSessionFromDriverBusSession(driverBusSession);
     Navigator.pushNamed(context, HomePage.routeName,

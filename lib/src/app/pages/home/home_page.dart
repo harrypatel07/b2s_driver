@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/statusBus.dart';
@@ -31,6 +29,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   HomePageViewModel viewModel = HomePageViewModel();
   @override
   void initState() {
+    viewModel.driverBusSession = widget.args.driverBusSession;
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   viewModel.loadData();
     // });
@@ -145,6 +144,54 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       );
     }
 
+    Widget __arrangeListRouteButton() {
+      return Positioned(
+        bottom: 0,
+        left: 0,
+        width: 90,
+        height: 65,
+        child: TS24Button(
+          onTap: (){
+            viewModel.onTapArrangeListRoute(driverBusSession);
+          },
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(topRight: Radius.circular(12)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 1.0, // has the effect of softening the shadow
+                  spreadRadius: 1.0, // has the effect of extending the shadow
+                  offset: Offset(
+                    -1.0, // horizontal, move right 10
+                    -1.0, // vertical, move down 10
+                  ),
+                ),
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 1.0, // has the effect of softening the shadow
+                  spreadRadius: 1.0, // has the effect of extending the shadow
+                  offset: Offset(
+                    1.0, // horizontal, move right 10
+                    1.0, // vertical, move down 10
+                  ),
+                )
+              ],
+              color: ThemePrimary.primaryColor),
+          child: Container(
+            padding: EdgeInsets.only(left: 10,right: 10),
+            alignment: Alignment.center,
+            child: Text(
+              "Sắp xếp lịch trình",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15),
+            ),
+          ),
+        ),
+      );
+    }
+
     Widget __buildButtonStart() {
       return Positioned(
         bottom: 0,
@@ -193,6 +240,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: HomePageTimeLineV2(listTimeLine: listTimeLine)),
         __buildReport(),
         __buildButtonStart(),
+        __arrangeListRouteButton(),
       ],
     );
   }
@@ -203,7 +251,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     //tabsPageViewModel = ViewModelProvider.of(context);
     //viewModel = tabsPageViewModel.homePageViewModel;
     viewModel.context = context;
-    viewModel.driverBusSession = widget.args.driverBusSession;
     return ViewModelProvider(
       viewmodel: viewModel,
       child: StreamBuilder<Object>(

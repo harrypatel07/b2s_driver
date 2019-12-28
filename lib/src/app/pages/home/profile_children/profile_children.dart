@@ -2,9 +2,11 @@ import 'package:b2s_driver/src/app/models/chat.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/pages/message/messageDetail/message_detail_page.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:validators/sanitizers.dart';
@@ -37,24 +39,54 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
+    Widget backButton() {
+      return Positioned(
+        top: 0,
+        left: 0,
+        child: SafeArea(
+          bottom: false,
+          top: true,
+          child: TS24Button(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(25),
+                  topRight: Radius.circular(25)),
+              color: Colors.black38,
+            ),
+            width: 70,
+            height: 50,
+            child: Container(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
-    final cancelBtn = Positioned(
-      top: 50.0,
-      left: 20.0,
-      child: Container(
-        height: 35.0,
-        width: 35.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey.withOpacity(0.5),
-        ),
-        child: IconButton(
-          icon: Icon(LineIcons.close, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-          iconSize: 20.0,
-        ),
-      ),
-    );
+//    final cancelBtn = Positioned(
+//      top: 50.0,
+//      left: 20.0,
+//      child: Container(
+//        height: 35.0,
+//        width: 35.0,
+//        decoration: BoxDecoration(
+//          shape: BoxShape.circle,
+//          color: Colors.grey.withOpacity(0.5),
+//        ),
+//        child: IconButton(
+//          icon: Icon(LineIcons.close, color: Colors.white),
+//          onPressed: () => Navigator.pop(context),
+//          iconSize: 20.0,
+//        ),
+//      ),
+//    );
 //    final qrCode = Positioned(
 //      bottom: 0,
 //      left: deviceWidth/2-80,
@@ -92,7 +124,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                 ],
               ),
             )),
-        cancelBtn,
+        backButton(),
 //        qrCode
       ],
     );
@@ -144,17 +176,17 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
       height: 1,
       color: Colors.grey.shade300,
     );
-    final userLocation = Container(
-      padding: EdgeInsets.only(left: 20.0, right: 20.0),
-      child: Text(
-        children.location,
-        style: TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          color: Colors.grey.withOpacity(0.8),
-        ),
-      ),
-    );
+//    final userLocation = Container(
+//      padding: EdgeInsets.only(left: 20.0, right: 20.0),
+//      child: Text(
+//        children.location,
+//        style: TextStyle(
+//          fontSize: 18.0,
+//          fontWeight: FontWeight.bold,
+//          color: Colors.grey.withOpacity(0.8),
+//        ),
+//      ),
+//    );
     Widget rowTitle(String title) {
       return Container(
         padding: EdgeInsets.only(top: 10, bottom: 10, left: 15.0, right: 15.0),
@@ -179,104 +211,6 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                       color: Colors.white),
                 ),
               ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    Widget row2(String title1, String content1, String title2, String content2,
-        bool type) {
-      return Container(
-        color: Colors.white,
-        padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 15, bottom: 15),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 3,
-                  child: SizedBox(),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(top: 3, right: 3, bottom: 3),
-                        child: Icon(
-                          type ? Icons.home : Icons.school,
-                          color: type ? Colors.orange : Colors.green,
-                          size: 20,
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          title1,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      content1,
-                      textAlign: TextAlign.left,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 3,
-                  child: SizedBox(),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(top: 3, right: 3, bottom: 3),
-                        child: Icon(
-                          type ? Icons.school : Icons.home,
-                          color: type ? Colors.green : Colors.orange,
-                          size: 20,
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          title2,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      content2,
-                      textAlign: TextAlign.left,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                )
-              ],
             ),
           ],
         ),
@@ -342,10 +276,9 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex:
-                        (phoneNumber != null && toBoolean(phoneNumber) != false)
-                            ? 10
-                            : 14,
+                    flex: (phoneNumber != null && !(phoneNumber is bool))
+                        ? 10
+                        : 14,
                     child: Container(
                       padding: EdgeInsets.only(top: 10, bottom: 10, left: 5),
                       alignment: Alignment.centerLeft,
@@ -360,7 +293,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                       ),
                     ),
                   ),
-                  if (phoneNumber != null && toBoolean(phoneNumber) != false)
+                  if (phoneNumber != null && !(phoneNumber is bool))
                     Expanded(
                       flex: 2,
                       child: InkWell(
@@ -380,7 +313,7 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                         ),
                       ),
                     ),
-                  if (phoneNumber != null && toBoolean(phoneNumber) != false)
+                  if (phoneNumber != null && !(phoneNumber is bool))
                     Expanded(
                       flex: 2,
                       child: InkWell(
@@ -462,11 +395,40 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
                   rowTitle('THÔNG TIN HỌC SINH'),
                   row1('Họ và tên :', children.name.toString()),
                   hr,
-                  row1('Lớp :', children.classes.toString()),
+                  row1(
+                      'Ngày sinh :',
+                      (children.birthday is bool || children.birthday == null)
+                          ? ''
+                          : DateFormat('dd/MM/yyyy').format(
+                              DateTime.parse(children.birthday.toString()))),
                   hr,
-                  row1('Trường :', children.schoolName.toString()),
+                  row1(
+                      'Tuổi :',
+                      (children.birthday is bool || children.birthday == null)
+                          ? ''
+                          : (DateTime.now().year -
+                                  DateTime.parse(children.birthday.toString())
+                                      .year)
+                              .toString()),
                   hr,
-                  row1('Địa chỉ :', children.location.toString()),
+                  row1(
+                      'Lớp :',
+                      (children.classes is bool || children.classes == null)
+                          ? ''
+                          : children.classes.toString()),
+                  hr,
+                  row1(
+                      'Trường :',
+                      (children.schoolName is bool ||
+                              children.schoolName == null)
+                          ? ''
+                          : children.schoolName.toString()),
+                  hr,
+                  row1(
+                      'Địa chỉ :',
+                      (children.location is bool || children.location == null)
+                          ? ''
+                          : children.location.toString()),
                   hr,
                   rowIcon('Phụ huynh :', children.parent.name.toString(),
                       children.parent.phone.toString(), () {
@@ -527,7 +489,10 @@ class _ProfileChildrenPageState extends State<ProfileChildrenPage> {
           children: <Widget>[
             userImage,
             userName,
-            userLocation,
+            SizedBox(
+              height: 15,
+            ),
+//            userLocation,
             childrenInfo(),
             //busInfo
           ],

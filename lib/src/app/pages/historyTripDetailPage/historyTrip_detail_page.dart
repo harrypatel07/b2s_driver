@@ -5,14 +5,12 @@ import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/pages/historyTripDetailPage/historyTrip_detail_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/common-service.dart';
-import 'package:b2s_driver/src/app/service/googlemap-service.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/dash.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 class HistoryTripDetailPage extends StatefulWidget {
@@ -68,6 +66,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
     viewModel.scrollController.addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
       viewModel.getUrlMaps(widget.driverBusSession);
+      viewModel.getListPositions(widget.driverBusSession);
           _getPosition();
           _getSizeContent();
         }));
@@ -253,31 +252,31 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
         );
       }
 
-      Widget __image() {
-        String url = GoogleMapService.getUrlImageFromMultiMarker(
-          width: (MediaQuery.of(context).size.width.toInt() - 40) * 2,
-          height: 170,
-          listLatLng: driverBusSession.listRouteBus
-              .map((route) => LatLng(route.lat, route.lng))
-              .toList(),
-        );
-
-        return Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: Container(
-//        color: Colors.orange,
-              height: 170 / 2 + 40,
-              width: MediaQuery.of(context).size.width,
-              child: CachedNetworkImage(
-                  imageUrl: url,
-                  imageBuilder: (context, imageProvider) => Image(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
-                      ))),
-        );
-      }
+//      Widget __image() {
+//        String url = GoogleMapService.getUrlImageFromMultiMarker(
+//          width: (MediaQuery.of(context).size.width.toInt() - 40) * 2,
+//          height: 170,
+//          listLatLng: driverBusSession.listRouteBus
+//              .map((route) => LatLng(route.lat, route.lng))
+//              .toList(),
+//        );
+//
+//        return Positioned(
+//          top: 0,
+//          left: 0,
+//          right: 0,
+//          child: Container(
+////        color: Colors.orange,
+//              height: 170 / 2 + 40,
+//              width: MediaQuery.of(context).size.width,
+//              child: CachedNetworkImage(
+//                  imageUrl: url,
+//                  imageBuilder: (context, imageProvider) => Image(
+//                        image: imageProvider,
+//                        fit: BoxFit.cover,
+//                      ))),
+//        );
+//      }
 
       Widget __right() {
 //        int countChild = 0;
@@ -554,17 +553,17 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
       );
     }
 
-    Widget _appBar() {
-      return TS24AppBar(
-        backgroundColorStart: ThemePrimary.primaryColor,
-        backgroundColorEnd: ThemePrimary.primaryColor,
-        title: Text('Chi tiết lịch sử chuyến'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      );
-    }
+//    Widget _appBar() {
+//      return TS24AppBar(
+//        backgroundColorStart: ThemePrimary.primaryColor,
+//        backgroundColorEnd: ThemePrimary.primaryColor,
+//        title: Text('Chi tiết lịch sử chuyến'),
+//        leading: IconButton(
+//          icon: Icon(Icons.arrow_back),
+//          onPressed: () => Navigator.pop(context),
+//        ),
+//      );
+//    }
 
     Widget _body() {
       return _item(
@@ -601,12 +600,17 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                                     : Colors.transparent,
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold)),
-                        background: CachedNetworkImage(
-                            imageUrl: viewModel.urlMaps,
-                            imageBuilder: (context, imageProvider) => Image(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ))),
+                        background: InkWell(
+                          onTap: (){
+                            viewModel.onTapMaps(widget.driverBusSession.listRouteBus);
+                          },
+                          child: CachedNetworkImage(
+                              imageUrl: viewModel.urlMaps,
+                              imageBuilder: (context, imageProvider) => Image(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              )),
+                        )),
                   ),
                   new SliverList(
                       delegate: new SliverChildListDelegate([_body()])),

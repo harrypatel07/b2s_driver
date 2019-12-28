@@ -4,6 +4,7 @@ import 'package:b2s_driver/src/app/models/itemCustomPopupMenu.dart';
 import 'package:b2s_driver/src/app/pages/historyTrip/historyTrip_viewmodel.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/dash.dart';
+import 'package:b2s_driver/src/app/widgets/empty_widget.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_scaffold_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -353,38 +354,38 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
         );
       }
 
-      Widget __buttonSupport() {
-        return InkWell(
-          onTap: onTap,
-          child: ClipRRect(
-            borderRadius: new BorderRadius.only(
-                bottomRight: Radius.circular(18),
-                bottomLeft: Radius.circular(18)),
-            child: Container(
-//          padding: EdgeInsets.only(right: 10,left: 10),
-              child: Container(
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width - 25,
-                height: 50,
-                color: driverBusSession.status
-                    ? Colors.green[300]
-                    : Colors.black87,
-                child: driverBusSession.status
-                    ? Text(
-                        'ĐÃ HOÀN THÀNH',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
-                      )
-                    : Text(
-                        'CHỌN',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
-                      ),
-              ),
-            ),
-          ),
-        );
-      }
+//      Widget __buttonSupport() {
+//        return InkWell(
+//          onTap: onTap,
+//          child: ClipRRect(
+//            borderRadius: new BorderRadius.only(
+//                bottomRight: Radius.circular(18),
+//                bottomLeft: Radius.circular(18)),
+//            child: Container(
+////          padding: EdgeInsets.only(right: 10,left: 10),
+//              child: Container(
+//                alignment: Alignment.center,
+//                width: MediaQuery.of(context).size.width - 25,
+//                height: 50,
+//                color: driverBusSession.status
+//                    ? Colors.green[300]
+//                    : Colors.black87,
+//                child: driverBusSession.status
+//                    ? Text(
+//                        'ĐÃ HOÀN THÀNH',
+//                        textAlign: TextAlign.center,
+//                        style: TextStyle(color: Colors.white),
+//                      )
+//                    : Text(
+//                        'CHỌN',
+//                        textAlign: TextAlign.center,
+//                        style: TextStyle(color: Colors.white),
+//                      ),
+//              ),
+//            ),
+//          ),
+//        );
+//      }
 
       return Container(
         width: MediaQuery.of(context).size.width,
@@ -551,11 +552,8 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
                     ],
                   )
                 : SingleChildScrollView(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.9,
-                      alignment: Alignment.center,
-                      child: Text('Chưa có lịch sử chuyến.'),
+                    child: EmptyWidget(
+                      message: 'Chưa có lịch sử di chuyển.',
                     ),
                   ),
 //              ),
@@ -574,6 +572,5 @@ class _HistoryTripPageState extends State<HistoryTripPage> {
             );
           }),
     );
-    ;
   }
 }

@@ -51,7 +51,8 @@ class Children {
     this.schoolName = (partner["school"] is bool) ? "" : partner["school"];
     this.phone = (partner["phone"] is bool) ? "" : partner["phone"];
     this.name = (partner["name"] is bool) ? "" : partner["name"];
-    this.birthday = partner["date_of_birth"];
+    this.birthday =
+        (partner["date_of_birth"] is bool) ? null : partner["date_of_birth"];
     this.email = (partner["email"] is bool) ? "" : partner["email"];
     this.photo = partner["image"];
     this.classes = (partner["class"] is bool) ? "" : partner["class"];
@@ -97,7 +98,7 @@ class Children {
 
     if (resPartner.parentId is List) parentId = resPartner.parentId[0];
     this.primary = primary;
-    birthday = resPartner.wkDob;
+    birthday = (resPartner.wkDob is bool) ? null : resPartner.wkDob;
     if (this.birthday != null) if (!(this.birthday is bool)) {
       var date = DateTime.parse(this.birthday);
       var dateNow = DateTime.now();

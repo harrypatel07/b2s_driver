@@ -1,10 +1,10 @@
-import 'dart:async';
 import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/menu.dart';
+import 'package:b2s_driver/src/app/pages/home/bottomSheetArrangeListRoute/bottomSheet_arrange_list_route.dart';
 import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
@@ -18,9 +18,9 @@ class HomePageViewModel extends ViewModelBase {
   bool isShowListButton = false;
   TabsPageViewModel tabsPageViewModel;
   HomePageViewModel();
+  DriverBusSession driverBusSession;
   List<Children> listChildrenSS1 = new List();
   List<Children> listChildrenSS2 = new List();
-  DriverBusSession driverBusSession = DriverBusSession();
   String busId = "";
 
   List<Children> getListChildrenForTimeLine(
@@ -155,5 +155,39 @@ class HomePageViewModel extends ViewModelBase {
   showNoticeCantStart() {
     LoadingDialog().showMsgDialogWithCloseButton(
         context, 'Không thể bắt đầu chuyến đi của ngày mai.');
+  }
+
+  onTapArrangeListRoute(DriverBusSession driverBusSession) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) {
+          return FractionallySizedBox(
+              heightFactor: 0.8,
+              child: BottomSheetArrangeListRoute(
+                driverBusSession: driverBusSession,
+              ));
+        }).then((_){
+          this.updateState();
+    });
+//    showModalBottomSheet(
+//      context: context,
+//      builder: (BuildContext context) {
+//        return BottomSheetArrangeListRoute(
+//            driverBusSession: driverBusSession,
+//        );
+//      },
+//    );
+//    showModalBottomSheet(
+//      context: context,
+//      isScrollControlled: false,
+//      backgroundColor: Colors.transparent,
+//      builder: (BuildContext ct) {
+//        return BottomSheetArrangeListRoute(
+//          driverBusSession: driverBusSession,
+//        );
+//      },
+//    );
   }
 }

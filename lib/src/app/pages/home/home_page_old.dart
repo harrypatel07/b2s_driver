@@ -72,7 +72,7 @@ class _HomePageOldState extends State<HomePageOld> with TickerProviderStateMixin
                   driverBusSession.busID.toString();
               return HomePageCardTimeLine(
                 children: children,
-                isEnablePicked: statusID == 0 ? true : false,
+                isEnablePicked: int.parse(statusID.toString()) == 0 ? true : false,
                 status: statusBus,
                 isEnableTapChildrenContentCard: true,
                 heroTag: tag,

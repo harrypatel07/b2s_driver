@@ -1,7 +1,6 @@
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/menu.dart';
-import 'package:b2s_driver/src/app/pages/sidemenu/sidemenu_page.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page_viewmodel.dart';
 
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';

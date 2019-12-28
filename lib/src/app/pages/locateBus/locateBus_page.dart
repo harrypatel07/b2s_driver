@@ -2,6 +2,7 @@ import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page_viewmodel.dart';
+import 'package:b2s_driver/src/app/service/common-service.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
@@ -32,6 +33,7 @@ class _LocateBusPageState extends State<LocateBusPage>
     //viewModel.listenData();
     viewModel.onCreateDriverBusSessionReport();
     viewModel.listenData();
+    viewModel.increasePointNextPick();
     super.initState();
   }
 
@@ -89,8 +91,9 @@ class _LocateBusPageState extends State<LocateBusPage>
 
     Widget __contentReport(List<Children> listChildren) {
       return Container(
-        color: ThemePrimary.primaryColor,
-        height: MediaQuery.of(context).size.height * 0.87,
+        height: (MediaQuery.of(context).orientation == Orientation.portrait)
+            ? MediaQuery.of(context).size.height - 144
+            : MediaQuery.of(context).size.height - 124,
         width: MediaQuery.of(context).size.width,
         child: SingleChildScrollView(
           child: Column(
@@ -132,67 +135,215 @@ class _LocateBusPageState extends State<LocateBusPage>
     }
 
     Widget __notice() {
-      int pointNext = viewModel.getPointNextPick();
+//      viewModel.increasePointNextPick();
+      String time = (viewModel.pointNext > 0)
+          ? Common.removeMiliSecond(viewModel
+              .driverBusSession.listRouteBus[viewModel.pointNext - 1].time)
+          : '';
+      int countChildPick = (viewModel.pointNext > 0)
+          ? viewModel.driverBusSession.childDrenStatus
+              .where((childDrenStatus) =>
+                  childDrenStatus.statusID == 0 &&
+                  viewModel.driverBusSession
+                          .listRouteBus[viewModel.pointNext - 1].id ==
+                      childDrenStatus.routeBusID &&
+                  childDrenStatus.typePickDrop == 0)
+              .toList()
+              .length
+          : 0;
+      int countChildDrop = (viewModel.pointNext > 0)
+          ? viewModel.driverBusSession.childDrenStatus
+              .where((childDrenStatus) =>
+                  childDrenStatus.statusID == 0 &&
+                  viewModel.driverBusSession
+                          .listRouteBus[viewModel.pointNext - 1].id ==
+                      childDrenStatus.routeBusID &&
+                  childDrenStatus.typePickDrop == 1)
+              .toList()
+              .length
+          : 0;
       return Positioned(
         right: 0,
         top: 10,
         child: NoticeLocalBus(
           onTap: () {
-            if (pointNext != -1)
-              viewModel.onTapNoticeContent(
-                  viewModel.getRouteBusPointNext(), pointNext);
+            viewModel.onTapNoticeContent();
           },
-          content: RichText(
-              text: (pointNext != -1)
-                  ? new TextSpan(
-                      style: new TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.black,
-                      ),
-                      children: <TextSpan>[
-                        new TextSpan(text: 'Điểm đón tiếp theo: '),
-                        new TextSpan(
-                            text: 'Điểm số ${pointNext.toString()}\n',
-                            style: new TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: ThemePrimary.primaryColor)),
-                        new TextSpan(text: 'Địa chỉ: '),
-                        new TextSpan(
-                            text: '${viewModel.getAddressPointNext()}\n',
-                            style: new TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: ThemePrimary.primaryColor)),
-                        new TextSpan(text: 'Học sinh cần đón: '),
-                        new TextSpan(
-                            text:
-                                '${viewModel.getCountChildrenPickPointNext().toString()}\n',
-                            style: new TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: ThemePrimary.primaryColor)),
-                        new TextSpan(text: 'Học sinh phải trả: '),
-                        new TextSpan(
-                            text:
-                                '${viewModel.getCountChildrenDropPointNext().toString()}',
-                            style: new TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: ThemePrimary.primaryColor)),
-                      ],
-                    )
-                  : new TextSpan(
-                      style: new TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.black,
-                      ),
-                      children: <TextSpan>[
-                          TextSpan(
-                            text:
-                                '\nXin vui lòng bấm kết thúc để hoàn thành chuyến đi.\n',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: ThemePrimary.primaryColor,
+          content: (viewModel.pointNext != -1)
+              ? Column(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(left: 5, right: 5),
+                      child: Row(
+//                      mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Stack(
+                            children: <Widget>[
+                              Icon(
+                                Icons.radio_button_unchecked,
+                                size: 28,
+                                color: ThemePrimary.primaryColor,
+                              ),
+                              Container(
+//                              color: Colors.yellow,
+                                width: 28,
+                                height: 28,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  viewModel.pointNext.toString(),
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      color: ThemePrimary.primaryColor),
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: Text(
+                              '${viewModel.getAddressPointNext()}',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.bold),
                             ),
                           ),
-                        ])),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 5, right: 5),
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.arrow_upward,
+                            color: ThemePrimary.primaryColor,
+                          ),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Text(
+                            '$countChildPick',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Icon(
+                            Icons.arrow_downward,
+                            color: Colors.yellow[700],
+                          ),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Text(
+                            '$countChildDrop',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Icon(
+                            Icons.access_time,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Text(
+                            " $time",
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: TS24Button(
+                            onTap: () {
+                              viewModel.showBottomSheetListRoute();
+                            },
+                            height: 35,
+                            decoration: BoxDecoration(
+                                color: ThemePrimary.primaryColor,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(12))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.menu,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'Danh sách điểm',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: TS24Button(
+                            onTap: () {
+                              viewModel.increasePointNextPick();
+                            },
+                            height: 35,
+                            decoration: BoxDecoration(
+                                color: ThemePrimary.colorParentApp,
+                                borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(12))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.skip_next,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'Điểm tiếp theo',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              : RichText(
+                  text: new TextSpan(
+                      style: new TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.black,
+                      ),
+                      children: <TextSpan>[
+                      TextSpan(
+                        text:
+                            '\nXin vui lòng bấm kết thúc để hoàn thành chuyến đi.\n',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: ThemePrimary.primaryColor,
+                        ),
+                      ),
+                    ])),
         ),
       );
     }

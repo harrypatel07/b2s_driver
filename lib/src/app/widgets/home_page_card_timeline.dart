@@ -51,30 +51,6 @@ class HomePageCardTimeLine extends StatelessWidget {
     }
 
     //WidgetsBinding.instance.addPostFrameCallback((_)=>_getPosition());
-    Widget _age() {
-      return new Container(
-        width: 15.0,
-        height: 15.0,
-        decoration: new BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black54,
-              blurRadius: 20.0, // has the effect of softening the shadow
-              spreadRadius: 3.0, // has the effect of extending the shadow
-            )
-          ],
-          color: Colors.white,
-          shape: BoxShape.circle,
-        ),
-        child: Align(
-          alignment: Alignment.center,
-          child: Text(
-            children.age.toString(),
-            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700),
-          ),
-        ),
-      );
-    }
 
     Widget _status() {
       return new Container(
@@ -145,13 +121,24 @@ class HomePageCardTimeLine extends StatelessWidget {
       alignment: FractionalOffset.centerLeft,
       child: _avatar(),
     );
-    // final childrenAvatar = new Positioned(
-    //   // margin: new EdgeInsets.symmetric(vertical: 16.0),
-    //   // alignment: Alignment(-0.80, 0.9),
-    //   top: 40,
-    //   left: 40,
-    //   child: _age(),
-    // );
+    final iconBirthday = new Positioned(
+      // margin: new EdgeInsets.symmetric(vertical: 16.0),
+      // alignment: Alignment(-0.80, 0.9),
+      top: 45,
+      left: 35,
+      child: Container(
+        width: 20,
+        height: 20,
+        alignment: Alignment.center,
+        decoration:
+            BoxDecoration(color: ThemePrimary.primaryColor, shape: BoxShape.circle),
+        child: Icon(
+          Icons.cake,
+          color: Colors.yellow,
+          size: 15,
+        ),
+      ),
+    );
     final baseTextStyle =
         const TextStyle(fontFamily: ThemePrimary.primaryFontFamily);
     final regularTextStyle = baseTextStyle.copyWith(
@@ -232,7 +219,7 @@ class HomePageCardTimeLine extends StatelessWidget {
                         ),
                         new Text(children.gender.toString(),
                             style: subHeaderTextStyle),
-                        (cardType == 1 && status!=null)
+                        (cardType == 1 && status != null)
                             ? _status()
                             : Container(
                                 height: 11,
@@ -243,7 +230,7 @@ class HomePageCardTimeLine extends StatelessWidget {
                   // Spacer(),
                   // Expanded(
                   //   child:
-                  (status!=null && status.statusID != 3)
+                  (status != null && status.statusID != 3)
                       ? cardType == 1
                           ? Column(
                               children: <Widget>[
@@ -447,15 +434,17 @@ class HomePageCardTimeLine extends StatelessWidget {
                                                     color: Colors.white)),
                                       ),
                                     )
-                                  :(status!=null)?Text(
-                                      typePickDrop == 0 ? 'Đón' : 'Trả',
-                                      style: new TextStyle(
-                                          fontFamily:
-                                              ThemePrimary.primaryFontFamily,
-                                          fontSize: 14.0,
-                                          color: ThemePrimary.primaryColor,
-                                          fontWeight: FontWeight.bold),
-                                    ):SizedBox(),
+                                  : (status != null)
+                                      ? Text(
+                                          typePickDrop == 0 ? 'Đón' : 'Trả',
+                                          style: new TextStyle(
+                                              fontFamily: ThemePrimary
+                                                  .primaryFontFamily,
+                                              fontSize: 14.0,
+                                              color: ThemePrimary.primaryColor,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      : SizedBox(),
                             )
                       : (cardType == 1)
                           ? Container()
@@ -465,34 +454,36 @@ class HomePageCardTimeLine extends StatelessWidget {
                               alignment: Alignment.center,
                               child: selected != null
                                   ? Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: ThemePrimary.primaryColor),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(1.0),
-                                  child: selected
-                                      ? Icon(
-                                    Icons.check,
-                                    size: 20.0,
-                                    color: Colors.white,
-                                  )
-                                      : Container(
+                                      width: 30,
+                                      height: 30,
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: Colors.white)),
-                                ),
-                              )
-                                  :(status!=null)? Text(
-                                      typePickDrop == 0 ? 'Đón' : 'Trả',
-                                      style: new TextStyle(
-                                          fontFamily:
-                                              ThemePrimary.primaryFontFamily,
-                                          fontSize: 14.0,
-                                          color: ThemePrimary.primaryColor,
-                                          fontWeight: FontWeight.bold),
-                                    ):SizedBox(),
+                                          color: ThemePrimary.primaryColor),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(1.0),
+                                        child: selected
+                                            ? Icon(
+                                                Icons.check,
+                                                size: 20.0,
+                                                color: Colors.white,
+                                              )
+                                            : Container(
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.white)),
+                                      ),
+                                    )
+                                  : (status != null)
+                                      ? Text(
+                                          typePickDrop == 0 ? 'Đón' : 'Trả',
+                                          style: new TextStyle(
+                                              fontFamily: ThemePrimary
+                                                  .primaryFontFamily,
+                                              fontSize: 14.0,
+                                              color: ThemePrimary.primaryColor,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      : SizedBox(),
                             ),
                   // ),
                 ],
@@ -528,6 +519,10 @@ class HomePageCardTimeLine extends StatelessWidget {
         ],
       ),
     );
+    DateTime birth = (children.birthday is bool || children.birthday == null)
+        ? null
+        : DateTime.parse(children.birthday);
+    DateTime now = DateTime.now();
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: new Container(
@@ -536,6 +531,8 @@ class HomePageCardTimeLine extends StatelessWidget {
         children: <Widget>[
           childrenCard,
           childrenThumbnail,
+          if (birth != null && birth.day == now.day && birth.month == now.month)
+            iconBirthday,
 //              childrenAvatar,
         ],
       )),

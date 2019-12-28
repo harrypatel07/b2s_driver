@@ -5,10 +5,10 @@ import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
-import 'package:b2s_driver/src/app/models/models-traccar/devices.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/pages/bottomSheet/bottom_sheet_custom.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
+import 'package:b2s_driver/src/app/pages/locateBus/bottomSheetListRoute/bottomSheet_list_route.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/widgets/icon_marker_custom.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
@@ -35,6 +35,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   Geolocator geolocator = Geolocator();
   //List<Children> listChildrenPaidTicket;
   StreamSubscription streamLocation;
+  int pointNext = 0;
 
   //Tạo list routeBus cho thông báo khi xe sắp đến.
   Map _listRouteBusPushed = Map();
@@ -249,13 +250,54 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
         if (result && driverBusSession.listRouteBus.length > pos) {
           animateThePoint(pos);
         }
-        if (result) initMarkers();
+        if (result){
+          initMarkers();
+          increasePointNextPick();
+          this.updateState();
+        }
       } catch (e) {
         print(e);
       }
       this.updateState();
     });
     animateThePoint(pos - 1);
+  }
+
+  void showBottomSheetListRoute() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext ct) {
+        return BottomSheetListRoute(
+          arguments: BottomSheetCustomArgs(viewModel: this),
+        );
+      },
+    ).then((position) {
+      try {
+        if (position != null) {
+          _trackingMyLoc = false;
+          pointNext = position;
+          animateThePoint(position - 1);
+        }
+//        this.updateState();
+//        onTapMaker(driverBusSession.listRouteBus[position - 1], position);
+      } catch (e) {
+        print(e);
+      }
+    });
+//        .then((result) {
+//      try {
+//        if (result && driverBusSession.listRouteBus.length > pos) {
+//          animateThePoint(pos);
+//        }
+//        if (result) initMarkers();
+//      } catch (e) {
+//        print(e);
+//      }
+//      this.updateState();
+//    });
+//    animateThePoint(pos - 1);
   }
 
 //Kiểm tra vị trí xe và khoảng cách các route
@@ -356,8 +398,20 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
         .toList();
   }
 
-  onTapNoticeContent(RouteBus routeBus, int position) {
-    onTapMaker(routeBus, position);
+  onTapNoticeContent() {
+    if (pointNext != -1)
+      onTapMaker(driverBusSession.listRouteBus[pointNext - 1], pointNext);
+  }
+
+  increasePointNextPick() {
+    _trackingMyLoc = false;
+    if (pointNext < driverBusSession.listRouteBus.length && !driverBusSession.listRouteBus[pointNext].status&&
+        !driverBusSession
+            .listRouteBus[driverBusSession.listRouteBus.length - 1].status) {
+      pointNext++;
+    } else
+      pointNext = getPointNextPick();
+    if (pointNext != -1) animateThePoint(pointNext - 1);
   }
 
   int getPointNextPick() {
@@ -365,15 +419,14 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
     for (int i = 0; i < driverBusSession.listRouteBus.length; i++)
       if (driverBusSession.listRouteBus[i].status == false) {
         result = i + 1;
-        break;
+        if(result != pointNext)
+          break;
       }
     return result;
   }
 
   String getAddressPointNext() {
-    return driverBusSession.listRouteBus
-        .firstWhere((routeBus) => routeBus.status == false)
-        .routeName;
+    return (pointNext >0)? driverBusSession.listRouteBus[pointNext - 1].routeName:'';
   }
 
   int getCountChildrenPickPointNext() {
@@ -407,5 +460,13 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   RouteBus getRouteBusPointNext() {
     return driverBusSession.listRouteBus
         .firstWhere((routeBus) => routeBus.status == false);
+  }
+
+  onTapNextPoint() {
+////    if(pointNext <= driverBusSession.listRouteBus.length - 1) {
+////      pointNext++;
+////      animateThePoint(pointNext-1);
+    this.updateState();
+////    }
   }
 }

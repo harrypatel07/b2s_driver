@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:b2s_driver/src/app/models/busTimeLine.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
-import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
@@ -16,7 +16,11 @@ class HomePageTimeLineV2 extends StatelessWidget {
 //  final ui.Image image;
 //  final bool isEnableIconBus;
   HomePageTimeLineV2(
-      {this.listTimeLine, this.busTimeLine, this.animationBusController,this.position,this.atPageHome = true});
+      {this.listTimeLine,
+      this.busTimeLine,
+      this.animationBusController,
+      this.position,
+      this.atPageHome = true});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,9 @@ class HomePageTimeLineV2 extends StatelessWidget {
     return Container(
       child: ListView.builder(
         itemCount: listTimeLine.length,
-        padding: atPageHome? EdgeInsets.only(bottom: 60):EdgeInsets.only(bottom: 45.0),
+        padding: atPageHome
+            ? EdgeInsets.only(bottom: 60)
+            : EdgeInsets.only(bottom: 45.0),
         itemBuilder: (context, index) {
           return new LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
@@ -35,7 +41,7 @@ class HomePageTimeLineV2 extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   _lineStyle(context, iconSize, index, listTimeLine.length,
-                      listTimeLine[index].isFinish, renderBox,position),
+                      listTimeLine[index].isFinish, renderBox, position),
                   // _displayTime(listTimeLine[index].time),
                   _displayContent(listTimeLine[index], context)
                 ],
@@ -58,19 +64,30 @@ class HomePageTimeLineV2 extends StatelessWidget {
           child: Row(
             children: <Widget>[
               Expanded(
-                child: Container(
-                  // width: MediaQuery.of(context).size.width - 50,
-                  child: Text(
-                    event.task,
-                    overflow: TextOverflow.ellipsis,
-                    style: new TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: (event.isFinish) ? Colors.green : Colors.black,
-                      fontSize: 16.0,
-                      fontFamily: ThemePrimary.primaryFontFamily,
+                child: TS24Button(
+                  onTap: () {
+                    try {
+                      if (!event.isFinish) event.onTap();
+                    } catch (e) {}
+                  },
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.zero)),
+                  child: Container(
+                    // width: MediaQuery.of(context).size.width - 50,
+                    child: Text(
+                      event.task,
+                      overflow: TextOverflow.ellipsis,
+                      style: new TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: (event.isFinish)
+                            ? event.colorFinish
+                            : event.colorDefault,
+                        fontSize: 16.0,
+                        fontFamily: ThemePrimary.primaryFontFamily,
+                      ),
+                      textAlign: TextAlign.start,
+                      maxLines: 2,
                     ),
-                    textAlign: TextAlign.start,
-                    maxLines: 2,
                   ),
                 ),
               ),
@@ -82,7 +99,7 @@ class HomePageTimeLineV2 extends StatelessWidget {
                 ),
               ),
               Text(
-                event.time.substring(0,event.time.length-3),
+                event.time.substring(0, event.time.length - 3),
                 style: TextStyle(fontFamily: ThemePrimary.primaryFontFamily),
               ),
             ],
@@ -108,7 +125,7 @@ class HomePageTimeLineV2 extends StatelessWidget {
   }
 
   Widget _lineStyle(BuildContext context, double iconSize, int index,
-      int listLength, bool isFinish, RenderBox renderBox,int numberTitle) {
+      int listLength, bool isFinish, RenderBox renderBox, int numberTitle) {
     return Stack(
       children: <Widget>[
         Container(
@@ -141,8 +158,10 @@ class HomePageTimeLineV2 extends StatelessWidget {
                     width: iconSize,
                     height: iconSize,
                     alignment: Alignment.center,
-                    child: Text(numberTitle!=null?numberTitle.toString():
-                      "${index + 1}",
+                    child: Text(
+                      numberTitle != null
+                          ? numberTitle.toString()
+                          : "${index + 1}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
@@ -177,8 +196,19 @@ class TimeLineEvent {
   final String task;
   final List<Widget> content;
   final bool isFinish;
+  final Color colorDefault;
+  final Color colorFinish;
+  final Function onTap;
 
-  TimeLineEvent({this.id,this.time, this.task, this.content, this.isFinish});
+  TimeLineEvent(
+      {this.id,
+      this.time,
+      this.task,
+      this.content,
+      this.isFinish,
+      this.onTap,
+      this.colorDefault = Colors.black,
+      this.colorFinish = Colors.green});
 }
 
 class CustomIconDecoration extends Decoration {

@@ -2,6 +2,7 @@ import 'package:b2s_driver/src/app/models/chat.dart';
 import 'package:b2s_driver/src/app/models/profileMessageUser.dart';
 import 'package:b2s_driver/src/app/pages/message/messageDetail/message_detail_page.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -27,24 +28,53 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
-
-    final cancelBtn = Positioned(
-      top: 50.0,
-      left: 20.0,
-      child: Container(
-        height: 35.0,
-        width: 35.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey.withOpacity(0.5),
+    Widget backButton() {
+      return Positioned(
+        top: 0,
+        left: 0,
+        child: SafeArea(
+          bottom: false,
+          top: true,
+          child: TS24Button(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(25),
+                  topRight: Radius.circular(25)),
+              color: Colors.black38,
+            ),
+            width: 70,
+            height: 50,
+            child: Container(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
+          ),
         ),
-        child: IconButton(
-          icon: Icon(LineIcons.close, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-          iconSize: 20.0,
-        ),
-      ),
-    );
+      );
+    }
+//    final cancelBtn = Positioned(
+//      top: 50.0,
+//      left: 20.0,
+//      child: Container(
+//        height: 35.0,
+//        width: 35.0,
+//        decoration: BoxDecoration(
+//          shape: BoxShape.circle,
+//          color: Colors.grey.withOpacity(0.5),
+//        ),
+//        child: IconButton(
+//          icon: Icon(LineIcons.close, color: Colors.white),
+//          onPressed: () => Navigator.pop(context),
+//          iconSize: 20.0,
+//        ),
+//      ),
+//    );
     final userImage = Stack(
       children: <Widget>[
         Hero(
@@ -65,7 +95,7 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
                 //   image: MemoryImage(widget.userModel.avatarUrl),
                 // ),
                 )),
-        cancelBtn,
+        backButton(),
       ],
     );
 
@@ -93,17 +123,17 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
       height: 1,
       color: Colors.grey.shade300,
     );
-    final userLocation = Container(
-      padding: EdgeInsets.only(left: 20.0, right: 20.0),
-      child: Text(
-        widget.userModel.address,
-        style: TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          color: Colors.grey.withOpacity(0.8),
-        ),
-      ),
-    );
+//    final userLocation = Container(
+//      padding: EdgeInsets.only(left: 20.0, right: 20.0),
+//      child: Text(
+//        widget.userModel.address,
+//        style: TextStyle(
+//          fontSize: 18.0,
+//          fontWeight: FontWeight.bold,
+//          color: Colors.grey.withOpacity(0.8),
+//        ),
+//      ),
+//    );
     Widget rowTitle(String title) {
       return Container(
         padding: EdgeInsets.only(top: 10, bottom: 10, left: 15.0, right: 15.0),
@@ -125,104 +155,6 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    Widget row2(String title1, String content1, String title2, String content2,
-        bool type) {
-      return Container(
-        color: Colors.white,
-        padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 15, bottom: 15),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 3,
-                  child: SizedBox(),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(top: 3, right: 3, bottom: 3),
-                        child: Icon(
-                          type ? Icons.home : Icons.school,
-                          color: type ? Colors.orange : Colors.green,
-                          size: 20,
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          title1,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      content1,
-                      textAlign: TextAlign.left,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 3,
-                  child: SizedBox(),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(top: 3, right: 3, bottom: 3),
-                        child: Icon(
-                          type ? Icons.school : Icons.home,
-                          color: type ? Colors.green : Colors.orange,
-                          size: 20,
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          title2,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      content2,
-                      textAlign: TextAlign.left,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                )
-              ],
             ),
           ],
         ),
@@ -288,24 +220,22 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex: (phoneNumber != null &&
-                        toBoolean(phoneNumber) != false)
+                    flex: (phoneNumber != null && !(phoneNumber is bool))
                         ? 10
                         : 14,
                     child: Container(
                       padding: EdgeInsets.only(top: 10, bottom: 10, left: 5),
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        toBoolean(phoneNumber) != false?content:'',
+                        toBoolean(phoneNumber) != false ? content : '',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
-                  if (phoneNumber != null && toBoolean(phoneNumber) != false)
+                  if (phoneNumber != null && !(phoneNumber is bool))
                     Expanded(
                       flex: 2,
                       child: InkWell(
@@ -325,7 +255,7 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
                         ),
                       ),
                     ),
-                  if (phoneNumber != null && toBoolean(phoneNumber) != false)
+                  if (phoneNumber != null && !(phoneNumber is bool))
                     Expanded(
                       flex: 2,
                       child: InkWell(
@@ -372,17 +302,21 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
     }
 
     childrenInfo(ProfileMessageUserModel userModel) {
-      onTapChatUser(){
+      onTapChatUser() {
         Chatting chatting = Chatting(
             peerId: userModel.peerId.toString(),
             name: userModel.name,
             message: 'Hi',
             listMessage: new List(),
             avatarUrl: userModel.avatarUrl,
-            datetime: DateTime.now().toIso8601String()
+            datetime: DateTime.now().toIso8601String());
+        Navigator.pushNamed(
+          context,
+          MessageDetailPage.routeName,
+          arguments: chatting,
         );
-        Navigator.pushNamed(context, MessageDetailPage.routeName, arguments: chatting,);
       }
+
       return Padding(
         padding: EdgeInsets.only(bottom: 20.0, left: 20.0, right: 20.0),
         child: Material(
@@ -403,11 +337,25 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
                   rowTitle('THÔNG TIN NGƯỜI DÙNG'),
                   row1('Họ và tên :', userModel.name),
                   hr,
-                  row1('Địa chỉ :', userModel.address),
+                  row1(
+                      'Địa chỉ :',
+                      (userModel.address is bool || userModel.address == null)
+                          ? ''
+                          : userModel.address.toString()),
                   hr,
-                  rowIcon('Số điện thoại :', userModel.phone, userModel.phone,()=>onTapChatUser()),
+                  rowIcon(
+                      'Số điện thoại :',
+                      (userModel.phone is bool || userModel.phone == null)
+                          ? ''
+                          : userModel.phone.toString(),
+                      userModel.phone,
+                      () => onTapChatUser()),
                   hr,
-                  row1('Email :', toBoolean(userModel.email)==false?'':userModel.email),
+                  row1(
+                      'Email :',
+                      (userModel.email is bool || userModel.email == null)
+                          ? ''
+                          : userModel.email.toString()),
                   Container(
                     height: 1,
                     margin: EdgeInsets.only(bottom: 10),
@@ -427,7 +375,8 @@ class _ProfileMessageUserPageState extends State<ProfileMessageUserPage> {
           children: <Widget>[
             userImage,
             userName,
-            userLocation,
+            SizedBox(height: 15,),
+//            userLocation,
             childrenInfo(widget.userModel),
           ],
         ),

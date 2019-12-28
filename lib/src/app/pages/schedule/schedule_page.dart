@@ -5,6 +5,7 @@ import 'package:b2s_driver/src/app/pages/schedule/schedule_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/googlemap-service.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/dash.dart';
+import 'package:b2s_driver/src/app/widgets/empty_widget.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -64,7 +65,10 @@ class _SchedulePageState extends State<SchedulePage> {
         child: Container(
           child: Row(
             children: <Widget>[
-              Text(viewModel.driver.vehicleName),
+              Text((viewModel.driver.vehicleName is bool ||
+                      viewModel.driver.vehicleName == null)
+                  ? ''
+                  : viewModel.driver.vehicleName.toString()),
               Icon(Icons.arrow_drop_down)
             ],
           ),
@@ -426,12 +430,8 @@ class _SchedulePageState extends State<SchedulePage> {
               )
             : SingleChildScrollView(
                 child: (viewModel.listDriverBusSession.length == 0)
-                    ? Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.9,
-                        child: Center(
-                          child: Text('Không có chuyến đi.'),
-                        ),
+                    ? EmptyWidget(
+                        message: 'Không có chuyến đi.',
                       )
                     : Container(
                         child: Column(

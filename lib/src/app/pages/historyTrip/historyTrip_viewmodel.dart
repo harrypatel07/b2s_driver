@@ -24,8 +24,12 @@ class HistoryTripViewModel extends ViewModelBase {
   int _skip = 0;
   HistoryTripViewModel() {
     choicesVehicle = driver.listVehicle
-        .map((vehicle) =>
-            CustomPopupMenu(id: vehicle.id, title: vehicle.licensePlate))
+        .map((vehicle) => CustomPopupMenu(
+            id: vehicle.id,
+            title:
+                (vehicle.licensePlate is bool || vehicle.licensePlate == null)
+                    ? ''
+                    : vehicle.licensePlate.toString()))
         .toList();
     controller.addListener(() {
       if (controller.offset == controller.position.maxScrollExtent &&
@@ -33,9 +37,18 @@ class HistoryTripViewModel extends ViewModelBase {
     });
     selectedVehicle = CustomPopupMenu(
         id: driver.listVehicle[0].id,
-        title: driver.listVehicle[0].licensePlate);
+        title: (driver.listVehicle[0].licensePlate is bool ||
+                driver.listVehicle[0].licensePlate == null)
+            ? ''
+            : driver.listVehicle[0].licensePlate.toString());
     onLoad();
   }
+
+  @override
+  void dispose() {
+    controller.dispose();
+  }
+
   void onLoad() {
     loading = true;
     loadMoreDone = false;
@@ -57,13 +70,13 @@ class HistoryTripViewModel extends ViewModelBase {
     if (loadMoreDone) return;
     loadingMore = true;
     this.updateState();
-    int countItemLoad = 0;
+//    int countItemLoad = 0;
     api.getHistoryDriver(take: _take, skip: _skip).then((list) {
       if (list.length > 0) {
-        list.forEach((historyDriver) {
-          countItemLoad += historyDriver.listHistory.length;
-        });
-        if (countItemLoad < _take) loadMoreDone = true;
+        // list.forEach((historyDriver) {
+        //   countItemLoad += historyDriver.listHistory.length;
+        // });
+        // if (countItemLoad < _take) loadMoreDone = true;
         listHistoryDriverBusSession.addAll(list);
         _skip += _take;
         loadingMore = false;
@@ -109,27 +122,27 @@ class HistoryTripViewModel extends ViewModelBase {
               .map((route) => LatLng(route.lat, route.lng))
               .toList(),
         );
-        TracCarService.getPositions(
-                sessionId: driverBusSession.sessionID,
-                date: DateFormat('yyyy-MM-dd').format(
-                    DateTime.parse(historyDriverBusSession.transportDate)),
-                uniqueId: driver.vehicleName)
-            .then((data) {
-          if (data.length > 0) {
-            historyDriverBusSession.listUrlHistoryPositions[j] =
-                GoogleMapService.getUrlImageFromMultiMarker(
-              width: (MediaQuery.of(context).size.width.toInt() - 40) * 2,
-              height: 170 * 2,
-              listLatLng: driverBusSession.listRouteBus
-                  .map((route) => LatLng(route.lat, route.lng))
-                  .toList(),
-              listPosition: data
-                  .map((route) => LatLng(route.latitude, route.longitude))
-                  .toList(),
-            );
-            this.updateState();
-          }
-        });
+        // TracCarService.getPositions(
+        //         sessionId: driverBusSession.sessionID,
+        //         date: DateFormat('yyyy-MM-dd').format(
+        //             DateTime.parse(historyDriverBusSession.transportDate)),
+        //         uniqueId: driver.vehicleName)
+        //     .then((data) {
+        //   if (data.length > 0) {
+        //     historyDriverBusSession.listUrlHistoryPositions[j] =
+        //         GoogleMapService.getUrlImageFromMultiMarker(
+        //       width: (MediaQuery.of(context).size.width.toInt() - 40) * 2,
+        //       height: 170 * 2,
+        //       listLatLng: driverBusSession.listRouteBus
+        //           .map((route) => LatLng(route.lat, route.lng))
+        //           .toList(),
+        //       listPosition: data
+        //           .map((route) => LatLng(route.latitude, route.longitude))
+        //           .toList(),
+        //     );
+        //     this.updateState();
+        //   }
+        // });
       }
     }
   }

@@ -1,8 +1,8 @@
-
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/chat.dart';
 import 'package:b2s_driver/src/app/pages/message/ContactsPage/contacts_page.dart';
 import 'package:b2s_driver/src/app/pages/message/message_page_viewmodel.dart';
+import 'package:b2s_driver/src/app/widgets/empty_widget.dart';
 import 'package:b2s_driver/src/app/widgets/listview_Animator.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_appbar_widget.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_scaffold_widget.dart';
@@ -140,14 +140,18 @@ class _MessagePageState extends State<MessagePage> {
           ? LoadingSpinner.loadingView(
               context: viewModel.context,
               loading: (viewModel.loadingDataMessage))
-          : (viewModel.listChat.length > 0)? ListView.builder(
-              //padding: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
-              itemCount: viewModel.listChat.length,
-              itemBuilder: (context, index) {
-                var _model = viewModel.listChat[index];
-                return WidgetANimator(_buildMessageRow(_model));
-              },
-            ):Container(child: Center(child: Text('Không có tin nhắn.'),),),
+          : (viewModel.listChat.length > 0)
+              ? ListView.builder(
+                  //padding: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+                  itemCount: viewModel.listChat.length,
+                  itemBuilder: (context, index) {
+                    var _model = viewModel.listChat[index];
+                    return WidgetANimator(_buildMessageRow(_model));
+                  },
+                )
+              : SingleChildScrollView(
+        child: EmptyWidget(message: 'Không có tin nhắn.',),
+      ),
     );
   }
 

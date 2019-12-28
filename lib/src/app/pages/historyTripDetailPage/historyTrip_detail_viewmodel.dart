@@ -2,6 +2,9 @@ import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
+import 'package:b2s_driver/src/app/models/models-traccar/position.dart';
+import 'package:b2s_driver/src/app/models/routeBus.dart';
+import 'package:b2s_driver/src/app/pages/historyTripDetailPage/historyTripDetailMaps/historyTrip_detail_map_page.dart';
 import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
 import 'package:b2s_driver/src/app/service/common-service.dart';
 import 'package:b2s_driver/src/app/service/googlemap-service.dart';
@@ -13,7 +16,8 @@ import 'package:intl/intl.dart';
 class HistoryTripDetailViewModel extends ViewModelBase {
   String urlMaps = "";
   ScrollController scrollController;
-  HistoryTripDetailViewModel() {}
+  List<Positions> listPosition;
+  HistoryTripDetailViewModel();
 
   List<Children> getListChildrenForTimeLine(
       DriverBusSession driverBusSession, int routeBusID) {
@@ -35,23 +39,22 @@ class HistoryTripDetailViewModel extends ViewModelBase {
           .toList(),
     );
     TracCarService.getPositions(
-        sessionId: driverBusSession.sessionID,
-        date: DateFormat('yyyy-MM-dd').format(
-            DateTime.parse(driverBusSession.listRouteBus[0].date)),
-        uniqueId: Driver().vehicleName)
+            sessionId: driverBusSession.sessionID,
+            date: DateFormat('yyyy-MM-dd')
+                .format(DateTime.parse(driverBusSession.listRouteBus[0].date)),
+            uniqueId: Driver().vehicleName)
         .then((data) {
       if (data.length > 0) {
-        urlMaps =
-            GoogleMapService.getUrlImageFromMultiMarker(
-              width: (MediaQuery.of(context).size.width.toInt()) * 2,
-              height: 200 * 2,
-              listLatLng: driverBusSession.listRouteBus
-                  .map((route) => LatLng(route.lat, route.lng))
-                  .toList(),
-              listPosition: data
-                  .map((route) => LatLng(route.latitude, route.longitude))
-                  .toList(),
-            );
+        urlMaps = GoogleMapService.getUrlImageFromMultiMarker(
+          width: (MediaQuery.of(context).size.width.toInt()) * 2,
+          height: 200 * 2,
+          listLatLng: driverBusSession.listRouteBus
+              .map((route) => LatLng(route.lat, route.lng))
+              .toList(),
+          listPosition: data
+              .map((route) => LatLng(route.latitude, route.longitude))
+              .toList(),
+        );
         this.updateState();
       }
     });
@@ -98,5 +101,22 @@ class HistoryTripDetailViewModel extends ViewModelBase {
   onTapChildren(Children children, String heroTag) {
     Navigator.pushNamed(context, ProfileChildrenPage.routeName,
         arguments: ProfileChildrenArgs(children: children, heroTag: heroTag));
+  }
+
+  getListPositions(DriverBusSession driverBusSession) {
+    TracCarService.getPositions(
+            sessionId: driverBusSession.sessionID,
+            date: DateFormat('yyyy-MM-dd')
+                .format(DateTime.parse(driverBusSession.listRouteBus[0].date)),
+            uniqueId: Driver().vehicleName)
+        .then((list) {
+      listPosition = list;
+    });
+  }
+
+  onTapMaps(List<RouteBus> listRouteBus) {
+    if (listPosition != null && listPosition.length > 0)
+      Navigator.pushNamed(context, HistoryTripDetailMap.routeName,
+          arguments: HistoryTripDetailMapArgs(listPosition,listRouteBus));
   }
 }

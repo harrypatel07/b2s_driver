@@ -4,6 +4,7 @@ import 'package:b2s_driver/src/app/pages/attendant/attendant_page.dart';
 import 'package:b2s_driver/src/app/pages/attendantManager/attendant_manager_page.dart';
 import 'package:b2s_driver/src/app/pages/bottomSheet/bottom_sheet_custom.dart';
 import 'package:b2s_driver/src/app/pages/historyTrip/historyTrip_page.dart';
+import 'package:b2s_driver/src/app/pages/historyTripDetailPage/historyTripDetailMaps/historyTrip_detail_map_page.dart';
 import 'package:b2s_driver/src/app/pages/historyTripDetailPage/historyTrip_detail_page.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
 import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
@@ -13,7 +14,6 @@ import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page.dart';
 import 'package:b2s_driver/src/app/pages/login/login_page.dart';
 import 'package:b2s_driver/src/app/pages/message/ContactsPage/contacts_page.dart';
 import 'package:b2s_driver/src/app/pages/message/messageDetail/message_detail_page.dart';
-import 'package:b2s_driver/src/app/pages/message/messageUser/message_user_page.dart';
 import 'package:b2s_driver/src/app/pages/message/message_page.dart';
 import 'package:b2s_driver/src/app/pages/message/profileMessageUser/profile_message_user_page.dart';
 import 'package:b2s_driver/src/app/pages/schedule/schedule_page.dart';
@@ -29,7 +29,7 @@ class Routes {
     Driver driver = new Driver();
     bool result = await driver.checkDriverExist();
     if (result) {
-      //Kiểm tra bus session chưa kết thúc.
+      // //Kiểm tra bus session chưa kết thúc.
       DriverBusSession driverBusSession = DriverBusSession();
       result = await driverBusSession.checkDriverBusSessionExists();
       if (result) if (driver.isDriver) {
@@ -73,8 +73,8 @@ class Routes {
     MessagePage.routeName: (context) => MessagePage(),
     MessageDetailPage.routeName: (context) =>
         MessageDetailPage(chatting: ModalRoute.of(context).settings.arguments),
-    MessageUserPage.routeName: (context) =>
-        MessageUserPage(userId: ModalRoute.of(context).settings.arguments),
+//    MessageUserPage.routeName: (context) =>
+//        MessageUserPage(userId: ModalRoute.of(context).settings.arguments),
     ContactsPage.routeName: (context) => ContactsPage(),
     ProfileMessageUserPage.routeName: (context) => ProfileMessageUserPage(
         userModel: ModalRoute.of(context).settings.arguments),
@@ -86,6 +86,9 @@ class Routes {
     AttendantPage.routeName: (context) => AttendantPage(),
     AttendantManagerPage.routeName: (context) => AttendantManagerPage(
           driverBusSession: ModalRoute.of(context).settings.arguments,
+        ),
+    HistoryTripDetailMap.routeName: (context) => HistoryTripDetailMap(
+          args: ModalRoute.of(context).settings.arguments,
         )
   };
 }

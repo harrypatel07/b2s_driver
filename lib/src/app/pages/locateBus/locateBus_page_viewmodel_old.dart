@@ -98,13 +98,13 @@ class LocateBusPageViewModelOld extends ViewModelBase {
 
   Future movingBus() async {
     markers.clear();
-    final iconBus = await GoogleMapService.getMarkerIcon(
-        'assets/images/pin.png',
-        width: 100);
+//    final iconBus = await GoogleMapService.getMarkerIcon(
+//        'assets/images/pin.png',
+//        width: 100);
     final iconSchool =
         await GoogleMapService.getMarkerIcon('assets/images/school.png');
-    final iconChild =
-        await GoogleMapService.getMarkerIcon('assets/images/pin_child.png');
+//    final iconChild =
+//        await GoogleMapService.getMarkerIcon('assets/images/pin_child.png');
     //Create marker bus
     // markers[markerBus] = Marker(
     //   markerId: markerBus,

@@ -26,19 +26,19 @@ class _NoticeLocalBusState extends State<NoticeLocalBus> {
         children: <Widget>[
           if (isShow)
             Positioned(
-              right: 30,
+              right: 57,
 //              top: 10,
 //              bottom: 10,
               child: InkWell(
                 onTap: widget.onTap,
                 child: Container(
                   alignment: Alignment.centerLeft,
-                  padding:
-                      EdgeInsets.only(left: 15, right: 30, top: 5, bottom: 5),
+//                  padding:
+//                      EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12.0)),
-                  width: MediaQuery.of(context).size.width * 0.9,
+                  width: MediaQuery.of(context).size.width - 60,
                   child: widget.content,
                 ),
               ),

@@ -1,9 +1,6 @@
 import 'dart:convert';
-
-import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/parent.dart';
 import 'package:b2s_driver/src/app/models/res-partner.dart';
-import 'package:b2s_driver/src/app/service/index.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 

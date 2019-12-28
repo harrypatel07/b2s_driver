@@ -35,19 +35,7 @@ class BottomSheetListChildrenEmergencyViewModel extends ViewModelBase{
 }
 
 class ChildrenWithSelect{
-  Children _children;
-
-  Children get children => _children;
-
-  set children(Children children) {
-    _children = children;
-  }
-  bool _isSelect;
-
-  bool get isSelect => _isSelect;
-
-  set isSelect(bool isSelect) {
-    _isSelect = isSelect;
-  }
-  ChildrenWithSelect(this._children, this._isSelect);
+  Children children;
+  bool isSelect;
+  ChildrenWithSelect(this.children, this.isSelect);
 }

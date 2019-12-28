@@ -1,6 +1,4 @@
 import 'package:b2s_driver/src/app/pages/attendant/attendant_page.dart';
-import 'package:b2s_driver/src/app/pages/attendant/attendant_viewmodel.dart';
-import 'package:b2s_driver/src/app/pages/attendantManager/attendant_manager_page.dart';
 import 'package:b2s_driver/src/app/pages/schedule/schedule_page.dart';
 import 'package:b2s_driver/src/app/pages/user/user_page.dart';
 import 'package:flutter/material.dart';

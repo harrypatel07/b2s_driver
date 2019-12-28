@@ -40,16 +40,12 @@ class BottomSheetCustomViewModel extends ViewModelBase {
 
   onTapLeave(
       DriverBusSession driverBusSession, Children children, RouteBus routeBus) {
-    var childrenStatus = driverBusSession.childDrenStatus.singleWhere(
-            (item) =>
-        item.childrenID == children.id &&
-            item.routeBusID == routeBus.id);
+    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
+        item.childrenID == children.id && item.routeBusID == routeBus.id);
     DriverBusSession.updateChildrenStatusIdByLeave(
-        driverBusSession: driverBusSession,
-        childDrenStatus: childrenStatus);
+        driverBusSession: driverBusSession, childDrenStatus: childrenStatus);
     //Đồng bộ firestore
-    cloudService.busSession
-        .updateBusSessionFromChildrenStatus(childrenStatus);
+    cloudService.busSession.updateBusSessionFromChildrenStatus(childrenStatus);
     //Push thông báo
     api.postNotificationChangeStatus(children, childrenStatus);
 //    updateStatusLeaveChildren(childrenStatus.id);
@@ -136,14 +132,14 @@ class BottomSheetCustomViewModel extends ViewModelBase {
     if (!bottomSheetViewModelBase.routeBus.status) {
       var listPick = listChildrenStatus
           .where((statusBus) =>
-              statusBus.statusID == 0 && statusBus.typePickDrop == 0)
+              (statusBus.statusID == 0) && statusBus.typePickDrop == 0)
           .toList();
       var listDrop = listChildrenStatus
           .where((statusBus) =>
-              statusBus.statusID == 1 && statusBus.typePickDrop == 1)
+              (statusBus.statusID == 1 || statusBus.statusID == 0) &&
+              statusBus.typePickDrop == 1)
           .toList();
-      if ((listChildrenStatus[0].typePickDrop == 0 && listPick.length > 0) ||
-          (listChildrenStatus[0].typePickDrop == 1 && listDrop.length > 0))
+      if (listDrop.length > 0 || listPick.length > 0)
         ToastController.show(
             context: context,
             message: 'Vẫn còn học sinh, ban chưa thể hoàn thành.',

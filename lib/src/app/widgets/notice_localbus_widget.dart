@@ -42,6 +42,7 @@ class _NoticeLocalBusState extends State<NoticeLocalBus> {
                   child: widget.content,
                 ),
               ),
+//              ),
             ),
           Positioned(
             top: 10,
@@ -88,15 +89,15 @@ class _NoticeLocalBusState extends State<NoticeLocalBus> {
                     child: Center(
                       child: isShow
                           ? Icon(
-                        FontAwesomeIcons.angleDoubleRight,
-                        size: 17,
-                        color: Colors.white,
-                      )
+                              FontAwesomeIcons.angleDoubleRight,
+                              size: 17,
+                              color: Colors.white,
+                            )
                           : Icon(
-                        FontAwesomeIcons.angleDoubleLeft,
-                        size: 17,
-                        color: Colors.white,
-                      ),
+                              FontAwesomeIcons.angleDoubleLeft,
+                              size: 17,
+                              color: Colors.white,
+                            ),
                     ),
                   ),
                 ),

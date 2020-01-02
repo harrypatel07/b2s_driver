@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
@@ -64,6 +66,7 @@ class _LocateBusPageState extends State<LocateBusPage>
         left: 0,
         child: SafeArea(
           bottom: false,
+          left: false,
           top: true,
           child: TS24Button(
             onTap: () {
@@ -91,9 +94,9 @@ class _LocateBusPageState extends State<LocateBusPage>
 
     Widget __contentReport(List<Children> listChildren) {
       return Container(
-        height: (MediaQuery.of(context).orientation == Orientation.portrait)
-            ? MediaQuery.of(context).size.height - 144
-            : MediaQuery.of(context).size.height - 124,
+//        height: (MediaQuery.of(context).orientation == Orientation.portrait)
+//            ? MediaQuery.of(context).size.height - 144
+//            : MediaQuery.of(context).size.height - 124,
         width: MediaQuery.of(context).size.width,
         child: SingleChildScrollView(
           child: Column(
@@ -162,189 +165,185 @@ class _LocateBusPageState extends State<LocateBusPage>
               .toList()
               .length
           : 0;
-      return Positioned(
-        right: 0,
-        top: 10,
-        child: NoticeLocalBus(
-          onTap: () {
-            viewModel.onTapNoticeContent();
-          },
-          content: (viewModel.pointNext != -1)
-              ? Column(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(left: 5, right: 5),
-                      child: Row(
+      return NoticeLocalBus(
+        onTap: () {
+          viewModel.onTapNoticeContent();
+        },
+        content: (viewModel.pointNext != -1)
+            ? Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(left: 5, right: 5),
+                    child: Row(
 //                      mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Stack(
-                            children: <Widget>[
-                              Icon(
-                                Icons.radio_button_unchecked,
-                                size: 28,
-                                color: ThemePrimary.primaryColor,
-                              ),
-                              Container(
-//                              color: Colors.yellow,
-                                width: 28,
-                                height: 28,
-                                alignment: Alignment.center,
-                                child: Text(
-                                  viewModel.pointNext.toString(),
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w700,
-                                      color: ThemePrimary.primaryColor),
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: Text(
-                              '${viewModel.getAddressPointNext()}',
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 5, right: 5),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.arrow_upward,
-                            color: ThemePrimary.primaryColor,
-                          ),
-                          SizedBox(
-                            width: 3,
-                          ),
-                          Text(
-                            '$countChildPick',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: 3,
-                          ),
-                          Icon(
-                            Icons.arrow_downward,
-                            color: Colors.yellow[700],
-                          ),
-                          SizedBox(
-                            width: 3,
-                          ),
-                          Text(
-                            '$countChildDrop',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Icon(
-                            Icons.access_time,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(
-                            width: 3,
-                          ),
-                          Text(
-                            " $time",
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Expanded(
-                          child: TS24Button(
-                            onTap: () {
-                              viewModel.showBottomSheetListRoute();
-                            },
-                            height: 35,
-                            decoration: BoxDecoration(
-                                color: ThemePrimary.primaryColor,
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(12))),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.menu,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  'Danh sách điểm',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
+                        Stack(
+                          children: <Widget>[
+                            Icon(
+                              Icons.radio_button_unchecked,
+                              size: 28,
+                              color: ThemePrimary.primaryColor,
                             ),
-                          ),
+                            Container(
+//                              color: Colors.yellow,
+                              width: 28,
+                              height: 28,
+                              alignment: Alignment.center,
+                              child: Text(
+                                viewModel.pointNext.toString(),
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: ThemePrimary.primaryColor),
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          width: 5,
                         ),
                         Expanded(
-                          child: TS24Button(
-                            onTap: () {
-                              viewModel.increasePointNextPick();
-                            },
-                            height: 35,
-                            decoration: BoxDecoration(
-                                color: ThemePrimary.colorParentApp,
-                                borderRadius: BorderRadius.only(
-                                    bottomRight: Radius.circular(12))),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.skip_next,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  'Điểm tiếp theo',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
+                          child: Text(
+                            '${viewModel.getAddressPointNext()}',
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
-                    )
-                  ],
-                )
-              : RichText(
-                  text: new TextSpan(
-                      style: new TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.black,
-                      ),
-                      children: <TextSpan>[
-                      TextSpan(
-                        text:
-                            '\nXin vui lòng bấm kết thúc để hoàn thành chuyến đi.\n',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 5, right: 5),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.arrow_upward,
                           color: ThemePrimary.primaryColor,
                         ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Text(
+                          '$countChildPick',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Icon(
+                          Icons.arrow_downward,
+                          color: Colors.yellow[700],
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Text(
+                          '$countChildDrop',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Icon(
+                          Icons.access_time,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Text(
+                          " $time",
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        child: TS24Button(
+                          onTap: () {
+                            viewModel.showBottomSheetListRoute();
+                          },
+                          height: 35,
+                          decoration: BoxDecoration(
+                              color: ThemePrimary.primaryColor,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(12))),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.menu,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                'Danh sách điểm',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                    ])),
-        ),
+                      Expanded(
+                        child: TS24Button(
+                          onTap: () {
+                            viewModel.increasePointNextPick();
+                          },
+                          height: 35,
+                          decoration: BoxDecoration(
+                              color: ThemePrimary.colorParentApp,
+                              borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(12))),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.skip_next,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                'Điểm tiếp theo',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              )
+            : RichText(
+                text: new TextSpan(
+                    style: new TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                    TextSpan(
+                      text:
+                          '\nXin vui lòng bấm kết thúc để hoàn thành chuyến đi.\n',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: ThemePrimary.primaryColor,
+                      ),
+                    ),
+                  ])),
       );
     }
 
@@ -366,14 +365,11 @@ class _LocateBusPageState extends State<LocateBusPage>
     }
 
     Widget __navigateGoogleMap() {
-      return Positioned(
-        right: 0,
-        top: 175,
-        child: Stack(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 20),
-              decoration: new BoxDecoration(
+      return Stack(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 20),
+            decoration: new BoxDecoration(
 //                  boxShadow: [
 //                    BoxShadow(
 //                      color: Colors.black38,
@@ -386,36 +382,35 @@ class _LocateBusPageState extends State<LocateBusPage>
 //                      ),
 //                    )
 //                  ],
-                  color: Colors.black12,
-                  borderRadius: new BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      bottomLeft: Radius.circular(40))),
-              width: 60,
-              height: 60,
-            ),
-            Positioned(
-              top: 4,
-              left: 2,
-              child: TS24Button(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
-                    color: ThemePrimary.primaryColor),
-                onTap: () {
-                  viewModel.onTapGoogleMaps();
-                },
-                child: Center(
-                  child: Icon(
-                    Icons.near_me,
-                    color: Colors.white,
-                    size: 25,
-                  ),
+                color: Colors.black12,
+                borderRadius: new BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    bottomLeft: Radius.circular(40))),
+            width: 60,
+            height: 60,
+          ),
+          Positioned(
+            top: 4,
+            left: 2,
+            child: TS24Button(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(25)),
+                  color: ThemePrimary.primaryColor),
+              onTap: () {
+                viewModel.onTapGoogleMaps();
+              },
+              child: Center(
+                child: Icon(
+                  Icons.near_me,
+                  color: Colors.white,
+                  size: 25,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       );
     }
 
@@ -424,7 +419,10 @@ class _LocateBusPageState extends State<LocateBusPage>
         bottom: -10,
         right: MediaQuery.of(context).size.width / 2 - 50,
         child: SafeArea(
+          top: false,
           bottom: true,
+          left: false,
+          right:false,
           child: TS24Button(
             width: 100,
             height: 80,
@@ -538,14 +536,11 @@ class _LocateBusPageState extends State<LocateBusPage>
     }
 
     Widget __sosButton() {
-      return Positioned(
-        top: 100,
-        right: 0,
-        child: Stack(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 20),
-              decoration: new BoxDecoration(
+      return Stack(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 20),
+            decoration: new BoxDecoration(
 //                  boxShadow: [
 //                    BoxShadow(
 //                      color: Colors.black38,
@@ -558,56 +553,51 @@ class _LocateBusPageState extends State<LocateBusPage>
 //                      ),
 //                    )
 //                  ],
-                  color: Colors.black12,
-                  borderRadius: new BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      bottomLeft: Radius.circular(40))),
-              width: 60,
-              height: 60,
-            ),
-            Positioned(
-              top: 4,
-              left: 2,
-              child: TS24Button(
-                width: 50,
-                height: 50,
-                onTap: () {
-                  viewModel.onTapSOS();
-                },
-                decoration: BoxDecoration(
-                  color: Colors.red[300],
-                  borderRadius: BorderRadius.all(Radius.circular(25)),
-                ),
-                child: Center(
-                  child: Text(
-                    "SOS",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.yellow, fontWeight: FontWeight.w900),
-                  ),
+                color: Colors.black12,
+                borderRadius: new BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    bottomLeft: Radius.circular(40))),
+            width: 60,
+            height: 60,
+          ),
+          Positioned(
+            top: 4,
+            left: 2,
+            child: TS24Button(
+              width: 50,
+              height: 50,
+              onTap: () {
+                viewModel.onTapSOS();
+              },
+              decoration: BoxDecoration(
+                color: Colors.red[300],
+                borderRadius: BorderRadius.all(Radius.circular(25)),
+              ),
+              child: Center(
+                child: Text(
+                  "SOS",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.yellow, fontWeight: FontWeight.w900),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       );
     }
 
     Widget __buildIconLocation() {
-      return Positioned(
-        right: 15,
-        top: 250,
-        child: SizedBox(
-          width: 40,
-          height: 40,
-          child: FloatingActionButton(
-            child: Icon(
-              Icons.gps_fixed,
-              color: Theme.of(context).primaryColor,
-            ),
-            onPressed: viewModel.animateMyLocation,
-            backgroundColor: Colors.white,
+      return SizedBox(
+        width: 40,
+        height: 40,
+        child: FloatingActionButton(
+          child: Icon(
+            Icons.gps_fixed,
+            color: Theme.of(context).primaryColor,
           ),
+          onPressed: viewModel.animateMyLocation,
+          backgroundColor: Colors.white,
         ),
       );
     }
@@ -625,22 +615,139 @@ class _LocateBusPageState extends State<LocateBusPage>
                       viewModel.showGoolgeMap
                           ? __buildGoogleMap()
                           : Container(),
-                      Positioned(
-                        right: 0,
-                        top: 90,
-                        child: Container(
-                          height: 300,
-                          width: MediaQuery.of(context).size.width,
-                          child: Stack(
-                            children: <Widget>[
-                              __notice(),
-                              __navigateGoogleMap(),
-                              __sosButton(),
-                              __buildIconLocation(),
-                            ],
-                          ),
-                        ),
-                      ),
+                      (Platform.isAndroid || Platform.isFuchsia)
+                          ? (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait)
+                              ? Positioned(
+                                  right: 0,
+                                  top: 115,
+                                  child: Container(
+                                    height: 450,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Positioned(
+                                          right: 0,
+                                          top: 10,
+                                          child: __notice(),
+                                        ),
+                                        Positioned(
+                                          right: 0,
+                                          top: 200,
+                                          child: __navigateGoogleMap(),
+                                        ),
+                                        Positioned(
+                                          top: 300,
+                                          right: 0,
+                                          child: __sosButton(),
+                                        ),
+                                        Positioned(
+                                          right: 15,
+                                          top: 400,
+                                          child: __buildIconLocation(),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : Positioned(
+                                  right: 0,
+                                  top: 75,
+                                  child: Container(
+                                    height: 300,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Positioned(
+                                          right: 0,
+                                          top: 10,
+                                          child: __notice(),
+                                        ),
+                                        Positioned(
+                                          right: 0,
+                                          top: 175,
+                                          child: __navigateGoogleMap(),
+                                        ),
+                                        Positioned(
+                                          top: 100,
+                                          right: 0,
+                                          child: __sosButton(),
+                                        ),
+                                        Positioned(
+                                          right: 15,
+                                          top: 250,
+                                          child: __buildIconLocation(),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                          : (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait)
+                              ? Positioned(
+                                  right: 0,
+                                  top: 130,
+                                  child: Container(
+                                    height: 450,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Positioned(
+                                          right: 0,
+                                          top: 10,
+                                          child: __notice(),
+                                        ),
+                                        Positioned(
+                                          right: 0,
+                                          top: 200,
+                                          child: __navigateGoogleMap(),
+                                        ),
+                                        Positioned(
+                                          top: 300,
+                                          right: 0,
+                                          child: __sosButton(),
+                                        ),
+                                        Positioned(
+                                          right: 15,
+                                          top: 400,
+                                          child: __buildIconLocation(),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : Positioned(
+                                  right: 0,
+                                  top: 65,
+                                  child: Container(
+                                    height: 300,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Positioned(
+                                          right: 0,
+                                          top: 10,
+                                          child: __notice(),
+                                        ),
+                                        Positioned(
+                                          right: 0,
+                                          top: 175,
+                                          child: __navigateGoogleMap(),
+                                        ),
+                                        Positioned(
+                                          top: 100,
+                                          right: 0,
+                                          child: __sosButton(),
+                                        ),
+                                        Positioned(
+                                          right: 15,
+                                          top: 250,
+                                          child: __buildIconLocation(),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
                       __backButton(),
                       __finishButton(),
                       __report(),

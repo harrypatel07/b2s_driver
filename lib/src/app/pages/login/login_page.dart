@@ -97,7 +97,6 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
       );
 
   Widget _content(context) {
-    final focus = FocusNode();
 
     Widget _formLogin() {
       return Container(
@@ -122,7 +121,7 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (v) {
-                      FocusScope.of(context).requestFocus(focus);
+                      FocusScope.of(context).requestFocus(viewModel.focus);
                     },
                   ),
                 ),
@@ -133,7 +132,7 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
                       children: <Widget>[
                         TextFormField(
                           controller: viewModel.passController,
-                          focusNode: focus,
+                          focusNode: viewModel.focus,
                           style: TextStyle(fontSize: 18, color: Colors.black),
                           obscureText: !viewModel.showPass ? true : false,
                           decoration: InputDecoration(

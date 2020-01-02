@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
 
 class LoginPageViewModel extends ViewModelBase {
+  final focus = FocusNode();
   TextEditingController _emailController = new TextEditingController();
   get emailController => _emailController;
   TextEditingController _passController = new TextEditingController();

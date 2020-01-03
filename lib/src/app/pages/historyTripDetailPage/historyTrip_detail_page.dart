@@ -41,7 +41,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
   bool lastStatus = true;
 
   _scrollListener() {
-    print("HIEP:" + viewModel.scrollController.offset.toString());
+    //print("HIEP:" + viewModel.scrollController.offset.toString());
     if (isShrink != lastStatus) {
       lastStatus = isShrink;
       viewModel.updateState();
@@ -65,8 +65,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
     viewModel.scrollController = ScrollController();
     viewModel.scrollController.addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-      viewModel.getUrlMaps(widget.driverBusSession);
-      viewModel.getListPositions(widget.driverBusSession);
+          viewModel.getUrlMaps(widget.driverBusSession);
           _getPosition();
           _getSizeContent();
         }));
@@ -601,15 +600,16 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold)),
                         background: InkWell(
-                          onTap: (){
-                            viewModel.onTapMaps(widget.driverBusSession.listRouteBus);
+                          onTap: () {
+                            viewModel.onTapMaps(
+                                widget.driverBusSession.listRouteBus);
                           },
                           child: CachedNetworkImage(
                               imageUrl: viewModel.urlMaps,
                               imageBuilder: (context, imageProvider) => Image(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              )),
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  )),
                         )),
                   ),
                   new SliverList(

@@ -109,7 +109,7 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                         Container(
                           height: 40,
                           alignment: Alignment.center,
-                          child: Text('THÔNG TIN ĐIỂM',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
+                          child: Text('THÔNG TIN ĐIỂM ${viewModel.bottomSheetViewModelBase.position}',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
                         ),
                         Expanded(
                           child: Container(

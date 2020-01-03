@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HistoryTripDetailMapViewModel extends ViewModelBase {
-  final Set<Marker> markers = {};
+  // final Set<Marker> markers = {};
   final Set<Polyline> polyLines = {};
   LatLng center = const LatLng(10.777317, 106.677513);
   List<Positions> listPosition;
@@ -17,15 +17,20 @@ class HistoryTripDetailMapViewModel extends ViewModelBase {
   GoogleMapController mapController;
   GoogleMapService googleMapsServices = GoogleMapService();
 
+  Map<PolylineId, Polyline> polyline = <PolylineId, Polyline>{};
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+
+  PolylineId selectedPolyline = PolylineId("Polyline01");
+
   void onCreated(GoogleMapController controller) async {
     mapController = controller;
     String _pathStyleMap =
         await Common.getJsonFile("assets/json/styleMap_uber.json");
     mapController.setMapStyle(_pathStyleMap);
-    onSend();
+    this.updateState();
+    drawPolylineAndMarkers();
 //    await animateMyLocation(animate: true);
     animateToCenterRoute();
-    this.updateState();
   }
 
   void animateToCenterRoute() async {
@@ -36,36 +41,67 @@ class HistoryTripDetailMapViewModel extends ViewModelBase {
     this.updateState();
   }
 
-  onSend() async {
-    for (int i = 0; i < listPosition.length - 1; i++) {
-      googleMapsServices
-          .getRouteCoordinates(
-              LatLng(listPosition[i].latitude, listPosition[i].longitude),
-              LatLng(
-                  listPosition[i + 1].latitude, listPosition[i + 1].longitude))
-          .then((route) {
-        createRoute(route, i);
-      });
-    }
-    for (int i = 0; i < listRouteBus.length; i++) {
-      addMarker(LatLng(listRouteBus[i].lat, listRouteBus[i].lng),
-          listRouteBus[i].routeName, i + 1);
+  Future drawPolylineAndMarkers() async {
+    polyline[selectedPolyline] = Polyline(
+      polylineId: selectedPolyline,
+      visible: true,
+      color: ThemePrimary.primaryColor.withOpacity(0.5),
+      width: 5,
+      zIndex: 2,
+      points: listPosition
+          .map((route) => LatLng(route.latitude, route.longitude))
+          .toList(),
+    );
+    var i = 1;
+    for (var item in listRouteBus) {
+      await _addMarker(LatLng(item.lat, item.lng), item.routeName, i++);
     }
     this.updateState();
   }
 
-  void addMarker(LatLng location, String address, int position) async {
-    markers.add(Marker(
-        markerId: MarkerId(location.toString()),
-        position: location,
-        infoWindow: InfoWindow(title: address),
-        icon: await iconMarkerCustomText(
-          text: position.toString(),
-          color: Colors.white,
-          backgroundColor: ThemePrimary.primaryColor,
-          strokeColor: Colors.white,
-        )));
-    notifyListeners();
+  // onSend() async {
+  //   for (int i = 0; i < listPosition.length - 1; i++) {
+  //     googleMapsServices
+  //         .getRouteCoordinates(
+  //             LatLng(listPosition[i].latitude, listPosition[i].longitude),
+  //             LatLng(
+  //                 listPosition[i + 1].latitude, listPosition[i + 1].longitude))
+  //         .then((route) {
+  //       createRoute(route, i);
+  //     });
+  //   }
+  //   for (int i = 0; i < listRouteBus.length; i++) {
+  //     addMarker(LatLng(listRouteBus[i].lat, listRouteBus[i].lng),
+  //         listRouteBus[i].routeName, i + 1);
+  //   }
+  //   this.updateState();
+  // }
+
+  Future<void> _addMarker(LatLng location, String address, int position) async {
+    // markers.add(Marker(
+    //     markerId: MarkerId(location.toString()),
+    //     position: location,
+    //     infoWindow: InfoWindow(title: address),
+    //     icon: await iconMarkerCustomText(
+    //       text: position.toString(),
+    //       color: Colors.white,
+    //       backgroundColor: ThemePrimary.primaryColor,
+    //       strokeColor: Colors.white,
+    //     )));
+
+    markers[MarkerId(location.toString())] = Marker(
+      markerId: MarkerId(location.toString()),
+      position: location,
+      infoWindow: InfoWindow(title: address),
+      icon: await iconMarkerCustomText(
+        text: position.toString(),
+        color: Colors.white,
+        backgroundColor: ThemePrimary.primaryColor,
+        strokeColor: Colors.white,
+      ),
+    );
+
+    //notifyListeners();
   }
 
   void createRoute(String encondedPoly, int id) {

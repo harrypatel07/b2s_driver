@@ -31,9 +31,9 @@ class _HistoryTripDetailMapState extends State<HistoryTripDetailMap> {
   void initState() {
     viewModel.listPosition = widget.args.listPositions;
     viewModel.listRouteBus = widget.args.listRouteBus;
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => () {
 //          viewModel.onSend();
-        }));
+        });
     super.initState();
   }
 
@@ -87,8 +87,9 @@ class _HistoryTripDetailMapState extends State<HistoryTripDetailMap> {
                     myLocationButtonEnabled: false,
                     mapType: MapType.normal,
                     compassEnabled: true,
-                    markers: viewModel.markers,
-                    polylines: viewModel.polyLines,
+                    markers: Set<Marker>.of(viewModel.markers.values),
+                    // polylines: viewModel.polyLines,
+                    polylines: Set<Polyline>.of(viewModel.polyline.values),
                   ),
                   backButton(),
                 ],

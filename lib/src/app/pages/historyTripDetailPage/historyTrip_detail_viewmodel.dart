@@ -38,6 +38,7 @@ class HistoryTripDetailViewModel extends ViewModelBase {
           .map((route) => LatLng(route.lat, route.lng))
           .toList(),
     );
+    print(urlMaps);
     TracCarService.getPositions(
             sessionId: driverBusSession.sessionID,
             date: DateFormat('yyyy-MM-dd')
@@ -55,6 +56,8 @@ class HistoryTripDetailViewModel extends ViewModelBase {
               .map((route) => LatLng(route.latitude, route.longitude))
               .toList(),
         );
+        listPosition = data;
+        print(urlMaps);
         this.updateState();
       }
     });
@@ -103,20 +106,20 @@ class HistoryTripDetailViewModel extends ViewModelBase {
         arguments: ProfileChildrenArgs(children: children, heroTag: heroTag));
   }
 
-  getListPositions(DriverBusSession driverBusSession) {
-    TracCarService.getPositions(
-            sessionId: driverBusSession.sessionID,
-            date: DateFormat('yyyy-MM-dd')
-                .format(DateTime.parse(driverBusSession.listRouteBus[0].date)),
-            uniqueId: Driver().vehicleName)
-        .then((list) {
-      listPosition = list;
-    });
-  }
+  // getListPositions(DriverBusSession driverBusSession) {
+  //   TracCarService.getPositions(
+  //           sessionId: driverBusSession.sessionID,
+  //           date: DateFormat('yyyy-MM-dd')
+  //               .format(DateTime.parse(driverBusSession.listRouteBus[0].date)),
+  //           uniqueId: Driver().vehicleName)
+  //       .then((list) {
+  //     listPosition = list;
+  //   });
+  // }
 
   onTapMaps(List<RouteBus> listRouteBus) {
     if (listPosition != null && listPosition.length > 0)
       Navigator.pushNamed(context, HistoryTripDetailMap.routeName,
-          arguments: HistoryTripDetailMapArgs(listPosition,listRouteBus));
+          arguments: HistoryTripDetailMapArgs(listPosition, listRouteBus));
   }
 }

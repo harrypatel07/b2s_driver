@@ -20,7 +20,7 @@ class ChatBubble extends StatelessWidget {
         date.year == now.year)
         ? DateFormat('hh:mm')
         .format(DateTime.fromMillisecondsSinceEpoch(int.parse(message.timestamp)))
-        : DateFormat('dd/MM/yyyy hh:mm')
+        : DateFormat('dd/MM/yyyy \nhh:mm')
         .format(DateTime.fromMillisecondsSinceEpoch(int.parse(message.timestamp)));
 //    var date = DateFormat('dd MMM')
 //        .format(DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp)));

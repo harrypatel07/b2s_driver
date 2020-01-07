@@ -1,3 +1,4 @@
+import 'package:b2s_driver/src/app/service/play-sound-service.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
 
@@ -5,6 +6,7 @@ class BarCodeService {
   static Future<String> scan() async {
     try {
       String barcode = await BarcodeScanner.scan();
+      PlaySoundService.play("sound/scannerbeep.mp3");
       return barcode;
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {

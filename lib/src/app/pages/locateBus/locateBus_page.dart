@@ -328,22 +328,25 @@ class _LocateBusPageState extends State<LocateBusPage>
                   )
                 ],
               )
-            : RichText(
-                text: new TextSpan(
-                    style: new TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black,
-                    ),
-                    children: <TextSpan>[
-                    TextSpan(
-                      text:
-                          '\nXin vui lòng bấm kết thúc để hoàn thành chuyến đi.\n',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: ThemePrimary.primaryColor,
+            : Container(
+                margin: EdgeInsets.only(left: 10, right: 10),
+                child: RichText(
+                    text: new TextSpan(
+                        style: new TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.black,
+                        ),
+                        children: <TextSpan>[
+                      TextSpan(
+                        text:
+                            '\nXin vui lòng bấm kết thúc để hoàn thành chuyến đi.\n',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: ThemePrimary.primaryColor,
+                        ),
                       ),
-                    ),
-                  ])),
+                    ])),
+              ),
       );
     }
 
@@ -422,7 +425,7 @@ class _LocateBusPageState extends State<LocateBusPage>
           top: false,
           bottom: true,
           left: false,
-          right:false,
+          right: false,
           child: TS24Button(
             width: 100,
             height: 80,

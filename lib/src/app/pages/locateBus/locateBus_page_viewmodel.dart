@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
@@ -13,6 +15,8 @@ import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart
 import 'package:b2s_driver/src/app/pages/locateBus/widgets/icon_marker_custom.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
+import 'package:b2s_driver/src/app/service/play-sound-service.dart';
+import 'package:b2s_driver/src/app/service/text-to-speech-service.dart';
 import 'package:b2s_driver/src/app/service/traccar-service.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
@@ -36,7 +40,6 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   //List<Children> listChildrenPaidTicket;
   StreamSubscription streamLocation;
   int pointNext = 0;
-
   //Tạo list routeBus cho thông báo khi xe sắp đến.
   Map _listRouteBusPushed = Map();
   LocateBusPageViewModel();
@@ -335,6 +338,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
                               notification:
                                   "Xe đã đến.Học sinh nhanh chóng ra xe");
                     });
+                    TextToSpeechService.speak('Xe đã đến điểm số ${route.id +1}');
                   }
                   api.postNotificationBusIsComing(listChildren, "",
                       isCome: true);
@@ -350,8 +354,9 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
                   listChildrenStatus.forEach((childrenStatus) {
                     cloudSerivce.busSession.updateBusSessionFromChildrenStatus(
                         childrenStatus,
-                        notification: "Xe sắp đến trong phòng 5 phút");
+                        notification: "Xe sắp đến trong vòng 5 phút");
                   });
+                  TextToSpeechService.speak("Xe sắp đến điểm số ${route.id + 1} trong vòng 5 phút.");
                 }
                 api.postNotificationBusIsComing(listChildren, "5 phút");
               }
@@ -412,6 +417,9 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
     } else
       pointNext = getPointNextPick();
     if (pointNext != -1) animateThePoint(pointNext - 1);
+    else {
+      TextToSpeechService.speak('Xin vui lòng bấm kết thúc để hoàn thành chuyến đi.');
+    }
   }
 
   int getPointNextPick() {
@@ -460,13 +468,5 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   RouteBus getRouteBusPointNext() {
     return driverBusSession.listRouteBus
         .firstWhere((routeBus) => routeBus.status == false);
-  }
-
-  onTapNextPoint() {
-////    if(pointNext <= driverBusSession.listRouteBus.length - 1) {
-////      pointNext++;
-////      animateThePoint(pointNext-1);
-    this.updateState();
-////    }
   }
 }

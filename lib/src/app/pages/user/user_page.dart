@@ -14,6 +14,10 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   UserPageViewModel viewModel = UserPageViewModel();
   @override
+  void initState() {
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
 //    TabsPageViewModel tabsPageViewModel = ViewModelProvider.of(context);
 //    viewModel = tabsPageViewModel.userPageViewModel;

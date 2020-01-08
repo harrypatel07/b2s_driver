@@ -12,7 +12,7 @@ class ChatBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final messageBody = message.body;
     final fromMe = message.fromMe;
-    final timeStamp = message.timestamp;
+//    final timeStamp = message.timestamp;
     DateTime date = DateTime.fromMillisecondsSinceEpoch(int.parse(message.timestamp));
     DateTime now = DateTime.now();
     String dateShow = (date.day == now.day &&
@@ -20,7 +20,7 @@ class ChatBubble extends StatelessWidget {
         date.year == now.year)
         ? DateFormat('hh:mm')
         .format(DateTime.fromMillisecondsSinceEpoch(int.parse(message.timestamp)))
-        : DateFormat('dd/MM/yyyy \nhh:mm')
+        : DateFormat('hh:mm, dd/MM/yyyy')
         .format(DateTime.fromMillisecondsSinceEpoch(int.parse(message.timestamp)));
 //    var date = DateFormat('dd MMM')
 //        .format(DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp)));

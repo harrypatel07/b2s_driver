@@ -11,6 +11,7 @@ import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/models/ticketCode.dart';
 import 'package:b2s_driver/src/app/pages/attendantManager/attendant_manager_viewmodel.dart';
 import 'package:b2s_driver/src/app/service/barcode-service.dart';
+import 'package:b2s_driver/src/app/service/text-to-speech-service.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -69,12 +70,14 @@ class BottomSheetCustomViewModel extends ViewModelBase {
       return;
     if (childrenStatus.typePickDrop == 0 && childrenStatus.statusID == 0) {
       bottomSheetViewModelBase.driverBusSession.totalChildrenPick++;
+      TextToSpeechService.speak('học sinh ${children.name} đã lên xe.');
       updateStatusPickChildren(childrenStatus.id);
       //Update tọa độ xe đến trạm
       api.updatePickingRouteByDriver(childrenStatus.pickingRoute, 0);
     }
     if (childrenStatus.typePickDrop == 1 && childrenStatus.statusID == 1) {
       bottomSheetViewModelBase.driverBusSession.totalChildrenDrop++;
+      TextToSpeechService.speak('học sinh ${children.name} đã xuống xe.');
       updateStatusDropChildren(childrenStatus.id);
       //Update tọa độ xe đến trạm
       api.updatePickingRouteByDriver(childrenStatus.pickingRoute, 1);

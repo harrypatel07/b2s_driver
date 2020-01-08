@@ -155,7 +155,7 @@ class _MessagePageState extends State<MessagePage> {
                 ),
               ),
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: Container(
                   alignment: Alignment.centerRight,
                   child: Text(

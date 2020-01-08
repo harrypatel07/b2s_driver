@@ -1,73 +1,60 @@
+import 'dart:collection';
 
 import 'package:flutter_tts/flutter_tts.dart';
 
 enum TtsState { playing, stopped }
 
 class TextToSpeechService {
-  static double volume = 0.8;
+  // static Queue _queue = Queue();
+  static double volume = 1;
   static double pitch = 0.9;
   static double rate = 0.6;
   static FlutterTts flutterTts = FlutterTts()
     ..setVolume(volume)
     ..setSpeechRate(rate)
     ..setPitch(pitch)
-;
-  dynamic languages;
-  String language;
-  TextToSpeechService() {
-
-    _getLanguages();
-    flutterTts.setStartHandler(() {
+    ..setLanguage('vi-VN')
+    ..setStartHandler(() {
       print("playing");
       ttsState = TtsState.playing;
-    });
-
-    flutterTts.setCompletionHandler(() {
+    })
+    ..setCompletionHandler(() async {
+      // if (_queue.isNotEmpty) {
+      //   var result = await flutterTts.speak(_queue.removeLast().toString());
+      //   if (result == 1) ttsState = TtsState.playing;
+      // }
       print("Complete");
+      _isSpeak = true;
       ttsState = TtsState.stopped;
-    });
-
-    flutterTts.setErrorHandler((msg) {
+    })
+    ..setErrorHandler((msg) {
       print("error: $msg");
       ttsState = TtsState.stopped;
     });
-  }
+  TextToSpeechService();
   static TtsState ttsState = TtsState.stopped;
 
   get isPlaying => ttsState == TtsState.playing;
 
   get isStopped => ttsState == TtsState.stopped;
-  // initTts() {
-  //   flutterTts = FlutterTts();
 
-  //   _getLanguages();
-
-  //   flutterTts.setStartHandler(() {
-  //     print("playing");
-  //     ttsState = TtsState.playing;
-  //   });
-
-  //   flutterTts.setCompletionHandler(() {
-  //     print("Complete");
-  //     ttsState = TtsState.stopped;
-  //   });
-
-  //   flutterTts.setErrorHandler((msg) {
-  //     print("error: $msg");
-  //     ttsState = TtsState.stopped;
-  //   });
-  // }
-
-  Future _getLanguages() async {
-    language = 'vi-VN';
-    flutterTts.setLanguage(language);
-  }
-
+  static bool _isSpeak = true;
   static Future speak(String voiceText) async {
-    if (voiceText != null) {
-      if (voiceText.isNotEmpty) {
-        var result = await flutterTts.speak(voiceText);
-        if (result == 1) ttsState = TtsState.playing;
+    // if (_queue.last != null) {
+    //   if (_queue.last.toString().isNotEmpty && ttsState == TtsState.stopped) {
+    //     var result = await flutterTts.speak(_queue.removeLast().toString());
+    //     if (result == 1) ttsState = TtsState.playing;
+    //   }
+    // }
+    if (!_isSpeak)
+      Future.delayed(const Duration(milliseconds: 200), () {
+        speak(voiceText);
+      });
+    else {
+      _isSpeak = false;
+      var result = await flutterTts.speak(voiceText);
+      if (result == 1) {
+        ttsState = TtsState.playing;
       }
     }
   }

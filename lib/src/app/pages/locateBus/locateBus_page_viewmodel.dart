@@ -64,7 +64,8 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
     this.updateState();
     await animateMyLocation(animate: false);
     await listenLocation();
-    animateThePoint(0);
+    this.increasePointNextPick();
+    // animateThePoint(0);
     initMarkers();
   }
 
@@ -88,12 +89,17 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
 //    );
   }
 
-  void animateThePoint(int point) async {
+  void animateThePoint(int point, [bool speak = false]) async {
     var firstRoute = driverBusSession.listRouteBus[point];
     center = LatLng(firstRoute.lat, firstRoute.lng);
-    mapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: center, zoom: 17.0)));
-    this.updateState();
+    if (speak)
+      TextToSpeechService.speak(
+          "Địa chỉ điểm số ${point + 1} là ${firstRoute.routeName}");
+    if (mapController != null) {
+      mapController.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(target: center, zoom: 17.0)));
+      this.updateState();
+    }
   }
 
   Future initMarkers() async {
@@ -250,10 +256,10 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
               arguments: BottomSheetCustomArgs(viewModel: this));
         }).then((result) {
       try {
-        if (result && driverBusSession.listRouteBus.length > pos) {
-          animateThePoint(pos);
-        }
-        if (result){
+        // if (result && driverBusSession.listRouteBus.length > pos) {
+        //   animateThePoint(pos, true);
+        // }
+        if (result) {
           initMarkers();
           increasePointNextPick();
           this.updateState();
@@ -281,7 +287,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
         if (position != null) {
           _trackingMyLoc = false;
           pointNext = position;
-          animateThePoint(position - 1);
+          animateThePoint(position - 1, true);
         }
 //        this.updateState();
 //        onTapMaker(driverBusSession.listRouteBus[position - 1], position);
@@ -338,7 +344,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
                               notification:
                                   "Xe đã đến.Học sinh nhanh chóng ra xe");
                     });
-                    TextToSpeechService.speak('Xe đã đến điểm số ${route.id +1}');
+                    TextToSpeechService.speak('Xe đã đến điểm số ${i + 1}');
                   }
                   api.postNotificationBusIsComing(listChildren, "",
                       isCome: true);
@@ -356,7 +362,8 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
                         childrenStatus,
                         notification: "Xe sắp đến trong vòng 5 phút");
                   });
-                  TextToSpeechService.speak("Xe sắp đến điểm số ${route.id + 1} trong vòng 5 phút.");
+                  TextToSpeechService.speak(
+                      "Xe sắp đến điểm số ${i + 1} trong vòng 5 phút.");
                 }
                 api.postNotificationBusIsComing(listChildren, "5 phút");
               }
@@ -382,6 +389,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
         .where((status) => status.statusID != 0)
         .toList();
     if (listCheck.length == 0 || listCheck == null) {
+      driverBusSession.clearLocal();
       if (Navigator.canPop(context))
         Navigator.pop(context);
       else
@@ -410,15 +418,18 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
 
   increasePointNextPick() {
     _trackingMyLoc = false;
-    if (pointNext < driverBusSession.listRouteBus.length && !driverBusSession.listRouteBus[pointNext].status&&
+    if (pointNext < driverBusSession.listRouteBus.length &&
+        !driverBusSession.listRouteBus[pointNext].status &&
         !driverBusSession
             .listRouteBus[driverBusSession.listRouteBus.length - 1].status) {
       pointNext++;
     } else
       pointNext = getPointNextPick();
-    if (pointNext != -1) animateThePoint(pointNext - 1);
+    if (pointNext != -1)
+      animateThePoint(pointNext - 1, true);
     else {
-      TextToSpeechService.speak('Xin vui lòng bấm kết thúc để hoàn thành chuyến đi.');
+      TextToSpeechService.speak(
+          'Xin vui lòng bấm kết thúc để hoàn thành chuyến đi.');
     }
   }
 
@@ -427,14 +438,15 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
     for (int i = 0; i < driverBusSession.listRouteBus.length; i++)
       if (driverBusSession.listRouteBus[i].status == false) {
         result = i + 1;
-        if(result != pointNext)
-          break;
+        if (result != pointNext) break;
       }
     return result;
   }
 
   String getAddressPointNext() {
-    return (pointNext >0)? driverBusSession.listRouteBus[pointNext - 1].routeName:'';
+    return (pointNext > 0)
+        ? driverBusSession.listRouteBus[pointNext - 1].routeName
+        : '';
   }
 
   int getCountChildrenPickPointNext() {
@@ -468,5 +480,31 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   RouteBus getRouteBusPointNext() {
     return driverBusSession.listRouteBus
         .firstWhere((routeBus) => routeBus.status == false);
+  }
+
+  int countChildPick() {
+    return (pointNext > 0)
+        ? driverBusSession.childDrenStatus
+            .where((childDrenStatus) =>
+                childDrenStatus.statusID != 3 &&
+                driverBusSession.listRouteBus[pointNext - 1].id ==
+                    childDrenStatus.routeBusID &&
+                childDrenStatus.typePickDrop == 0)
+            .toList()
+            .length
+        : 0;
+  }
+
+  int countChildDrop() {
+    return (pointNext > 0)
+        ? driverBusSession.childDrenStatus
+            .where((childDrenStatus) =>
+                childDrenStatus.statusID != 3 &&
+                driverBusSession.listRouteBus[pointNext - 1].id ==
+                    childDrenStatus.routeBusID &&
+                childDrenStatus.typePickDrop == 1)
+            .toList()
+            .length
+        : 0;
   }
 }

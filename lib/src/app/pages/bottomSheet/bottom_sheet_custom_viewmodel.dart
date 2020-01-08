@@ -77,6 +77,7 @@ class BottomSheetCustomViewModel extends ViewModelBase {
     }
     if (childrenStatus.typePickDrop == 1 && childrenStatus.statusID == 1) {
       bottomSheetViewModelBase.driverBusSession.totalChildrenDrop++;
+      TextToSpeechService.speak('học sinh ${children.name} đã xuống xe.');
       updateStatusDropChildren(childrenStatus.id);
       //Update tọa độ xe đến trạm
       api.updatePickingRouteByDriver(childrenStatus.pickingRoute, 1);

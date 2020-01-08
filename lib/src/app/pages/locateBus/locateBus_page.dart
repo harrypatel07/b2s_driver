@@ -35,7 +35,7 @@ class _LocateBusPageState extends State<LocateBusPage>
     //viewModel.listenData();
     viewModel.onCreateDriverBusSessionReport();
     viewModel.listenData();
-    viewModel.increasePointNextPick();
+    // viewModel.increasePointNextPick();
     super.initState();
   }
 
@@ -143,28 +143,6 @@ class _LocateBusPageState extends State<LocateBusPage>
           ? Common.removeMiliSecond(viewModel
               .driverBusSession.listRouteBus[viewModel.pointNext - 1].time)
           : '';
-      int countChildPick = (viewModel.pointNext > 0)
-          ? viewModel.driverBusSession.childDrenStatus
-              .where((childDrenStatus) =>
-                  childDrenStatus.statusID == 0 &&
-                  viewModel.driverBusSession
-                          .listRouteBus[viewModel.pointNext - 1].id ==
-                      childDrenStatus.routeBusID &&
-                  childDrenStatus.typePickDrop == 0)
-              .toList()
-              .length
-          : 0;
-      int countChildDrop = (viewModel.pointNext > 0)
-          ? viewModel.driverBusSession.childDrenStatus
-              .where((childDrenStatus) =>
-                  childDrenStatus.statusID == 0 &&
-                  viewModel.driverBusSession
-                          .listRouteBus[viewModel.pointNext - 1].id ==
-                      childDrenStatus.routeBusID &&
-                  childDrenStatus.typePickDrop == 1)
-              .toList()
-              .length
-          : 0;
       return NoticeLocalBus(
         onTap: () {
           viewModel.onTapNoticeContent();
@@ -225,7 +203,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                           width: 3,
                         ),
                         Text(
-                          '$countChildPick',
+                          '${viewModel.countChildPick()}',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(
@@ -239,7 +217,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                           width: 3,
                         ),
                         Text(
-                          '$countChildDrop',
+                          '${viewModel.countChildDrop()}',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(

@@ -896,7 +896,7 @@ class Api1 extends ApiMaster {
     });
   }
 
-  ///Update thông tin khách hàng
+  ///Update thông tin chuyến xe
   ///
   ///Success - Trả về true
   ///

@@ -1,5 +1,6 @@
 library appsetting;
 
+import 'package:b2s_driver/src/app/app_handler_push_notification.dart';
 import 'package:b2s_driver/src/app/provider/api.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
@@ -19,7 +20,7 @@ const String admin_password = "B@S#2019";
 
 final String ggKey = "AIzaSyCjB1Kh7OstaDns8ie6uPysWEWa_vwS3iw";
 
-const String oneSignal_myAppId = "ece1d724-31f9-4372-9ecf-5b13ad2baef0";
+const String oneSignal_myAppId = "0d392a06-3088-43ab-9a7d-1b4370822434";
 
 const String oneSignal_appId = "ece1d724-31f9-4372-9ecf-5b13ad2baef0";
 
@@ -34,3 +35,5 @@ const emptyState = {
 };
 
 Api api = new Api();
+
+HandlerPushNotification handlerPushNotification = HandlerPushNotification();

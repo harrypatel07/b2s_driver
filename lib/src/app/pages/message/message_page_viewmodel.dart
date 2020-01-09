@@ -54,7 +54,8 @@ class MessagePageViewModel extends ViewModelBase {
             item.avatarUrl = onValue.image;
             listProfileMessageUser
                 .add(ProfileMessageUserModel.fromDocumentSnapShot(onValue));
-            if (checkDone++ == listChat.length) {
+            checkDone++;
+            if (checkDone == listChat.length) {
               loadingDataMessage = false;
               checkDone = 0;
               this.updateState();

@@ -34,6 +34,10 @@
 	<string>Cho phép Bus2School truy cập vị trí của bạn để tính khoảng cách chuyến đi.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Cho phép Bus2School truy cập bộ sưu tập ảnh để thực hiện tính năng chỉnh sửa thông tin người dùng.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

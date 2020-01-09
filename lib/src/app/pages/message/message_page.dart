@@ -45,17 +45,17 @@ class _MessagePageState extends State<MessagePage> {
 //    );
     return TS24AppBar(
       title: new Text("Tin nhắn"),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.add),
-          iconSize: 30.0,
-          onPressed: () {
-            Navigator.pushNamed(context, ContactsPage.routeName).then((_) {
-              viewModel.listenData();
-            });
-          },
-        )
-      ],
+      // actions: <Widget>[
+      //   IconButton(
+      //     icon: Icon(Icons.add),
+      //     iconSize: 30.0,
+      //     onPressed: () {
+      //       Navigator.pushNamed(context, ContactsPage.routeName).then((_) {
+      //         viewModel.listenData();
+      //       });
+      //     },
+      //   )
+      // ],
     );
   }
 

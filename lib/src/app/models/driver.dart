@@ -7,6 +7,7 @@ import 'package:b2s_driver/src/app/models/res-partner.dart';
 class Driver {
   int id;
   dynamic name;
+  dynamic email;
   dynamic photo;
   dynamic gender;
   dynamic genderId;
@@ -33,6 +34,7 @@ class Driver {
   Driver.newInstance(
       {this.id,
       this.name,
+      this.email,
       this.photo,
       this.gender,
       this.phone,
@@ -45,6 +47,7 @@ class Driver {
       this.vehicleIdTracCar}) {
     id = id;
     name = name;
+    email = email;
     photo = photo;
     phone = phone;
     gender = gender;
@@ -60,6 +63,7 @@ class Driver {
   Driver.fromResPartner(ResPartner resPartner) {
     id = resPartner.id;
     name = (resPartner.name is bool) ? "" : resPartner.name;
+    email = (resPartner.email is bool) ? "" : resPartner.email;
     photo = resPartner.image;
     if (resPartner.title is List) {
       gender = resPartner.title[1];
@@ -72,6 +76,7 @@ class Driver {
   fromResPartner(ResPartner resPartner) {
     id = resPartner.id;
     name = (resPartner.name is bool) ? "" : resPartner.name;
+    email = (resPartner.email is bool) ? "" : resPartner.email;
     photo = resPartner.image;
     if (resPartner.title is List) {
       gender = resPartner.title[1];
@@ -84,6 +89,7 @@ class Driver {
   Driver.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    email = json['email'];
     photo = json['photo'];
     gender = json['gender'];
     genderId = json['genderId'];
@@ -99,6 +105,7 @@ class Driver {
   fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    email = json['email'];
     photo = json['photo'];
     gender = json['gender'];
     genderId = json['genderId'];
@@ -115,6 +122,7 @@ class Driver {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["id"] = this.id;
     data["name"] = this.name;
+    data["email"] = this.email;
     data["photo"] = this.photo;
     data["gender"] = this.gender;
     data["genderId"] = this.genderId;
@@ -125,6 +133,16 @@ class Driver {
         this.listVehicle.map((item) => item.toJson()).toList();
     data["isDriver"] = this.isDriver;
     data["driverId"] = this.driverId;
+    return data;
+  }
+
+  Map<String, dynamic> toJsonOneSignal() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    // data['photo'] = this.photo;
+    data['email'] = this.email;
+    data['phone'] = this.phone;
     return data;
   }
 

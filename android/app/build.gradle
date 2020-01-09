@@ -66,5 +66,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
-apply plugin: 'com.google.gms.google-services' 
+apply plugin: 'com.google.gms.google-services'
+googleServices { disableVersionCheck = true }
 apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'

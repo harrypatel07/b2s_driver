@@ -46,7 +46,8 @@ class MessageDetailViewModel extends ViewModelBase {
       await cloudService.chat.sendMessage(
           strId: driver.id.toString(),
           strPeerId: chat.peerId.toString(),
-          content: _content);
+          content: _content,
+          strPeerName: chat.name);
       listScrollController.animateTo(0.0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     }

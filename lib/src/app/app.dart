@@ -1,6 +1,7 @@
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
 
 import 'app_localizations.dart';
 import 'app_route.dart';

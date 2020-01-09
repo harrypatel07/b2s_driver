@@ -39,7 +39,11 @@ class InterfaceFireStore {
 class CollectionChat extends InterfaceFireStore {
   final _collectionName = "chat";
 
-  Future sendMessage({String strId, String strPeerId, String content}) async {
+  Future sendMessage(
+      {String strId,
+      String strPeerId,
+      String strPeerName,
+      String content}) async {
     var id = EncrypteService.encryptHash(strId),
         peerId = EncrypteService.encryptHash(strPeerId),
         groupChatId = "";
@@ -54,6 +58,7 @@ class CollectionChat extends InterfaceFireStore {
     message.content = content;
     message.timestamp = DateTime.now().millisecondsSinceEpoch.toString();
     message.type = 0;
+    message.receiverName = strPeerName;
     var _jsonMessKey = Map<String, dynamic>.from(message.toJson());
     _jsonMessKey["keyword"] =
         Common.createKeyWordForChat(groupChatId, split: split);
@@ -81,8 +86,7 @@ class CollectionChat extends InterfaceFireStore {
     return _firestore
         .collection("chat")
         .where("keyword", arrayContains: id)
-        .getDocuments()
-        .asStream();
+        .snapshots();
     // var id = EncrypteService.encrypt(strId).base64,
     //     peerId = EncrypteService.encrypt("User03").base64,
     //     groupChatId = "";

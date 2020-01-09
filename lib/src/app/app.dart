@@ -35,6 +35,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemePrimary.theme(),
       initialRoute: '/',
       navigatorObservers: [MyRouteObserver()],
+      navigatorKey: Get.key,
       routes: Routes.route,
       home: Routes.defaultPage,
       //Init locale lang

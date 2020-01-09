@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/models/busSession.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/childrenBusSession.dart';
@@ -65,7 +66,7 @@ class CollectionChat extends InterfaceFireStore {
         .document(groupChatId)
         .collection(String.fromCharCodes(groupChatId.runes.toList().reversed))
         .document();
-
+    api.postNotificationSendMessage(message);
     return await _firestore.runTransaction((transaction) async {
       await transaction.set(
         documentReference,

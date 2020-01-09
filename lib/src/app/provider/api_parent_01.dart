@@ -7,6 +7,7 @@ import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/fleet-vehicle.dart';
 import 'package:b2s_driver/src/app/models/historyDriver.dart';
+import 'package:b2s_driver/src/app/models/message.dart';
 import 'package:b2s_driver/src/app/models/parent.dart';
 import 'package:b2s_driver/src/app/models/picking-route.dart';
 import 'package:b2s_driver/src/app/models/picking-transport-info.dart';
@@ -1214,5 +1215,26 @@ class Api1 extends ApiMaster {
       ];
       OneSignalService.postNotification(body);
     }
+  }
+
+  ///Gửi thông báo chat
+  ///@param object messages
+  Future<dynamic> postNotificationSendMessage(Messages messages) async {
+    String notification = messages.content;
+    if (notification.length > 100)
+      notification = notification.substring(0, 100) + "...";
+    BodyNotification body = BodyNotification();
+    body.headings = {"en": "Bạn có tin nhắn từ ${messages.receiverName}"};
+    body.contents = {"en": notification};
+    body.data = messages.toJsonPushNotification();
+    body.filters = [
+      {
+        "field": "tag",
+        "key": "id",
+        "relation": "=",
+        "value": int.parse(messages.receiverId)
+      }
+    ];
+    OneSignalService.postNotification(body);
   }
 }

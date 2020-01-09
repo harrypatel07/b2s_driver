@@ -70,7 +70,7 @@ dependencies:
   flutter_tts: ^0.8.5
   audioplayers: ^0.13.7
   get: ^1.6.3
-  flutter_inappbrowser: ^2.0.2
+  flutter_inappwebview: ^2.1.0+1
 dev_dependencies:
   flutter_launcher_icons: "^0.7.4"
   flutter_test:

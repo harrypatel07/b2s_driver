@@ -7,7 +7,7 @@ import 'package:b2s_driver/src/app/service/onesingal-service.dart';
 import 'package:get/get.dart';
 
 class HandlerPushNotification {
-  StreamController streamController = StreamController();
+  StreamController streamController = StreamController.broadcast();
   Stream get stream => streamController.stream;
 
   void dispose() {

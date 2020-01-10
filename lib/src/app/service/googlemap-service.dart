@@ -163,7 +163,6 @@ class GoogleMapService {
               .map((latLng) => [latLng.latitude, latLng.longitude])
               .toList(),
           precision: 5);
-      ;
       path += polyline.encodedString;
       // for (var i = 0; i < listPosition.length; i++) {
       //   var item = listPosition[i];

@@ -605,11 +605,12 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                                 widget.driverBusSession.listRouteBus);
                           },
                           child: CachedNetworkImage(
-                              imageUrl: viewModel.urlMaps,
-                              imageBuilder: (context, imageProvider) => Image(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                  )),
+                            imageUrl: viewModel.urlMaps,
+                            imageBuilder: (context, imageProvider) => Image(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         )),
                   ),
                   new SliverList(

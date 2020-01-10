@@ -11,6 +11,7 @@ import 'dart:ui' as ui;
 import 'dart:math' as math;
 import 'package:android_intent/android_intent.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:polyline/polyline.dart' as prefixPolyline;
 
 class GoogleMapService {
   GoogleMapService();
@@ -154,17 +155,24 @@ class GoogleMapService {
     var path = "";
     if (listPosition != null) if (listPosition.length > 0) {
       path +=
-          "&path=color:0x${ThemePrimary.primaryColor.value.toRadixString(16)}|weight:2";
+          "&path=color:0x${ThemePrimary.primaryColor.value.toRadixString(16)}|weight:5";
       path = path.replaceAll("0xff", "0x");
-      for (var i = 0; i < listPosition.length; i++) {
-        var item = listPosition[i];
-
-        path += "|";
-        path += "${item.latitude},${item.longitude}";
-      }
+      path += "|enc:";
+      prefixPolyline.Polyline polyline = prefixPolyline.Polyline.Encode(
+          decodedCoords: listPosition
+              .map((latLng) => [latLng.latitude, latLng.longitude])
+              .toList(),
+          precision: 5);
+      ;
+      path += polyline.encodedString;
+      // for (var i = 0; i < listPosition.length; i++) {
+      //   var item = listPosition[i];
+      //   path += "|";
+      //   path += "${item.latitude},${item.longitude}";
+      // }
       url += path;
     }
-    //print(url);
+    print(url);
     return url;
   }
 

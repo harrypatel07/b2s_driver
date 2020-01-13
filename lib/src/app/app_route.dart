@@ -94,8 +94,10 @@ class Routes {
 }
 
 class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
+  static String routeCurrentName='';
   void _sendScreenView(PageRoute<dynamic> route) {
     var screenName = route.settings.name;
+    routeCurrentName = route.settings.name;
     switch (screenName) {
       case TabsPage.routeName:
         break;

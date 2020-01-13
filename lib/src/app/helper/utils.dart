@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
 
 Future<Uint8List> readFileByte(String filePath) async {
   Uri myUri = Uri.parse(filePath);
@@ -13,4 +16,10 @@ Future<Uint8List> readFileByte(String filePath) async {
         onError.toString());
   });
   return bytes;
+}
+bool getPointInCircle({Offset center, double r, Offset positionCurrent}) {
+  double distance = (pow((positionCurrent.dx - center.dx), 2) +
+      pow((positionCurrent.dy - center.dy), 2))
+      .abs();
+  return distance <= r * r;
 }

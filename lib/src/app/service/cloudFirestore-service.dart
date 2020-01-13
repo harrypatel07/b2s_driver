@@ -71,6 +71,7 @@ class CollectionChat extends InterfaceFireStore {
         .document(groupChatId)
         .collection(String.fromCharCodes(groupChatId.runes.toList().reversed))
         .document();
+    //Gửi push message
     api.postNotificationSendMessage(message);
     return await _firestore.runTransaction((transaction) async {
       await transaction.set(

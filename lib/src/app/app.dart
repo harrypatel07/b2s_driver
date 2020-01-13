@@ -1,3 +1,4 @@
+import 'package:b2s_driver/src/app/pages/popupChat/popupChat_page.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -28,7 +29,12 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       builder: (context, child) {
         return MediaQuery(
-          child: child,
+          child: Stack(
+            children: <Widget>[
+              child,
+              PopupChatPage(),
+            ],
+          ),
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
         );
       },

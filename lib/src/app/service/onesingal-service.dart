@@ -70,4 +70,16 @@ class OneSignalService {
       return null;
     });
   }
+
+  static Future postNotificationSameApplication(BodyNotification body) async {
+    body.appId = oneSignal_myAppId;
+    _headers[HttpHeaders.authorizationHeader] = "Basic $oneSignal_myRestKey";
+    return http
+        .post(_urlRest, headers: _headers, body: jsonEncode(body.toJson()))
+        .then((http.Response response) {
+      print(response);
+    }).catchError((error) {
+      return null;
+    });
+  }
 }

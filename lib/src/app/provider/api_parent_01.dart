@@ -1236,5 +1236,6 @@ class Api1 extends ApiMaster {
       }
     ];
     OneSignalService.postNotification(body);
+    OneSignalService.postNotificationSameApplication(body);
   }
 }

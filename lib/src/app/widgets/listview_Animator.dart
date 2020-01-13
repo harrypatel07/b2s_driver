@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-class Animator extends StatefulWidget {
+class ListViewAnimator extends StatefulWidget {
   final Widget child;
   final Duration time;
-  Animator(this.child, this.time);
+  ListViewAnimator(this.child, this.time);
   @override
-  _AnimatorState createState() => _AnimatorState();
+  _ListViewAnimatorState createState() => _ListViewAnimatorState();
 }
 
-class _AnimatorState extends State<Animator>
+class _ListViewAnimatorState extends State<ListViewAnimator>
     with SingleTickerProviderStateMixin {
   Timer timer;
   AnimationController animationController;
@@ -67,6 +67,6 @@ class WidgetANimator extends StatelessWidget {
   WidgetANimator(this.child);
   @override
   Widget build(BuildContext context) {
-    return Animator(child, wait());
+    return ListViewAnimator(child, wait());
   }
 }

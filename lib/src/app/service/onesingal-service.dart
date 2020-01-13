@@ -62,6 +62,7 @@ class OneSignalService {
 
   static Future postNotification(BodyNotification body) async {
     body.appId = oneSignal_appId;
+    _headers[HttpHeaders.authorizationHeader] = "Basic $oneSignal_restKey";
     return http
         .post(_urlRest, headers: _headers, body: jsonEncode(body.toJson()))
         .then((http.Response response) {

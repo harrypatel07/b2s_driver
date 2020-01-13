@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/profileMessageUser.dart';
 import 'package:b2s_driver/src/app/pages/message/profileMessageUser/profile_message_user_page.dart';
 import 'package:b2s_driver/src/app/pages/popupChat/contentPopupChat/content_popup_chat_page.dart';
@@ -8,7 +9,6 @@ import 'package:get/get.dart';
 import '../../../core/app_setting.dart';
 import '../../../core/baseViewModel.dart';
 import '../../../models/message.dart';
-import '../../../models/parent.dart';
 import '../popupChat_viewmodel.dart';
 
 class ContentPopupChatViewModel extends ViewModelBase {
@@ -27,6 +27,7 @@ class ContentPopupChatViewModel extends ViewModelBase {
   initListChat(List<ModelChatPopup> listChat) {
     this.listChat = listChat;
   }
+
   @override
   void dispose() {
     if (streamCloud != null) streamCloud.cancel();
@@ -41,9 +42,10 @@ class ContentPopupChatViewModel extends ViewModelBase {
       var _content = _textMessageController.text.trim();
       textMessageController.clear();
       await cloudService.chat.sendMessage(
-          strId: Parent().id.toString(),
+          strId: Driver().id.toString(),
           strPeerId: modelChatPopup.chatting.peerId.toString(),
-          content: _content);
+          content: _content,
+          strPeerName: modelChatPopup.chatting.name.toString());
       this.updateState();
     }
   }
@@ -51,7 +53,7 @@ class ContentPopupChatViewModel extends ViewModelBase {
   Future listenDataListMessage(ModelChatPopup modelChatPopup) async {
     if (streamCloudMessageData != null) streamCloudMessageData.cancel();
     final _snap = await cloudService.chat.listenListMessageByIdAndPeerId(
-        Parent().id.toString(), modelChatPopup.chatting.peerId.toString());
+        Driver().id.toString(), modelChatPopup.chatting.peerId.toString());
     streamCloudMessageData = _snap.listen((onData) {
       if (onData.documents.length > 0) {
         modelChatPopup.chatting.listMessage = onData.documents

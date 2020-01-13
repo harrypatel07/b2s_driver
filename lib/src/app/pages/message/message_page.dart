@@ -92,7 +92,7 @@ class _MessagePageState extends State<MessagePage> {
                       child: Hero(
                         tag: chatting.peerId.toString(),
                         child: CachedNetworkImage(
-                          imageUrl: chatting.avatarUrl,
+                          imageUrl: chatting.avatarUrl.toString(),
                           imageBuilder: (context, imageProvider) =>
                               CircleAvatar(
                             radius: 24.0,

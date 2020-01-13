@@ -27,9 +27,9 @@ class _ListViewAnimatorState extends State<ListViewAnimator>
 
   @override
   void dispose() {
-    super.dispose();
     timer.cancel();
     animationController.dispose();
+    super.dispose();
   }
 
   @override

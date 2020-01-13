@@ -37,6 +37,7 @@ class HandlerPushNotification {
             Chatting chat = Chatting.fromMessages(messages);
             api.getCustomerInfo(chat.peerId).then((onValue) {
               chat.avatarUrl = onValue.image.toString();
+              chat.name = onValue.name.toString();
               if (type == 0) {
                 Get.toNamed(MessageDetailPage.routeName, arguments: chat);
               } else

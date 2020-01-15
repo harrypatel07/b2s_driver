@@ -8,7 +8,8 @@ class BluetoothBarcodeService {
   final String _characteristicUUID = "d973f2e1-b19e-11e2-9e96-0800200c9a66";
   final Duration _durationScan = Duration(seconds: 4);
   final List<String> _deviceName = ["BLE-Chat", "B2S-Scanner"];
-  StreamController _streamController = StreamController.broadcast();
+  StreamController<String> _streamController =
+      StreamController<String>.broadcast();
   Stream<String> get _streamListenDataQRCode => _streamController.stream;
   FlutterBlue instance;
   Timer _timer;

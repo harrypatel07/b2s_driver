@@ -70,7 +70,8 @@ class LoadingDialog {
     //Navigator.pop(context);
   }
 
-  static void showMsgDialog(BuildContext context, String msg) {
+  static void showMsgDialog(BuildContext context, String msg,
+      {bool showByBluetoothDevice = false}) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -98,11 +99,15 @@ class LoadingDialog {
         ],
       ),
     );
+    if (showByBluetoothDevice)
+      Future.delayed(Duration(seconds: 1)).then((_) {
+        Navigator.of(context).pop(LoadingDialog);
+      });
   }
 
-  Future<bool> showMsgDialogWithButton(
-      BuildContext context, String msg,{String textYes = "Tiếp tục",String textNo = "Hủy"}) async{
-      return await showDialog(
+  Future<bool> showMsgDialogWithButton(BuildContext context, String msg,
+      {String textYes = "Tiếp tục", String textNo = "Hủy"}) async {
+    return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
@@ -144,8 +149,11 @@ class LoadingDialog {
       ),
     );
   }
+
   Future<bool> showMsgDialogWithCloseButton(
-      BuildContext context, String msg,) async{
+    BuildContext context,
+    String msg,
+  ) async {
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -163,7 +171,7 @@ class LoadingDialog {
               child: new Text(
                 "Đóng",
                 style:
-                TextStyle(fontSize: 16, color: ThemePrimary.primaryColor),
+                    TextStyle(fontSize: 16, color: ThemePrimary.primaryColor),
               ),
               onPressed: () {
 //                result = true;

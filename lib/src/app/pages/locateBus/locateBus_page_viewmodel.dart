@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:audioplayers/audio_cache.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
@@ -11,21 +8,24 @@ import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/pages/bottomSheet/bottom_sheet_custom.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/bottomSheetListRoute/bottomSheet_list_route.dart';
+import 'package:b2s_driver/src/app/pages/locateBus/connectQRscanDevices/connect_qrscan_devices_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/widgets/icon_marker_custom.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
+import 'package:b2s_driver/src/app/service/bluetooh-barcode-service.dart';
 import 'package:b2s_driver/src/app/service/index.dart';
-import 'package:b2s_driver/src/app/service/play-sound-service.dart';
 import 'package:b2s_driver/src/app/service/text-to-speech-service.dart';
 import 'package:b2s_driver/src/app/service/traccar-service.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocateBusPageViewModel extends BottomSheetViewModelBase {
+  BluetoothBarcodeService barcodeService = BluetoothBarcodeService();
   DriverBusSession driverBusSessionInput;
   bool showGoolgeMap = true;
   bool showSpinner = false;
@@ -42,14 +42,26 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   int pointNext = 0;
   //Tạo list routeBus cho thông báo khi xe sắp đến.
   Map _listRouteBusPushed = Map();
-  LocateBusPageViewModel();
+  BluetoothDevice bluetoothDeviceConnected;
+  StreamSubscription streamQrCode;
+  StreamSubscription streamBluetoothAvailable;
+  StreamSubscription streamConnectedDevice;
+  bool isBluetoothOn = false;
+  LocateBusPageViewModel() {
+    listenBluetoothAvailable();
+    listenBluetoothDeviceConnected();
+  }
 
   //Tracking my location
   bool _trackingMyLoc = false;
   @override
   dispose() {
     //  if (streamCloud != null) streamCloud.cancel();
+    if (streamQrCode != null) streamQrCode.cancel();
     if (streamLocation != null) streamLocation.cancel();
+    if (streamBluetoothAvailable != null) streamBluetoothAvailable.cancel();
+    if (streamConnectedDevice != null) streamConnectedDevice.cancel();
+    barcodeService.onDispose();
     super.dispose();
   }
 
@@ -139,7 +151,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
           try {
             if (result) showBottomSheet(_pos);
           } catch (e) {
-            print(e);
+//            print(e);
           }
         });
       }
@@ -212,13 +224,6 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
           'Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.');
   }
 
-  Future<bool> checkSessionFinishedByAnotherRole(
-      List<int> listIdPicking) async {
-    //Kiểm tra attendant đã hoàn thành chuyến
-    bool result = await api.checkUserRoleFinishedBusSession(listIdPicking);
-    return result;
-  }
-
   listenLocation() async {
     await TracCarService.initDeviceTracCar();
     if (streamLocation != null) streamLocation.cancel();
@@ -232,7 +237,9 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
             bearing: onData.heading, tilt: 90);
       }
       Driver driver = Driver();
-      api.updateCoordinateVehicle(driver.vehicleId, onData);
+      Future.delayed(Duration(seconds: 20), () {
+        api.updateCoordinateVehicle(driver.vehicleId, onData);
+      });
       checkBusLocationWithRoute(LatLng(onData.latitude, onData.longitude));
       TracCarService.updateDeviceTracCar(onData, driverBusSession.sessionID);
     });
@@ -265,7 +272,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
           this.updateState();
         }
       } catch (e) {
-        print(e);
+//        print(e);
       }
       this.updateState();
     });
@@ -292,7 +299,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
 //        this.updateState();
 //        onTapMaker(driverBusSession.listRouteBus[position - 1], position);
       } catch (e) {
-        print(e);
+//        print(e);
       }
     });
 //        .then((result) {
@@ -506,5 +513,59 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
             .toList()
             .length
         : 0;
+  }
+
+  listenBluetoothAvailable() {
+    if (streamBluetoothAvailable != null) streamBluetoothAvailable.cancel();
+    streamBluetoothAvailable =
+        barcodeService.checkBluetoothAvaiable().listen((onData) {
+      if (onData != isBluetoothOn) {
+        isBluetoothOn = onData;
+        if (!onData) {
+          ToastController.show(
+              context: context,
+              message:
+                  "Bluetooth chưa bật hoặc thiết bị không có chức năng bluetooth.",
+              duration: Duration(seconds: 2));
+        }
+        this.updateState();
+      }
+    });
+  }
+
+  listenBluetoothDeviceConnected() {
+    if (streamConnectedDevice != null) streamConnectedDevice.cancel();
+    streamConnectedDevice =
+        barcodeService.getConnectedDevice().listen((onData) {
+      if (this.bluetoothDeviceConnected == null ||
+          this.bluetoothDeviceConnected != onData) {
+        this.bluetoothDeviceConnected = onData;
+        listenQrCode(this.bluetoothDeviceConnected);
+      }
+    });
+//    barcodeService.getConnectedDevice().then((bluetoothDevice){
+//      if(bluetoothDevice != null)
+//        listenQrCode(bluetoothDevice);
+//    });
+  }
+
+  listenQrCode(BluetoothDevice bluetoothDevice) {
+    if (streamQrCode != null) streamQrCode.cancel();
+    streamQrCode = barcodeService
+        .listenDataQrCode(device: this.bluetoothDeviceConnected)
+        .listen((onData) {
+      if (onData.length > 0) listenQRcodeDevice(onData);
+      print(onData);
+    });
+  }
+
+  onTapQRScanDeviceButton() {
+    Navigator.pushNamed(context, ConnectQRScanDevicesPage.routeName)
+        .then((bluetoothDevice) {
+      if (bluetoothDevice != null) {
+        this.bluetoothDeviceConnected = bluetoothDevice;
+        listenQrCode(bluetoothDevice);
+      }
+    });
   }
 }

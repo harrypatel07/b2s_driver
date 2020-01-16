@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
@@ -7,7 +8,10 @@ import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/models/ticketCode.dart';
 import 'package:b2s_driver/src/app/pages/bottomSheet/bottom_sheet_custom.dart';
+import 'package:b2s_driver/src/app/pages/home/home_page.dart';
+import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
 import 'package:b2s_driver/src/app/service/cloudFirestore-service.dart';
+import 'package:b2s_driver/src/app/service/text-to-speech-service.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -120,7 +124,7 @@ Bạn có muốn tiếp tục?
         this.updateState();
       });
     } catch (e) {
-      print(e);
+//      print(e);
     }
   }
 
@@ -146,14 +150,175 @@ Bạn có muốn tiếp tục?
       if (_vehicle.xQrCode != null && qrResult == _vehicle.xQrCode)
         return true;
       else {
+        TextToSpeechService.speak(
+            "Mã này không phải của xe ${driver.vehicleName}.Xin vui lòng kiểm tra lại.");
         LoadingDialog.showMsgDialog(context,
             "Mã này không phải của xe ${driver.vehicleName}.Xin vui lòng kiểm tra lại.");
         return false;
       }
     } else {
+      TextToSpeechService.speak("Mã này không hợp lệ.Xin vui lòng thử lại.");
       LoadingDialog.showMsgDialog(
           context, "Mã này không hợp lệ.Xin vui lòng thử lại.");
       return false;
     }
+  }
+
+  Future<bool> checkSessionFinishedByAnotherRole(
+      List<int> listIdPicking) async {
+    //Kiểm tra attendant đã hoàn thành chuyến
+    bool result = await api.checkUserRoleFinishedBusSession(listIdPicking);
+    return result;
+  }
+
+  //-----Handler QRcodeDevice-----//
+  listenQRcodeDevice(String qrCodeResult) {
+    TicketCode ticketCode = TicketCode();
+    bool checkCode = ticketCode.checkTicketCode(qrCodeResult);
+    if (checkCode) {
+      String firstCharCode = qrCodeResult.substring(0, 1);
+      switch (firstCharCode) {
+        case "1": //Mã thẻ học sinh
+          //Tìm học sinh có mã thẻ như qrCodeResult
+          var children = driverBusSession.listChildren.firstWhere(
+              (child) => child.ticketCode == qrCodeResult,
+              orElse: () => null);
+          if (children != null) {
+            var childrenStatusPick = driverBusSession.childDrenStatus
+                .firstWhere(
+                    (stt) =>
+                        stt.childrenID == children.id &&
+                        stt.statusID != 3 &&
+                        stt.statusID == 0 &&
+                        stt.typePickDrop == 0,
+                    orElse: () => null);
+            if (childrenStatusPick != null)
+              return onTapPickUpLocateBus(
+                  driverBusSession, children, childrenStatusPick);
+            var childrenStatusDrop = driverBusSession.childDrenStatus
+                .firstWhere(
+                    (stt) =>
+                        stt.childrenID == children.id &&
+                        stt.statusID != 3 &&
+                        stt.statusID == 1 &&
+                        stt.typePickDrop == 1,
+                    orElse: () => null);
+            if (childrenStatusDrop != null)
+              return onTapPickUpLocateBus(
+                  driverBusSession, children, childrenStatusDrop);
+          } else {
+            TextToSpeechService.speak(
+                'Mã vé không có đăng ký trong chuyến xe này.');
+            return LoadingDialog.showMsgDialog(
+                context, "Mã vé không có đăng ký trong chuyến xe này.",
+                showByBluetoothDevice: true);
+          }
+          break;
+        case "2": // Mã thẻ xe
+          _finishSessionByQrCode(qrCodeResult);
+          break;
+        default:
+      }
+    } else {
+      TextToSpeechService.speak('Mã vé này không hợp lệ.Xin vui lòng thử lại.');
+      return LoadingDialog.showMsgDialog(
+          context, "Mã vé này không hợp lệ.Xin vui lòng thử lại.",
+          showByBluetoothDevice: true);
+    }
+  }
+
+  _finishSessionByQrCode(String qrCodeResult) async {
+    if (driverBusSession.totalChildrenPick ==
+            driverBusSession.totalChildrenDrop &&
+        (driverBusSession.totalChildrenPick +
+                driverBusSession.totalChildrenLeave) ==
+            driverBusSession.totalChildrenRegistered) {
+      driverBusSession.status = true;
+      this.updateState();
+      //Kiểm tra attendant đã hoàn thành chuyến
+      List<int> listIdPicking =
+          driverBusSession.childDrenStatus.map((item) => item.id).toList();
+      bool checkFinished =
+          await checkSessionFinishedByAnotherRole(listIdPicking);
+      this.updateState();
+      if (!checkFinished) {
+        if (qrCodeResult != null) {
+          if (checkTicketCodeWhenTapFinished(qrCodeResult)) {
+            List<int> listIdPicking = driverBusSession.childDrenStatus
+                .map((item) => item.id)
+                .toList();
+            api.updateUserRoleFinishedBusSession(listIdPicking, 0);
+            driverBusSession.clearLocal();
+          } else
+            return false;
+        } else
+          return false;
+      } else
+        driverBusSession.clearLocal();
+      TextToSpeechService.speak("Chuyến xe đã hoàn thành.Xin cám ơn.");
+      Navigator.pushReplacementNamed(context, TabsPage.routeName,
+          arguments: TabsArgument(routeChildName: HomePage.routeName));
+    } else {
+      TextToSpeechService.speak(
+          "Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.");
+      LoadingDialog.showMsgDialog(context,
+          'Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.');
+    }
+  }
+
+  onTapPickUpLocateBus(DriverBusSession driverBusSession, Children children,
+      ChildDrenStatus childrenStatus) {
+    if (childrenStatus.typePickDrop == 0 && childrenStatus.statusID != 0)
+      return;
+    if (childrenStatus.typePickDrop == 1 && childrenStatus.statusID != 1)
+      return;
+    if (childrenStatus.typePickDrop == 0 && childrenStatus.statusID == 0) {
+      driverBusSession.totalChildrenPick++;
+      TextToSpeechService.speak('học sinh ${children.name} đã lên xe.');
+      updateStatusPickChildren(childrenStatus.id);
+      //Update tọa độ xe đến trạm
+      api.updatePickingRouteByDriver(childrenStatus.pickingRoute, 0);
+    }
+    if (childrenStatus.typePickDrop == 1 && childrenStatus.statusID == 1) {
+      driverBusSession.totalChildrenDrop++;
+      TextToSpeechService.speak('học sinh ${children.name} đã xuống xe.');
+      updateStatusDropChildren(childrenStatus.id);
+      //Update tọa độ xe đến trạm
+      api.updatePickingRouteByDriver(childrenStatus.pickingRoute, 1);
+    }
+    DriverBusSession.updateChildrenStatusIdByPickDrop(
+        driverBusSession: driverBusSession, childDrenStatus: childrenStatus);
+
+    //Đồng bộ firestore
+    cloudService.busSession.updateBusSessionFromChildrenStatus(childrenStatus);
+    //Push thông báo
+    api.postNotificationChangeStatus(children, childrenStatus);
+    driverBusSession.saveLocal();
+    this.updateState();
+
+    this.onCreateDriverBusSessionReport();
+    this.updateState();
+  }
+
+  updateStatusPickChildren(int childrenStatusId) {
+    // List<int> listIdPicking = List();
+    // listIdPicking.add(childrenStatusId);
+    api.updateStatusPickByIdPicking([childrenStatusId]).then((r) {
+      if (r)
+        print('Success');
+      else
+        print('fails');
+    });
+  }
+
+  updateStatusDropChildren(int childrenStatusId) {
+    List<int> listIdDropping = List();
+    listIdDropping.add(childrenStatusId);
+    api.updateStatusDropByIdChildren(listIdDropping).then((r) {
+      if (r)
+        print('Success');
+      else
+        print('fails');
+    });
   }
 }

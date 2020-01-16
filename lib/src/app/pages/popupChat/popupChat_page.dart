@@ -93,6 +93,7 @@ class _PopupChatHomePageState extends State<PopupChatHomePage>
               children: <Widget>[
                 if (viewModel.listChat.length > 0 &&
                     viewModel.showPopup &&
+                    viewModel.showPopupBaseScreen &&
                     viewModel.flowDrag)
                   Positioned(
                     top: viewModel.positionDraggable.dy,
@@ -112,8 +113,9 @@ class _PopupChatHomePageState extends State<PopupChatHomePage>
                   ),
                 if (viewModel.listChat.length > 0 &&
                     viewModel.showPopup &&
+                    viewModel.showPopupBaseScreen &&
                     !viewModel.flowDrag &&
-                    (viewModel.inTargetRemove || viewModel.isRemove))
+                    (viewModel.inTargetRemove || viewModel.isRemoveCancel))
                   Animator(
                     statusListener: ((_, __) {
                       if (_.index == 3)
@@ -123,10 +125,10 @@ class _PopupChatHomePageState extends State<PopupChatHomePage>
                     }),
                     curve: Curves.easeInOutBack,
                     tween: Tween<Offset>(
-                        begin: (viewModel.isRemove)
+                        begin: (viewModel.isRemoveCancel)
                             ? viewModel.positionItemShow
                             : viewModel.positionDraggable,
-                        end: (viewModel.isRemove)
+                        end: (viewModel.isRemoveCancel)
                             ? viewModel.positionDraggable
                             : Offset(
                                 MediaQuery.of(context).size.width / 2 - 65 / 2,
@@ -153,7 +155,9 @@ class _PopupChatHomePageState extends State<PopupChatHomePage>
                           offset: anim.value);
                     },
                   ),
-                if (viewModel.listChat.length > 0 && viewModel.showPopup)
+                if (viewModel.listChat.length > 0 &&
+                    viewModel.showPopup &&
+                    viewModel.showPopupBaseScreen)
                   Positioned(
                     top: viewModel.positionDraggable.dy,
                     left: viewModel.positionDraggable.dx,

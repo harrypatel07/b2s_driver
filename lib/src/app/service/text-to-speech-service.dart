@@ -1,5 +1,4 @@
-import 'dart:collection';
-
+import 'dart:io' show Platform;
 import 'package:flutter_tts/flutter_tts.dart';
 
 enum TtsState { playing, stopped }
@@ -46,6 +45,7 @@ class TextToSpeechService {
     //     if (result == 1) ttsState = TtsState.playing;
     //   }
     // }
+    if (Platform.isIOS) return false;
     if (!_isSpeak)
       Future.delayed(const Duration(milliseconds: 200), () {
         speak(voiceText);

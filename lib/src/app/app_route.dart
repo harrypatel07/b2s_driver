@@ -1,3 +1,4 @@
+import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/pages/attendant/attendant_page.dart';
@@ -8,6 +9,7 @@ import 'package:b2s_driver/src/app/pages/historyTripDetailPage/historyTripDetail
 import 'package:b2s_driver/src/app/pages/historyTripDetailPage/historyTrip_detail_page.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
 import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.dart';
+import 'package:b2s_driver/src/app/pages/locateBus/connectQRscanDevices/connect_qrscan_devices_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/emergency/emergency_page.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/locateBus_page.dart';
 
@@ -89,13 +91,15 @@ class Routes {
         ),
     HistoryTripDetailMap.routeName: (context) => HistoryTripDetailMap(
           args: ModalRoute.of(context).settings.arguments,
-        )
+        ),
+    ConnectQRScanDevicesPage.routeName: (context) => ConnectQRScanDevicesPage()
   };
 }
 
 class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   static String routeCurrentName='';
   void _sendScreenView(PageRoute<dynamic> route) {
+    handlerPushPageName.add(route.settings.name.toString());
     var screenName = route.settings.name;
     routeCurrentName = route.settings.name;
     switch (screenName) {

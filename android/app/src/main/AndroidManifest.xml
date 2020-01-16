@@ -22,6 +22,10 @@
             </intent-filter>
         </activity>
         <activity android:name="com.apptreesoftware.barcodescan.BarcodeScannerActivity"/>
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCjB1Kh7OstaDns8ie6uPysWEWa_vwS3iw"/>
     </application>
 </manifest>

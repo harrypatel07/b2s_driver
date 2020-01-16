@@ -395,6 +395,62 @@ class _LocateBusPageState extends State<LocateBusPage>
       );
     }
 
+    Widget __connectQrScanDevice() {
+      return Positioned(
+        bottom: -6,
+        right: 0,
+        child: Stack(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(left: 20),
+              decoration: new BoxDecoration(
+//                  boxShadow: [
+//                    BoxShadow(
+//                      color: Colors.black38,
+//                      blurRadius: 1.0, // has the effect of softening the shadow
+//                      spreadRadius:
+//                          1.0, // has the effect of extending the shadow
+//                      offset: Offset(
+//                        -1.0, // horizontal, move right 10
+//                        -1.0, // vertical, move down 10
+//                      ),
+//                    )
+//                  ],
+                  color: Colors.black12,
+                  borderRadius: new BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      bottomLeft: Radius.circular(40))),
+              width: 60,
+              height: 60,
+            ),
+            Positioned(
+              top: 4,
+              left: 2,
+              child: TS24Button(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    color: viewModel.isBluetoothOn
+                        ? ThemePrimary.primaryColor
+                        : Colors.grey),
+                onTap: () {
+                  viewModel.onTapQRScanDeviceButton();
+                },
+                child: Center(
+                  child: Icon(
+                    Icons.settings_remote,
+                    color: Colors.white,
+                    size: 25,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     Widget __finishButton() {
       return Positioned(
         bottom: -10,
@@ -603,7 +659,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                                   right: 0,
                                   top: 115,
                                   child: Container(
-                                    height: 450,
+                                    height: 360,
                                     width: MediaQuery.of(context).size.width,
                                     child: Stack(
                                       children: <Widget>[
@@ -614,17 +670,22 @@ class _LocateBusPageState extends State<LocateBusPage>
                                         ),
                                         Positioned(
                                           right: 0,
-                                          top: 200,
+                                          top: 150,
                                           child: __navigateGoogleMap(),
                                         ),
                                         Positioned(
-                                          top: 300,
+                                          top: 230,
                                           right: 0,
                                           child: __sosButton(),
                                         ),
+//                                        Positioned(
+//                                          top: 310,
+//                                          right: 0,
+//                                          child: __connectQrScanDevice(),
+//                                        ),
                                         Positioned(
                                           right: 15,
-                                          top: 400,
+                                          top: 310,
                                           child: __buildIconLocation(),
                                         )
                                       ],
@@ -635,7 +696,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                                   right: 0,
                                   top: 75,
                                   child: Container(
-                                    height: 300,
+                                    height: 325,
                                     width: MediaQuery.of(context).size.width,
                                     child: Stack(
                                       children: <Widget>[
@@ -646,17 +707,17 @@ class _LocateBusPageState extends State<LocateBusPage>
                                         ),
                                         Positioned(
                                           right: 0,
-                                          top: 175,
+                                          top: 85,
                                           child: __navigateGoogleMap(),
                                         ),
                                         Positioned(
-                                          top: 100,
+                                          top: 150,
                                           right: 0,
                                           child: __sosButton(),
                                         ),
                                         Positioned(
                                           right: 15,
-                                          top: 250,
+                                          top: 215,
                                           child: __buildIconLocation(),
                                         )
                                       ],
@@ -669,7 +730,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                                   right: 0,
                                   top: 130,
                                   child: Container(
-                                    height: 450,
+                                    height: 360,
                                     width: MediaQuery.of(context).size.width,
                                     child: Stack(
                                       children: <Widget>[
@@ -680,17 +741,22 @@ class _LocateBusPageState extends State<LocateBusPage>
                                         ),
                                         Positioned(
                                           right: 0,
-                                          top: 200,
+                                          top: 150,
                                           child: __navigateGoogleMap(),
                                         ),
                                         Positioned(
-                                          top: 300,
+                                          top: 230,
                                           right: 0,
                                           child: __sosButton(),
                                         ),
+//                                        Positioned(
+//                                          top: 310,
+//                                          right: 0,
+//                                          child: __connectQrScanDevice(),
+//                                        ),
                                         Positioned(
                                           right: 15,
-                                          top: 400,
+                                          top: 310,
                                           child: __buildIconLocation(),
                                         )
                                       ],
@@ -701,7 +767,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                                   right: 0,
                                   top: 65,
                                   child: Container(
-                                    height: 300,
+                                    height: 325,
                                     width: MediaQuery.of(context).size.width,
                                     child: Stack(
                                       children: <Widget>[
@@ -712,17 +778,17 @@ class _LocateBusPageState extends State<LocateBusPage>
                                         ),
                                         Positioned(
                                           right: 0,
-                                          top: 175,
+                                          top: 85,
                                           child: __navigateGoogleMap(),
                                         ),
                                         Positioned(
-                                          top: 100,
+                                          top: 150,
                                           right: 0,
                                           child: __sosButton(),
                                         ),
                                         Positioned(
                                           right: 15,
-                                          top: 250,
+                                          top: 215,
                                           child: __buildIconLocation(),
                                         )
                                       ],
@@ -732,6 +798,7 @@ class _LocateBusPageState extends State<LocateBusPage>
                       __backButton(),
                       __finishButton(),
                       __report(),
+                      __connectQrScanDevice(),
                       viewModel.showSpinner
                           ? LoadingIndicator.progress(
                               context: context,

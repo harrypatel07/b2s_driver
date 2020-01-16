@@ -4,6 +4,7 @@ import 'package:b2s_driver/src/app/app_handler_push_notification.dart';
 import 'package:b2s_driver/src/app/provider/api.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:rxdart/rxdart.dart';
 
 final LocalStorage localStorage = new LocalStorage("localStorage");
 
@@ -39,4 +40,5 @@ const emptyState = {
 
 Api api = new Api();
 
+BehaviorSubject<String> handlerPushPageName = new BehaviorSubject<String>();
 HandlerPushNotification handlerPushNotification = HandlerPushNotification();

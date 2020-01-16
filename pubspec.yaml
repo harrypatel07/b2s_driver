@@ -74,6 +74,7 @@ dependencies:
   polyline: ^1.0.2
   animator: ^1.0.0+3
   flutter_blue: ^0.6.3+1
+  image_cropper: ^1.1.2
 dev_dependencies:
   flutter_launcher_icons: "^0.7.4"
   flutter_test:

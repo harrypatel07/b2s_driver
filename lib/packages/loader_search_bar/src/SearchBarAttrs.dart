@@ -29,7 +29,7 @@ class SearchBarAttrs {
       textBoxOutlineColor: Colors.black26);
 
   static TextStyle _getDefaultTextStyle(Color color) =>
-      TextStyle(fontSize: 20.0, color: color);
+      TextStyle(fontSize: 18.0, color: color);
 
   final Color primaryDetailColor;
   final Color secondaryDetailColor;

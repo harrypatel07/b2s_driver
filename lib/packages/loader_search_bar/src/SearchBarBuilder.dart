@@ -1,10 +1,11 @@
-
-import 'package:b2s_driver/packages/loader_search_bar/loader_search_bar.dart';
-import 'package:b2s_driver/packages/loader_search_bar/src/InheritedSearchWidget.dart';
-import 'package:b2s_driver/packages/loader_search_bar/src/SearchBarButton.dart';
-import 'package:b2s_driver/packages/loader_search_bar/src/SearchBarState.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'InheritedSearchWidget.dart';
+import 'SearchBar.dart';
+import 'SearchBarAttrs.dart';
+import 'SearchBarButton.dart';
+import 'SearchBarState.dart';
 
 abstract class SearchBarBuilder<T extends SearchBarState>
     extends StatelessWidget {
@@ -150,7 +151,11 @@ abstract class SearchBarBuilder<T extends SearchBarState>
       searchState.activated && searchState.queryNotEmpty;
 
   Widget _buildSearchTextField() {
-    return Positioned.fill(
+    return Positioned(
+      top: -7,
+      right: 0,
+      left: 0,
+      bottom: 0,
       child: Center(
         child: TextField(
           style: searchAttrs.textStyle,

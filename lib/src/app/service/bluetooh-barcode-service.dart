@@ -46,7 +46,6 @@ class BluetoothBarcodeService {
     if (_streamConnectedDevice != null) _streamConnectedDevice.cancel();
     _streamController.close();
     _streamControllerBluetoothState.close();
-    _streamControllerBluetoothState = StreamController<bool>.broadcast();
     _streamControllerConnectedDevice.close();
 
     if (_timer != null) _timer.cancel();

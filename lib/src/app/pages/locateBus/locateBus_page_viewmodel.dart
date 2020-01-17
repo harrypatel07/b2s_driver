@@ -562,6 +562,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   onTapQRScanDeviceButton() {
     Navigator.pushNamed(context, ConnectQRScanDevicesPage.routeName)
         .then((bluetoothDevice) {
+      listenBluetoothAvailable();
       if (bluetoothDevice != null) {
         this.bluetoothDeviceConnected = bluetoothDevice;
         listenQrCode(bluetoothDevice);

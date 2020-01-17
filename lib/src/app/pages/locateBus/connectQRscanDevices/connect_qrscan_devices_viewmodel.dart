@@ -10,14 +10,14 @@ class ConnectQRScanDeviceViewModel extends ViewModelBase {
   List<BluetoothDevice> listBluetoothDeviceConnected = List();
   StreamSubscription streamBluetoothAvailable;
   bool isBluetoothOn = false;
-  ConnectQRScanDeviceViewModel(){
+  ConnectQRScanDeviceViewModel() {
     listenBluetoothAvailable();
   }
 
   @override
   dispose() {
-//    if(streamBluetoothAvailable != null) streamBluetoothAvailable.cancel();
-    barcodeService.onDispose();
+    if (streamBluetoothAvailable != null) streamBluetoothAvailable.cancel();
+    // barcodeService.onDispose();
     super.dispose();
   }
 
@@ -38,7 +38,8 @@ class ConnectQRScanDeviceViewModel extends ViewModelBase {
     Navigator.pop(context, scanResult.device);
   }
 
-  Widget handleButtonConnectedDevices(AsyncSnapshot<BluetoothDeviceState> snapshot,
+  Widget handleButtonConnectedDevices(
+      AsyncSnapshot<BluetoothDeviceState> snapshot,
       BluetoothDevice bluetoothDevice) {
     VoidCallback onPressed;
     String text;
@@ -70,8 +71,7 @@ class ConnectQRScanDeviceViewModel extends ViewModelBase {
   }
 
   onTapRefresh() async {
-    if(!isBluetoothOn)
-      return;
+    if (!isBluetoothOn) return;
     if (barcodeService.isScanning) await stopScan();
     Future.delayed(Duration(milliseconds: 200)).then((_) {
       starScan();
@@ -81,14 +81,15 @@ class ConnectQRScanDeviceViewModel extends ViewModelBase {
   starScan() {
     barcodeService.instance.startScan();
   }
+
   listenBluetoothAvailable() {
     if (streamBluetoothAvailable != null) streamBluetoothAvailable.cancel();
     streamBluetoothAvailable =
         barcodeService.checkBluetoothAvaiable().listen((onData) {
-          if (onData != isBluetoothOn) {
-            isBluetoothOn = onData;
-            this.updateState();
-          }
-        });
+      if (onData != isBluetoothOn) {
+        isBluetoothOn = onData;
+        this.updateState();
+      }
+    });
   }
 }

@@ -10,31 +10,40 @@ class ConnectQRScanDeviceViewModel extends ViewModelBase {
   List<BluetoothDevice> listBluetoothDeviceConnected = List();
   StreamSubscription streamBluetoothAvailable;
   bool isBluetoothOn = false;
+  bool isScanning = false;
   ConnectQRScanDeviceViewModel() {
     listenBluetoothAvailable();
+    isScanning = true;
+    Future.delayed(barcodeService.durationScan).then((_) {
+      try {
+        isScanning = false;
+        this.updateState();
+      } catch (e) {}
+    });
   }
 
   @override
   dispose() {
     if (streamBluetoothAvailable != null) streamBluetoothAvailable.cancel();
+    stopScan();
     // barcodeService.onDispose();
     super.dispose();
   }
 
   onTapDisconnectDevice(BluetoothDevice bluetoothDevice) async {
-    bluetoothDevice.disconnect();
-    if (barcodeService.isScanning) stopScan();
+    await bluetoothDevice.disconnect();
+    if (barcodeService.isScanning) await stopScan();
     Future.delayed(Duration(milliseconds: 200)).then((_) {
-      starScan();
+      barcodeService.scanResult();
     });
   }
 
   onTapConnectDevice(ScanResult scanResult) async {
-    scanResult.device.connect();
-    if (barcodeService.isScanning) stopScan();
-    Future.delayed(Duration(milliseconds: 200)).then((_) {
-      starScan();
-    });
+    await scanResult.device.connect();
+    if (barcodeService.isScanning) await stopScan();
+    // Future.delayed(Duration(milliseconds: 200)).then((_) {
+    //   barcodeService.scanResult();
+    // });
     Navigator.pop(context, scanResult.device);
   }
 
@@ -72,14 +81,18 @@ class ConnectQRScanDeviceViewModel extends ViewModelBase {
 
   onTapRefresh() async {
     if (!isBluetoothOn) return;
+    isScanning = true;
+    this.updateState();
     if (barcodeService.isScanning) await stopScan();
-    Future.delayed(Duration(milliseconds: 200)).then((_) {
-      starScan();
+    Future.delayed(Duration(milliseconds: 500)).then((_) {
+      barcodeService.scanResult();
     });
-  }
-
-  starScan() {
-    barcodeService.instance.startScan();
+    Future.delayed(barcodeService.durationScan).then((_) {
+      try {
+        isScanning = false;
+        this.updateState();
+      } catch (e) {}
+    });
   }
 
   listenBluetoothAvailable() {

@@ -7,7 +7,12 @@ class BluetoothBarcodeService {
   final String _serviceUUID = "d973f2e0-b19e-11e2-9e96-0800200c9a66";
   final String _characteristicUUID = "d973f2e1-b19e-11e2-9e96-0800200c9a66";
   final Duration durationScan = Duration(seconds: 10);
-  final List<String> _deviceName = ["BLE-Chat", "B2S-Scanner", "bluenrg!", "bluenrg"];
+  final List<String> _deviceName = [
+    "BLE-Chat",
+    "B2S-Scanner",
+    "bluenrg!",
+    "bluenrg"
+  ];
   StreamController<String> _streamController =
       StreamController<String>.broadcast();
   Stream<String> get _streamListenDataQRCode => _streamController.stream;
@@ -58,9 +63,8 @@ class BluetoothBarcodeService {
     );
   }
 
-  Stream<List<ScanResult>> scanResult(){
-    if (isScanning) instance.stopScan();
-    this.startScan();
+  Stream<List<ScanResult>> scanResult() {
+    if (isScanning == false) this.startScan();
     return instance.scanResults;
   }
 

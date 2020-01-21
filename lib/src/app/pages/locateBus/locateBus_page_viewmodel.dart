@@ -537,9 +537,10 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
     if (streamConnectedDevice != null) streamConnectedDevice.cancel();
     streamConnectedDevice =
         barcodeService.getConnectedDevice().listen((onData) {
-      if (this.bluetoothDeviceConnected == null ||
-          this.bluetoothDeviceConnected != onData) {
+      if ((this.bluetoothDeviceConnected == null ||
+          this.bluetoothDeviceConnected != onData) && onData != null) {
         this.bluetoothDeviceConnected = onData;
+        this.updateState();
         listenQrCode(this.bluetoothDeviceConnected);
       }
     });

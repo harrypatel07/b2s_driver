@@ -23,6 +23,18 @@ class _ConnectQRScanDevicesPageState extends State<ConnectQRScanDevicesPage> {
       return TS24AppBar(
         title: Text('Quản lý đầu đọc mã vạch'),
         actions: <Widget>[
+          if(viewModel.isBluetoothOn)
+          viewModel.isScanning?
+          Container(
+            alignment: Alignment.center,
+            width: 50,
+            padding: EdgeInsets.fromLTRB(12, 15, 13, 15),
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              valueColor:
+              AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          ):
           IconButton(
             icon: Icon(
               Icons.refresh,
@@ -170,7 +182,7 @@ class _ConnectQRScanDevicesPageState extends State<ConnectQRScanDevicesPage> {
                     builder: (c, snapshot) => Column(
                       children: <Widget>[
                         // if(snapshot.data.length > 0)
-                        _title("Thiết bị mới", showCircleLoading: true),
+                        _title("Thiết bị mới"),
                         ..._listConnectDevicesAvailable(snapshot)
                       ],
                     ),

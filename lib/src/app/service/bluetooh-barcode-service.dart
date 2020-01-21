@@ -59,7 +59,8 @@ class BluetoothBarcodeService {
   }
 
   Stream<List<ScanResult>> scanResult() {
-    this.startScan();
+    if(isScanning == false)
+      this.startScan();
     return instance.scanResults;
   }
 

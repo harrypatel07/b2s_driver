@@ -1,3 +1,4 @@
+import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/pages/user/user_page_viewmodel.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
@@ -13,8 +14,17 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   UserPageViewModel viewModel = UserPageViewModel();
+  GlobalKey _key = GlobalKey();
+  Size _size = Size(0,0);
+  _getSize() {
+    final RenderBox renderBox = _key.currentContext.findRenderObject();
+    _size = renderBox.size;
+  }
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+      _getSize();
+    }));
     super.initState();
   }
   @override
@@ -205,6 +215,7 @@ class _UserPageState extends State<UserPage> {
                 child: Column(
                   children: <Widget>[
                     Container(
+                      key: _key,
                       width: MediaQuery.of(context).size.width,
                       child: Column(
                         children: <Widget>[
@@ -226,6 +237,24 @@ class _UserPageState extends State<UserPage> {
                         ],
                       ),
                     ),
+                    if(_size.height >= MediaQuery.of(context).size.height)
+                      Container(
+                        height: 50,
+                        child: Center(
+                          child: Text("version $version"),
+                        ),
+                      )
+                    else Column(
+                      children: <Widget>[
+                        SizedBox( height:  MediaQuery.of(context).size.height - _size.height - 120,),
+                        Container(
+                          height: 50,
+                          child: Center(
+                            child: Text("version $version"),
+                          ),
+                        )
+                      ],
+                    )
                   ],
                 ),
               ),

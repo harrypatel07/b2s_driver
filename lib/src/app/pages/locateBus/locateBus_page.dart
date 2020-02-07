@@ -414,97 +414,74 @@ class _LocateBusPageState extends State<LocateBusPage>
             Positioned(
               top: 4,
               left: 2,
-              child: StreamBuilder<List<BluetoothDevice>>(
-                  stream: Stream.periodic(Duration(milliseconds: 500)).asyncMap(
-                      (_) =>
-                          viewModel.barcodeService.instance.connectedDevices),
-                  initialData: [],
-                  builder: (c, snapshot) {
-                    return Column(
-                      children: <Widget>[
-                        ...snapshot.data
-                            .map((d) => StreamBuilder<BluetoothDeviceState>(
-                                      stream: d.state,
-                                      initialData:
-                                          BluetoothDeviceState.disconnected,
-                                      builder: (c, snapshot) {
-                                        return TS24Button(
-                                          width: 50,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(25)),
-                                              color: viewModel.isBluetoothOn
-                                                  ? (snapshot.data ==
-                                                          BluetoothDeviceState
-                                                              .connected)
-                                                      ? ThemePrimary
-                                                          .primaryColor
-                                                      : ThemePrimary
-                                                          .colorParentApp
-                                                  : Colors.grey),
-                                          onTap: () {
-                                            viewModel.onTapQRScanDeviceButton();
-                                          },
-                                          child: Center(
-                                              child: viewModel.isBluetoothOn
-                                                  ? (snapshot.data ==
-                                                          BluetoothDeviceState
-                                                              .connected)
-                                                      ? Icon(
-                                                          Icons.settings_remote,
-                                                          color: Colors.white,
-                                                          size: 25,
-                                                        )
-                                                      : CircleAvatar(
-                                                          radius: 13.0,
-                                                          backgroundImage:
-                                                              AssetImage(
-                                                                  "assets/images/scan-device-signal.gif"),
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                        )
-                                                  : Icon(
-                                                      Icons.bluetooth_disabled,
-                                                      color: Colors.white,
-                                                      size: 25,
-                                                    )),
-                                        );
-                                      },
-                                    )
+              child: (viewModel.bluetoothDeviceConnected != null)
+                  ? StreamBuilder<BluetoothDeviceState>(
+                      stream: viewModel.bluetoothDeviceConnected.state,
+                      initialData: BluetoothDeviceState.disconnected,
+                      builder: (c, snapshot) {
+                        return TS24Button(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(25)),
+                              color: viewModel.isBluetoothOn
+                                  ? (snapshot.data ==
+                                          BluetoothDeviceState.connected)
+                                      ? ThemePrimary.primaryColor
+                                      : ThemePrimary.colorParentApp
+                                  : Colors.grey),
+                          onTap: () {
+                            viewModel.onTapQRScanDeviceButton();
+                          },
+                          child: Center(
+                              child: viewModel.isBluetoothOn
+                                  ? (snapshot.data ==
+                                          BluetoothDeviceState.connected)
+                                      ? Icon(
+                                          Icons.settings_remote,
+                                          color: Colors.white,
+                                          size: 25,
+                                        )
+                                      : CircleAvatar(
+                                          radius: 13.0,
+                                          backgroundImage: AssetImage(
+                                              "assets/images/scan-device-signal.gif"),
+                                          backgroundColor: Colors.transparent,
+                                        )
+                                  : Icon(
+                                      Icons.bluetooth_disabled,
+                                      color: Colors.white,
+                                      size: 25,
+                                    )),
+                        );
+                      },
+                    )
+                  : TS24Button(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                          color: viewModel.isBluetoothOn
+                              ? ThemePrimary.colorParentApp
+                              : Colors.grey),
+                      onTap: () {
+                        viewModel.onTapQRScanDeviceButton();
+                      },
+                      child: Center(
+                          child: viewModel.isBluetoothOn
+                              ? CircleAvatar(
+                                  radius: 13.0,
+                                  backgroundImage: AssetImage(
+                                      "assets/images/scan-device-signal.gif"),
+                                  backgroundColor: Colors.transparent,
                                 )
-                            .toList(),
-                        if (snapshot.data.length < 1)
-                          TS24Button(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(25)),
-                                color: viewModel.isBluetoothOn
-                                    ? ThemePrimary.colorParentApp
-                                    : Colors.grey),
-                            onTap: () {
-                              viewModel.onTapQRScanDeviceButton();
-                            },
-                            child: Center(
-                                child: viewModel.isBluetoothOn
-                                    ? CircleAvatar(
-                                        radius: 13.0,
-                                        backgroundImage: AssetImage(
-                                            "assets/images/scan-device-signal.gif"),
-                                        backgroundColor: Colors.transparent,
-                                      )
-                                    : Icon(
-                                        Icons.bluetooth_disabled,
-                                        color: Colors.white,
-                                        size: 25,
-                                      )),
-                          )
-                      ],
-                    );
-                  }),
+                              : Icon(
+                                  Icons.bluetooth_disabled,
+                                  color: Colors.white,
+                                  size: 25,
+                                )),
+                    ),
             ),
           ],
         ),

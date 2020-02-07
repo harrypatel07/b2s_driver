@@ -136,13 +136,14 @@ class Driver {
     return data;
   }
 
-  Map<String, dynamic> toJsonOneSignal() {
+  Map<String, dynamic> toJsonOneSignal({String language: "vi"}) {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     // data['photo'] = this.photo;
     data['email'] = this.email;
     data['phone'] = this.phone;
+    data['language'] = language;
     return data;
   }
 

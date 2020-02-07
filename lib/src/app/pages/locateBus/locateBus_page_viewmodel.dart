@@ -372,7 +372,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
                   TextToSpeechService.speak(
                       "Xe sắp đến điểm số ${i + 1} trong vòng 5 phút.");
                 }
-                api.postNotificationBusIsComing(listChildren, "5 phút");
+                api.postNotificationBusIsComing(listChildren, "5");
               }
             }
           }
@@ -538,7 +538,8 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
     streamConnectedDevice =
         barcodeService.getConnectedDevice().listen((onData) {
       if ((this.bluetoothDeviceConnected == null ||
-          this.bluetoothDeviceConnected != onData) && onData != null) {
+              this.bluetoothDeviceConnected != onData) &&
+          onData != null) {
         this.bluetoothDeviceConnected = onData;
         this.updateState();
         listenQrCode(this.bluetoothDeviceConnected);
@@ -561,13 +562,16 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   }
 
   onTapQRScanDeviceButton() {
-    Navigator.pushNamed(context, ConnectQRScanDevicesPage.routeName)
+    Navigator.pushNamed(context, ConnectQRScanDevicesPage.routeName,
+            arguments: this.bluetoothDeviceConnected)
         .then((bluetoothDevice) {
       listenBluetoothAvailable();
       if (bluetoothDevice != null) {
         this.bluetoothDeviceConnected = bluetoothDevice;
+        this.updateState();
         listenQrCode(bluetoothDevice);
-      }
+      } else
+        this.updateState();
     });
   }
 }

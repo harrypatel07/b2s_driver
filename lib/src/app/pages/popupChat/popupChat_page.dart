@@ -67,6 +67,7 @@ class _PopupChatHomePageState extends State<PopupChatHomePage>
                     top: 5,
                     right: 0,
                     child: Material(
+                      color: Colors.transparent,
                       child: Container(
                         width: 20,
                         height: 20,

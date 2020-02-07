@@ -1104,37 +1104,73 @@ class Api1 extends ApiMaster {
     //   StatusBus(3, "Nghỉ học", 0xFFE80F0F),
     //   StatusBus(4, "Đã về nhà", 0xFF6F32A0),
     // }
-    String notification = "${children.name} ";
+    String notificationVI = "${children.name} ";
     Driver driver = Driver();
     switch (childDrenStatus.statusID) {
       case 1:
-        notification += StatusBus.list[1].statusName.toLowerCase();
+        notificationVI += StatusBus.list[1].statusName.toLowerCase();
         break;
       case 2:
-        notification += StatusBus.list[2].statusName.toLowerCase();
+        notificationVI += StatusBus.list[2].statusName.toLowerCase();
         break;
       case 3:
-        notification +=
+        notificationVI +=
             "được xác nhận ${StatusBus.list[3].statusName.toLowerCase()} từ ${driver.name}";
         break;
       case 4:
-        notification += StatusBus.list[4].statusName.toLowerCase();
+        notificationVI += StatusBus.list[4].statusName.toLowerCase();
         break;
       default:
     }
-    notification += ".";
-    BodyNotification body = BodyNotification();
-    body.headings = {"en": "Thông báo từ Bus2School"};
-    body.contents = {"en": notification};
-    body.filters = [
-      {
-        "field": "tag",
-        "key": "id",
-        "relation": "=",
-        "value": children.parent.id
+    notificationVI += ".";
+    String notificationEN = "${children.name} ";
+    switch (childDrenStatus.statusID) {
+      case 1:
+        notificationEN += StatusBus.list[1].statusName.toLowerCase();
+        break;
+      case 2:
+        notificationEN += StatusBus.list[2].statusName.toLowerCase();
+        break;
+      case 3:
+        notificationEN +=
+            "Confirmed ${StatusBus.list[3].statusName.toLowerCase()} from ${driver.name}";
+        break;
+      case 4:
+        notificationEN += StatusBus.list[4].statusName.toLowerCase();
+        break;
+      default:
+    }
+    notificationEN += ".";
+    for (var i = 0; i < 2; i++) {
+      BodyNotification body = BodyNotification();
+      String language;
+      switch (i) {
+        case 0:
+          language = "vi";
+          body.headings = {
+            "en": "Thông báo từ Bus2School",
+          };
+
+          body.contents = {"en": notificationVI};
+          break;
+        case 1:
+          language = "en";
+          body.headings = {"en": "Notify from Bus2School"};
+          body.contents = {"en": notificationEN};
+          break;
+        default:
       }
-    ];
-    OneSignalService.postNotification(body);
+      body.filters = [
+        {
+          "field": "tag",
+          "key": "id",
+          "relation": "=",
+          "value": children.parent.id
+        },
+        {"field": "tag", "key": "language", "relation": "=", "value": language}
+      ];
+      OneSignalService.postNotification(body);
+    }
   }
 
   Future<dynamic> postNotificationBusIsComing(
@@ -1143,21 +1179,47 @@ class Api1 extends ApiMaster {
     for (var i = 0; i < listChildren.length; i++) {
       var children = listChildren[i];
 
-      String notification = isCome == false
-          ? "Xe sắp đến trong vòng $time, mời em ${children.name} chuẩn bị ra xe."
+      String notificationVI = isCome == false
+          ? "Xe sắp đến trong vòng $time phút, mời em ${children.name} chuẩn bị ra xe."
           : "Xe đã đến, mời em ${children.name} nhanh chóng ra xe.";
-      BodyNotification body = BodyNotification();
-      body.headings = {"en": "Thông báo từ Bus2School"};
-      body.contents = {"en": notification};
-      body.filters = [
-        {
-          "field": "tag",
-          "key": "id",
-          "relation": "=",
-          "value": children.parent.id
+      String notificationEN = isCome == false
+          ? "The bus is comming for $time minute, ${children.name} let's ready."
+          : "The bus has arrived, ${children.name} get in the bus.";
+      for (var i = 0; i < 2; i++) {
+        BodyNotification body = BodyNotification();
+        String language;
+        switch (i) {
+          case 0:
+            language = "vi";
+            body.headings = {
+              "en": "Thông báo từ Bus2School",
+            };
+
+            body.contents = {"en": notificationVI};
+            break;
+          case 1:
+            language = "en";
+            body.headings = {"en": "Notify from Bus2School"};
+            body.contents = {"en": notificationEN};
+            break;
+          default:
         }
-      ];
-      OneSignalService.postNotification(body);
+        body.filters = [
+          {
+            "field": "tag",
+            "key": "id",
+            "relation": "=",
+            "value": children.parent.id
+          },
+          {
+            "field": "tag",
+            "key": "language",
+            "relation": "=",
+            "value": language
+          }
+        ];
+        OneSignalService.postNotification(body);
+      }
     }
   }
 
@@ -1178,42 +1240,77 @@ class Api1 extends ApiMaster {
         placeMark[0].subAdministrativeArea;
     for (var i = 0; i < listChildren.length; i++) {
       var children = listChildren[i];
-      String notification = "";
-
+      String notificationVI = "";
+      String notificationEN = '';
       Driver driver = Driver();
       switch (type) {
         case 0:
-          notification =
+          notificationVI =
               """${driver.vehicleName} đang bị kẹt xe nghiêm trọng tại $addressLocation.
           Vui lòng truy cập ứng dụng đê cập nhật vị trí xe.
           """;
+          notificationEN =
+              """${driver.vehicleName} is stuck at $addressLocation very serious.
+          Please open the application and check the location details.
+          """;
           break;
         case 1:
-          notification =
+          notificationVI =
               """${driver.vehicleName} đang bị tai nạn giao thông tại $addressLocation.
           Vui lòng truy cập ứng dụng đê cập nhật vị trí xe.
           """;
+          notificationEN =
+              """${driver.vehicleName} being traffic accidents at $addressLocation.
+          Please open the application and check the location details.
+          """;
           break;
         case 2:
-          notification =
+          notificationVI =
               """Em ${children.name} đang gặp tai nạn tại $addressLocation.
           Vui lòng truy cập ứng dụng đê cập nhật vị trí xe.
+          """;
+          notificationEN =
+              """${children.name} being traffic accidents at $addressLocation.
+          Please open the application and check the location details.
           """;
           break;
         default:
       }
-      BodyNotification body = BodyNotification();
-      body.headings = {"en": "Thông báo từ Bus2School"};
-      body.contents = {"en": notification};
-      body.filters = [
-        {
-          "field": "tag",
-          "key": "id",
-          "relation": "=",
-          "value": children.parent.id
+      for (var i = 0; i < 2; i++) {
+        BodyNotification body = BodyNotification();
+        String language;
+        switch (i) {
+          case 0:
+            language = "vi";
+            body.headings = {
+              "en": "Thông báo từ Bus2School",
+            };
+
+            body.contents = {"en": notificationVI};
+            break;
+          case 1:
+            language = "en";
+            body.headings = {"en": "Notify from Bus2School"};
+            body.contents = {"en": notificationEN};
+            break;
+          default:
         }
-      ];
-      OneSignalService.postNotification(body);
+        body.filters = [
+          {
+            "field": "tag",
+            "key": "id",
+            "relation": "=",
+            "value": children.parent.id
+          },
+          {
+            "field": "tag",
+            "key": "language",
+            "relation": "=",
+            "value": language
+          }
+        ];
+        OneSignalService.postNotification(body);
+      }
     }
   }
 
@@ -1223,19 +1320,34 @@ class Api1 extends ApiMaster {
     String notification = messages.content;
     if (notification.length > 100)
       notification = notification.substring(0, 100) + "...";
-    BodyNotification body = BodyNotification();
-    body.headings = {"en": "Bạn có tin nhắn từ ${messages.receiverName}"};
-    body.contents = {"en": notification};
-    body.data = messages.toJsonPushNotification();
-    body.filters = [
-      {
-        "field": "tag",
-        "key": "id",
-        "relation": "=",
-        "value": int.parse(messages.receiverId)
+    Driver driver = Driver();
+    for (var i = 0; i < 2; i++) {
+      BodyNotification body = BodyNotification();
+      String language;
+      switch (i) {
+        case 0:
+          language = "vi";
+          body.headings = {"en": "Bạn có tin nhắn từ ${driver.name}"};
+          break;
+        case 1:
+          language = "en";
+          body.headings = {"en": "You have a message from ${driver.name}"};
+          break;
+        default:
       }
-    ];
-    OneSignalService.postNotification(body);
-    OneSignalService.postNotificationSameApplication(body);
+      body.contents = {"en": notification};
+      body.data = messages.toJsonPushNotification();
+      body.filters = [
+        {
+          "field": "tag",
+          "key": "id",
+          "relation": "=",
+          "value": int.parse(messages.receiverId)
+        },
+        {"field": "tag", "key": "language", "relation": "=", "value": language}
+      ];
+      OneSignalService.postNotification(body);
+      OneSignalService.postNotificationSameApplication(body);
+    }
   }
 }

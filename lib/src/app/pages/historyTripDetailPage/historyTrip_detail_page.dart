@@ -80,7 +80,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _tablePickDrop(ChildDrenStatus childDrenStatus, int typeBus) {
+    Widget _tablePickDrop(ChildDrenStatus childDrenStatus) {
       String __estimateStartTime =
           childDrenStatus.pickingRoute.startTime != '' &&
                   childDrenStatus.pickingRoute.startTime != null
@@ -150,7 +150,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                 ),
                 Text(
                   Common.removeMiliSecond(
-                      typeBus == 0 ? __estimateStartTime : __estimateEndTime),
+                      childDrenStatus.typePickDrop == 0 ? __estimateStartTime : __estimateEndTime),
                   textAlign: TextAlign.center,
                 ),
               ]),
@@ -164,7 +164,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                 ),
                 Text(
                   Common.removeMiliSecond(
-                      typeBus == 0 ? __realStartTime : __realEndTime),
+                      childDrenStatus.typePickDrop == 0 ? __realStartTime : __realEndTime),
                   textAlign: TextAlign.center,
                 ),
               ]),
@@ -176,7 +176,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                     textAlign: TextAlign.left,
                   ),
                 ),
-                typeBus == 0
+                childDrenStatus.typePickDrop == 0
                     ? Center(
                         child: Text(
                           (__estimateStartTime != '' && __realStartTime != '')
@@ -388,7 +388,7 @@ class _HistoryTripDetailPageState extends State<HistoryTripDetailPage> {
                                   ),
                                   if (childDrenStatus != null)
                                     _tablePickDrop(
-                                        childDrenStatus, driverBusSession.type),
+                                        childDrenStatus),
                                   __listViewChildren(listChildren, index),
                                 ],
                               ),

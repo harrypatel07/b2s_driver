@@ -8,6 +8,8 @@ import 'package:flutter_blue/flutter_blue.dart';
 
 class ConnectQRScanDevicesPage extends StatefulWidget {
   static const String routeName = "/ConnectQRScanDevices";
+  final BluetoothDevice bluetoothDevice;
+  const ConnectQRScanDevicesPage({Key key, this.bluetoothDevice}) : super(key: key);
   @override
   _ConnectQRScanDevicesPageState createState() =>
       _ConnectQRScanDevicesPageState();
@@ -15,35 +17,47 @@ class ConnectQRScanDevicesPage extends StatefulWidget {
 
 class _ConnectQRScanDevicesPageState extends State<ConnectQRScanDevicesPage> {
   ConnectQRScanDeviceViewModel viewModel = ConnectQRScanDeviceViewModel();
-
+  @override
+  void initState() {
+    viewModel.bluetoothDevice = widget.bluetoothDevice;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     viewModel.context = context;
     Widget _appbar() {
       return TS24AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            if (viewModel.bluetoothDevice != null)
+              Navigator.pop(context, viewModel.bluetoothDevice);
+            else
+              Navigator.pop(context);
+          },
+        ),
         title: Text('Quản lý đầu đọc mã vạch'),
         actions: <Widget>[
-          if(viewModel.isBluetoothOn)
-          viewModel.isScanning?
-          Container(
-            alignment: Alignment.center,
-            width: 50,
-            padding: EdgeInsets.fromLTRB(12, 15, 13, 15),
-            child: CircularProgressIndicator(
-              strokeWidth: 3,
-              valueColor:
-              AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-          ):
-          IconButton(
-            icon: Icon(
-              Icons.refresh,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              viewModel.onTapRefresh();
-            },
-          )
+          if (viewModel.isBluetoothOn)
+            viewModel.isScanning
+                ? Container(
+                    alignment: Alignment.center,
+                    width: 50,
+                    padding: EdgeInsets.fromLTRB(12, 15, 13, 15),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : IconButton(
+                    icon: Icon(
+                      Icons.refresh,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      viewModel.onTapRefresh();
+                    },
+                  )
         ],
       );
     }
@@ -143,7 +157,7 @@ class _ConnectQRScanDevicesPageState extends State<ConnectQRScanDevicesPage> {
                 Expanded(
                   child: Text(
                     'Bluetooth chưa bật hoặc thiết bị không có chức năng bluetooth.',
-                    style: TextStyle(color: Colors.white,fontSize: 16),
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 3,
                   ),
@@ -161,32 +175,32 @@ class _ConnectQRScanDevicesPageState extends State<ConnectQRScanDevicesPage> {
               child: Column(
                 children: <Widget>[
                   if (!viewModel.isBluetoothOn) _noticeBluetoothNotAvailable(),
-                  if(viewModel.isBluetoothOn)
-                  StreamBuilder<List<BluetoothDevice>>(
-                    stream: Stream.periodic(Duration(milliseconds: 500))
-                        .asyncMap((_) =>
-                            viewModel.barcodeService.instance.connectedDevices),
-                    initialData: [],
-                    builder: (c, snapshot) => Column(
-                      children: <Widget>[
-                        // if(snapshot.data.length > 0)
-                        _title("Thiết bị đã lưu"),
-                        ..._listConnectedDevices(snapshot),
-                      ],
+                  if (viewModel.isBluetoothOn)
+                    StreamBuilder<List<BluetoothDevice>>(
+                      stream: Stream.periodic(Duration(milliseconds: 500))
+                          .asyncMap((_) => viewModel
+                              .barcodeService.instance.connectedDevices),
+                      initialData: [],
+                      builder: (c, snapshot) => Column(
+                        children: <Widget>[
+                          // if(snapshot.data.length > 0)
+                          _title("Thiết bị đã lưu"),
+                          ..._listConnectedDevices(snapshot),
+                        ],
+                      ),
                     ),
-                  ),
-                  if(viewModel.isBluetoothOn)
-                  StreamBuilder<List<ScanResult>>(
-                    stream: viewModel.barcodeService.scanResult(),
-                    initialData: [],
-                    builder: (c, snapshot) => Column(
-                      children: <Widget>[
-                        // if(snapshot.data.length > 0)
-                        _title("Thiết bị mới"),
-                        ..._listConnectDevicesAvailable(snapshot)
-                      ],
-                    ),
-                  )
+                  if (viewModel.isBluetoothOn)
+                    StreamBuilder<List<ScanResult>>(
+                      stream: viewModel.barcodeService.scanResult(),
+                      initialData: [],
+                      builder: (c, snapshot) => Column(
+                        children: <Widget>[
+                          // if(snapshot.data.length > 0)
+                          _title("Thiết bị mới"),
+                          ..._listConnectDevicesAvailable(snapshot)
+                        ],
+                      ),
+                    )
                 ],
               ),
             ),

@@ -92,7 +92,7 @@ class Routes {
     HistoryTripDetailMap.routeName: (context) => HistoryTripDetailMap(
           args: ModalRoute.of(context).settings.arguments,
         ),
-    ConnectQRScanDevicesPage.routeName: (context) => ConnectQRScanDevicesPage()
+    ConnectQRScanDevicesPage.routeName: (context) => ConnectQRScanDevicesPage(bluetoothDevice: ModalRoute.of(context).settings.arguments,)
   };
 }
 

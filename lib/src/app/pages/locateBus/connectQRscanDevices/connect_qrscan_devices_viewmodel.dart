@@ -9,6 +9,7 @@ class ConnectQRScanDeviceViewModel extends ViewModelBase {
   BluetoothBarcodeService barcodeService = BluetoothBarcodeService();
   List<BluetoothDevice> listBluetoothDeviceConnected = List();
   StreamSubscription streamBluetoothAvailable;
+  BluetoothDevice bluetoothDevice;
   bool isBluetoothOn = false;
   bool isScanning = false;
   ConnectQRScanDeviceViewModel() {

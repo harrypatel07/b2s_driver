@@ -3,6 +3,7 @@ import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/pages/home/bottomSheetArrangeListRoute/bottomSheet_arrange_list_route_viewmodel.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
+import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:b2s_driver/src/app/widgets/listview_card_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +34,25 @@ class _BottomSheetArrangeListRouteState
   void _onReorder(int oldIndex, int newIndex) {
     setState(
       () {
+        switch (viewModel.driverBusSession.type) {
+          case 0:
+            if (oldIndex == viewModel.listRouteBus.length - 1 ||
+                newIndex == viewModel.listRouteBus.length)
+              return ToastController.show(
+                  context: context,
+                  message: 'Bạn không thể thay đổi vị trí trường học.',
+                  duration: Duration(milliseconds: 1000));
+            break;
+          case 1:
+            if (oldIndex == 0 || newIndex == 0)
+              return ToastController.show(
+                  context: context,
+                  message: 'Bạn không thể thay đổi vị trí trường học.',
+                  duration: Duration(milliseconds: 1000));
+            break;
+          default:
+        }
+
         if (newIndex > oldIndex) {
           newIndex -= 1;
         }
@@ -69,7 +89,13 @@ class _BottomSheetArrangeListRouteState
                           Container(
                             alignment: Alignment.center,
                             height: 40,
-                            child: Text('SẮP XẾP LỊCH TRÌNH',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
+                            child: Text(
+                              'SẮP XẾP LỊCH TRÌNH',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                           Expanded(
                             child: Container(
@@ -82,10 +108,11 @@ class _BottomSheetArrangeListRouteState
                               child: ReorderableListView(
                                 onReorder: _onReorder,
                                 scrollDirection: Axis.vertical,
+
 //                        padding: const EdgeInsets.symmetric(vertical: 8.0),
                                 children: List.generate(
                                   viewModel.listRouteBus.length,
-                                      (index) {
+                                  (index) {
                                     return ListViewCard(
                                       viewModel.listRouteBus,
                                       index,

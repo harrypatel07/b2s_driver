@@ -221,6 +221,7 @@ class ChildDrenStatus {
   int routeBusID;
   int typePickDrop; // 0 là pick, 1 là drop
   String note; // PH- TX - QLĐĐ
+  DateTime timePickDrop; //thời điểm pick hoặc drop
   PickingRoute pickingRoute;
   ChildDrenStatus(
       {this.id,
@@ -229,7 +230,8 @@ class ChildDrenStatus {
       this.routeBusID,
       this.typePickDrop,
       this.note,
-      this.pickingRoute});
+      this.pickingRoute,
+      this.timePickDrop});
 
   ChildDrenStatus.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
@@ -239,6 +241,7 @@ class ChildDrenStatus {
     typePickDrop = json['typePickDrop'];
     note = json['note'];
     pickingRoute = PickingRoute.fromJson(json['pickingRoute']);
+    timePickDrop = json['timePickDrop'];
   }
 
   Map<String, dynamic> toJson() {
@@ -250,6 +253,7 @@ class ChildDrenStatus {
     data["typePickDrop"] = this.typePickDrop;
     data["note"] = this.note;
     data["pickingRoute"] = this.pickingRoute.toJson();
+    data["timePickDrop"] = this.timePickDrop;
     return data;
   }
 

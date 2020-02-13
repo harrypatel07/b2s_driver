@@ -8,11 +8,12 @@ class TextToSpeechService {
   static double volume = 1;
   static double pitch = 0.9;
   static double rate = 0.6;
+  static String language = "vi-VN";
   static FlutterTts flutterTts = FlutterTts()
     ..setVolume(volume)
     ..setSpeechRate(rate)
     ..setPitch(pitch)
-    ..setLanguage('vi-VN')
+    ..setLanguage(language)
     ..setStartHandler(() {
       print("playing");
       ttsState = TtsState.playing;
@@ -46,6 +47,11 @@ class TextToSpeechService {
     //   }
     // }
     if (Platform.isIOS) return false;
+    var checkLanguage = await flutterTts.isLanguageAvailable(language);
+    if (checkLanguage)
+      await flutterTts.setLanguage(language);
+    else
+      return false;
     if (!_isSpeak)
       Future.delayed(const Duration(milliseconds: 200), () {
         speak(voiceText);

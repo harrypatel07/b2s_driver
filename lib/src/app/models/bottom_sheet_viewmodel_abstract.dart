@@ -192,9 +192,14 @@ Bạn có muốn tiếp tục?
                         stt.statusID == 0 &&
                         stt.typePickDrop == 0,
                     orElse: () => null);
-            if (childrenStatusPick != null)
+            if (childrenStatusPick != null) {
+              //Kiểm tra trường hợp 1 học sinh quét nhìu lần liên tiếp,
+              if (childrenStatusPick.timePickDrop == null)
+                childrenStatusPick.timePickDrop = DateTime.now();
+
               return onTapPickUpLocateBus(
                   driverBusSession, children, childrenStatusPick);
+            }
             var childrenStatusDrop = driverBusSession.childDrenStatus
                 .firstWhere(
                     (stt) =>
@@ -203,9 +208,29 @@ Bạn có muốn tiếp tục?
                         stt.statusID == 1 &&
                         stt.typePickDrop == 1,
                     orElse: () => null);
-            if (childrenStatusDrop != null)
+
+            if (childrenStatusDrop != null) {
+              //Kiểm tra trường hợp 1 học sinh quét nhìu lần liên tiếp,
+              childrenStatusPick = driverBusSession.childDrenStatus.firstWhere(
+                  (stt) =>
+                      stt.childrenID == children.id && stt.typePickDrop == 0,
+                  orElse: () => null);
+              if (childrenStatusPick != null) {
+                if (DateTime.now()
+                        .difference(childrenStatusPick.timePickDrop)
+                        .inSeconds >
+                    (60 * 3)) {
+                } else {
+                  TextToSpeechService.speak(
+                      'Mã vé này đã được quét.Vui lòng bỏ qua.');
+                  return LoadingDialog.showMsgDialog(
+                      context, "'Mã vé này đã được quét.Vui lòng bỏ qua.",
+                      showByBluetoothDevice: true);
+                }
+              }
               return onTapPickUpLocateBus(
                   driverBusSession, children, childrenStatusDrop);
+            }
           } else {
             TextToSpeechService.speak(
                 'Mã vé không có đăng ký trong chuyến xe này.');

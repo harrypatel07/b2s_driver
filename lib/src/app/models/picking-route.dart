@@ -109,4 +109,21 @@ class PickingRoute {
       data['x_real_start_time'] = this.xRealStartTime;
     return data;
   }
+
+  Map<String, dynamic> toJsonUpdate(int typePickDrop) {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (typePickDrop == 0) {
+      if (this.gpsTracking != null) data['gps_tracking'] = this.gpsTracking;
+    } else {
+      if (this.xGpsTrackingDes != null)
+        data['x_gps_tracking_des'] = this.xGpsTrackingDes;
+    }
+    if (this.status != null) data['status'] = this.status;
+
+    if (this.xRealEndTime != null) if (this.xRealEndTime != "")
+      data['x_real_end_time'] = this.xRealEndTime;
+    if (this.xRealStartTime != null) if (this.xRealStartTime != "")
+      data['x_real_start_time'] = this.xRealStartTime;
+    return data;
+  }
 }

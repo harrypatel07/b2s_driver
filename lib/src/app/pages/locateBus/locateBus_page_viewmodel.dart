@@ -187,44 +187,44 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   }
 
   onTapFinish() async {
-    // if (driverBusSession.totalChildrenPick ==
-    //         driverBusSession.totalChildrenDrop &&
-    //     (driverBusSession.totalChildrenPick +
-    //             driverBusSession.totalChildrenLeave) ==
-    //         driverBusSession.totalChildrenRegistered) {
-    //   driverBusSession.status = true;
-    //   showSpinner = true;
-    //   this.updateState();
-    //   //Kiểm tra attendant đã hoàn thành chuyến
-    //   List<int> listIdPicking =
-    //       driverBusSession.childDrenStatus.map((item) => item.id).toList();
-    //   bool checkFinished =
-    //       await checkSessionFinishedByAnotherRole(listIdPicking);
-    //   showSpinner = false;
-    //   this.updateState();
-    //   if (!checkFinished) {
-    //     String barcode = await BarCodeService.scan();
-    //     print(barcode);
-    //     if (barcode != null) {
-    //       if (checkTicketCodeWhenTapFinished(barcode)) {
-    //         List<int> listIdPicking = driverBusSession.childDrenStatus
-    //             .map((item) => item.id)
-    //             .toList();
-    //         api.updateUserRoleFinishedBusSession(listIdPicking, 0);
-    //         driverBusSession.clearLocal();
-    //       } else
-    //         return false;
-    //     } else
-    //       return false;
-    //   } else
-    //     driverBusSession.clearLocal();
-    //   Navigator.pushReplacementNamed(context, TabsPage.routeName,
-    //       arguments: TabsArgument(routeChildName: HomePage.routeName));
-    // } else
-    //   LoadingDialog.showMsgDialog(context,
-    //       'Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.');
-    Get.offAllNamed(TabsPage.routeName, (route) => false,
-        arguments: TabsArgument(routeChildName: HomePage.routeName));
+    if (driverBusSession.totalChildrenPick ==
+            driverBusSession.totalChildrenDrop &&
+        (driverBusSession.totalChildrenPick +
+                driverBusSession.totalChildrenLeave) ==
+            driverBusSession.totalChildrenRegistered) {
+      driverBusSession.status = true;
+      showSpinner = true;
+      this.updateState();
+      //Kiểm tra attendant đã hoàn thành chuyến
+      List<int> listIdPicking =
+          driverBusSession.childDrenStatus.map((item) => item.id).toList();
+      bool checkFinished =
+          await checkSessionFinishedByAnotherRole(listIdPicking);
+      showSpinner = false;
+      this.updateState();
+      if (!checkFinished) {
+        String barcode = await BarCodeService.scan();
+        print(barcode);
+        if (barcode != null) {
+          if (checkTicketCodeWhenTapFinished(barcode)) {
+            List<int> listIdPicking = driverBusSession.childDrenStatus
+                .map((item) => item.id)
+                .toList();
+            api.updateUserRoleFinishedBusSession(listIdPicking, 0);
+            driverBusSession.clearLocal();
+          } else
+            return false;
+        } else
+          return false;
+      } else
+        driverBusSession.clearLocal();
+      // Navigator.pushReplacementNamed(context, TabsPage.routeName,
+      //     arguments: TabsArgument(routeChildName: HomePage.routeName));
+      Get.offAllNamed(TabsPage.routeName, (route) => false,
+          arguments: TabsArgument(routeChildName: HomePage.routeName));
+    } else
+      LoadingDialog.showMsgDialog(context,
+          'Chưa hoàn thành tất cả các trạm, không thể kết thúc chuyến.');
   }
 
   listenLocation() async {

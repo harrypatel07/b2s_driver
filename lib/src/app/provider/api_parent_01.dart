@@ -1014,7 +1014,7 @@ class Api1 extends ApiMaster {
     body = new Map();
     body["model"] = "picking.route";
     body["ids"] = json.encode([int.parse(pickingRoute.id.toString())]);
-    body["values"] = json.encode(pickingRoute.toJson());
+    body["values"] = json.encode(pickingRoute.toJsonUpdate(typePickDrop));
     return http
         .put('${this.api}/write', headers: this.headers, body: body)
         .then((http.Response response) {

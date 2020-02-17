@@ -8,7 +8,7 @@ import 'package:rxdart/rxdart.dart';
 
 final LocalStorage localStorage = new LocalStorage("localStorage");
 
-String domainApi = "http://www.bus2school.vn";
+String domainApi = "https://www.bus2school.vn";
 
 const String client_id = 'XUanvRsb5NvRscvMfc6wNtgiHOF8F0';
 const String client_secret = 'c665Xgd3mt3SLbPVLdVjRawJg4kzd5';
@@ -37,7 +37,7 @@ const emptyState = {
   'assetImage': AssetImage('assets/images/empty.png'),
   'assetPath': 'assets/images/empty.png',
 };
-const version = "1.0.19";
+const version = "1.0.20";
 
 Api api = new Api();
 

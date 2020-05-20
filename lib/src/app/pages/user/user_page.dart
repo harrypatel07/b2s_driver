@@ -15,18 +15,20 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   UserPageViewModel viewModel = UserPageViewModel();
   GlobalKey _key = GlobalKey();
-  Size _size = Size(0,0);
+  Size _size = Size(0, 0);
   _getSize() {
     final RenderBox renderBox = _key.currentContext.findRenderObject();
     _size = renderBox.size;
   }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-      _getSize();
-    }));
+          _getSize();
+        }));
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
 //    TabsPageViewModel tabsPageViewModel = ViewModelProvider.of(context);
@@ -66,7 +68,8 @@ class _UserPageState extends State<UserPage> {
 //      );
 //    }
 
-    Widget _builtUserTitle({IconData icon, Color color, String title, Function onTap}) {
+    Widget _builtUserTitle(
+        {IconData icon, Color color, String title, Function onTap}) {
       return new Column(
         children: <Widget>[
           new ListTile(
@@ -93,6 +96,7 @@ class _UserPageState extends State<UserPage> {
         ],
       );
     }
+
     Widget secondCard() {
       return Padding(
         padding: EdgeInsets.only(right: 20.0, left: 20.0, bottom: 30.0),
@@ -108,11 +112,23 @@ class _UserPageState extends State<UserPage> {
             ),
             child: Column(
               children: <Widget>[
-                _builtUserTitle(icon:Icons.person_pin,color:ThemePrimary.primaryColor,title:"Tin nhắn",onTap:()=>viewModel.onTapMessage()),
+                _builtUserTitle(
+                    icon: Icons.person_pin,
+                    color: ThemePrimary.primaryColor,
+                    title: "Tin nhắn",
+                    onTap: () => viewModel.onTapMessage()),
                 hr,
-                _builtUserTitle(icon:Icons.history, color:ThemePrimary.primaryColor, title:'Lịch sử',onTap: ()=>viewModel.onTapHistoryTrip()),
+                _builtUserTitle(
+                    icon: Icons.history,
+                    color: ThemePrimary.primaryColor,
+                    title: 'Lịch sử',
+                    onTap: () => viewModel.onTapHistoryTrip()),
                 hr,
-                _builtUserTitle(icon:Icons.exit_to_app,color:ThemePrimary.primaryColor,title:"Đăng xuất",onTap: ()=>viewModel.onTapLogout()),
+                _builtUserTitle(
+                    icon: Icons.exit_to_app,
+                    color: ThemePrimary.primaryColor,
+                    title: "Đăng xuất",
+                    onTap: () => viewModel.onTapLogout()),
               ],
             ),
           ),
@@ -120,21 +136,32 @@ class _UserPageState extends State<UserPage> {
       );
     }
 
-    final userImage = CachedNetworkImage(
-      imageUrl: viewModel.driver.photo,
-      imageBuilder: (context, imageProvider) => Container(
-        height: 100.0,
-        width: 100.0,
-        decoration: BoxDecoration(
-          // color: Colors.red,
-          image: DecorationImage(
-              image: imageProvider,
-              // MemoryImage(viewModel.parent.photo)
-              fit: BoxFit.cover),
-          shape: BoxShape.circle,
+    Widget userImage() {
+      return CachedNetworkImage(
+        imageUrl: viewModel.driver.photo,
+        imageBuilder: (context, imageProvider) => Container(
+          height: 100.0,
+          width: 100.0,
+          decoration: BoxDecoration(
+            // color: Colors.red,
+            image: DecorationImage(
+                image: imageProvider,
+                // MemoryImage(viewModel.parent.photo)
+                fit: BoxFit.cover),
+            shape: BoxShape.circle,
+          ),
         ),
+      );
+    }
+
+    final userImageDefault = ClipRRect(
+      borderRadius: BorderRadius.circular(50.0),
+      child: Image.asset(
+        "assets/images/user-default.jpeg",
+        width: 100,
+        height: 100,
       ),
-    );
+    ); // Image.asset("assets/images/user-default.jpeg",width: 100,height: 100,);
 
     final userName = Container(
       child: Column(
@@ -186,7 +213,9 @@ class _UserPageState extends State<UserPage> {
                         Container(
                           width: 100,
                           height: 100,
-                          child: userImage,
+                          child: viewModel.driver.photo != null
+                              ? userImage()
+                              : userImageDefault,
                         ),
                         SizedBox(
                           width: 10,
@@ -237,24 +266,29 @@ class _UserPageState extends State<UserPage> {
                         ],
                       ),
                     ),
-                    if(_size.height >= MediaQuery.of(context).size.height)
+                    if (_size.height >= MediaQuery.of(context).size.height)
                       Container(
                         height: 50,
                         child: Center(
                           child: Text("version $version"),
                         ),
                       )
-                    else Column(
-                      children: <Widget>[
-                        SizedBox( height:  MediaQuery.of(context).size.height - _size.height - 120,),
-                        Container(
-                          height: 50,
-                          child: Center(
-                            child: Text("version $version"),
+                    else
+                      Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height -
+                                _size.height -
+                                120,
                           ),
-                        )
-                      ],
-                    )
+                          Container(
+                            height: 50,
+                            child: Center(
+                              child: Text("version $version"),
+                            ),
+                          )
+                        ],
+                      )
                   ],
                 ),
               ),

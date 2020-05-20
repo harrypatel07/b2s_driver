@@ -13,6 +13,7 @@ import 'package:b2s_driver/src/app/models/picking-route.dart';
 import 'package:b2s_driver/src/app/models/picking-transport-info.dart';
 import 'package:b2s_driver/src/app/models/res-partner-title.dart';
 import 'package:b2s_driver/src/app/models/res-partner.dart';
+import 'package:b2s_driver/src/app/models/route-location.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/models/sale-order-line.dart';
 import 'package:b2s_driver/src/app/models/sale-order.dart';
@@ -1095,6 +1096,61 @@ class Api1 extends ApiMaster {
     });
   }
 
+  ///Update lich trinh driver
+  ///@params String listIdRouteBus
+  ////@params int vehicleId
+  /// @params int driverId
+  /// @param int type : 0 là chuyến đi, 1 là chuyến về
+  Future<bool> updateListRouteBus(
+      {List<int> listIdRouteBus,
+      int vehicleId,
+      int driverId,
+      int type = 0}) async {
+    var client = await this.authorizationOdoo();
+    body = new Map();
+    var date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    body["list_route_location"] = listIdRouteBus;
+    body["vehicle_id"] = vehicleId;
+    body["driver_id"] = driverId;
+    body["date"] = date;
+    body["type"] = type == 0 ? "pick" : "drop";
+    bool check = false;
+    return client
+        .callController("/update_saleorder_sequence", body)
+        .then((onValue) {
+      var result = onValue.getResult();
+      if (result['status'] != null) check = result['status'];
+      return check;
+    });
+  }
+
+  ///Update tọa độ cho routeBus
+  ///
+  ///Success - Trả về true
+  ///
+  ///Fail - Trả về false
+  Future<bool> updateCoordRouteBus(RouteBus routeBus) async {
+    await this.authorization();
+    RouteLocation routeLocation = RouteLocation.fromRouteBus(routeBus);
+    body = new Map();
+    body["model"] = "route.location";
+    body["ids"] = json.encode(routeBus.id);
+    body["values"] = json.encode(routeLocation.toJsonUpdateCoord());
+    return http
+        .put('${this.api}/write', headers: this.headers, body: body)
+        .then((http.Response response) {
+      var result = false;
+      if (response.statusCode == 200) {
+        print(response.body);
+        result = true;
+        //print(list);
+      } else {
+        result = false;
+      }
+      return result;
+    });
+  }
+
   /*---------------OneSignal----------------- */
   Future<dynamic> postNotificationChangeStatus(
       Children children, ChildDrenStatus childDrenStatus) async {
@@ -1230,8 +1286,9 @@ class Api1 extends ApiMaster {
   ///- 0: kẹt xe nghiêm trọng
   //- 1: tai nạn giao thông
   // - 2: học sinh cấp cứu
-  Future<dynamic> postNotificationProblem(
-      List<Children> listChildren, int type) async {
+  // - 3: sự cố khác
+  Future<dynamic> postNotificationProblem(List<Children> listChildren, int type,
+      {String content}) async {
     var myLoc = await Location().getLocation();
     var placeMark = await Geolocator()
         .placemarkFromCoordinates(myLoc.latitude, myLoc.longitude);
@@ -1273,6 +1330,10 @@ class Api1 extends ApiMaster {
               """${children.name} being traffic accidents at $addressLocation.
           Please open the application and check the location details.
           """;
+          break;
+        case 3:
+          notificationVI = content;
+          notificationEN = content;
           break;
         default:
       }

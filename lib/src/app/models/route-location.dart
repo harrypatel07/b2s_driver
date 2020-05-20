@@ -1,3 +1,5 @@
+import 'package:b2s_driver/src/app/models/routeBus.dart';
+
 class RouteLocation {
   dynamic sLastUpdate;
   dynamic createDate;
@@ -34,6 +36,11 @@ class RouteLocation {
       this.xSaturday,
       this.xSunday});
 
+  RouteLocation.fromRouteBus(RouteBus routeBus) {
+    id = routeBus.id;
+    xPosx = routeBus.lat;
+    xPosy = routeBus.lng;
+  }
   RouteLocation.fromJson(Map<String, dynamic> json) {
     sLastUpdate = json['__last_update'];
     createDate = json['create_date'];
@@ -71,6 +78,14 @@ class RouteLocation {
     data['x_posz'] = this.xPosz;
     data['x_saturday'] = this.xSaturday;
     data['x_sunday'] = this.xSunday;
+    return data;
+  }
+
+  Map<String, dynamic> toJsonUpdateCoord() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['x_posx'] = this.xPosx;
+    data['x_posy'] = this.xPosy;
     return data;
   }
 }

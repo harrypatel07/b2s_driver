@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       title: Text('LỊCH TRÌNH'),
       leading: IconButton(
         icon: Icon(Icons.arrow_back),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () => Navigator.pop(context,viewModel.isChangRouteBus),
       ),
     );
   }
@@ -256,9 +256,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       child: StreamBuilder<Object>(
           stream: viewModel.stream,
           builder: (context, snapshot) {
-            return TS24Scaffold(
-              appBar: _appBar(),
-              body: _buildBody(widget.args.driverBusSession),
+            return WillPopScope(
+              child: TS24Scaffold(
+                appBar: _appBar(),
+                body: _buildBody(widget.args.driverBusSession),
+              ),
+              onWillPop: ()async{
+                Navigator.pop(context,viewModel.isChangRouteBus);
+                return false;
+              },
             );
           }),
     );

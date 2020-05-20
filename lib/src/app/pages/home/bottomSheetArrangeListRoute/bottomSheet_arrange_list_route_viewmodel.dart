@@ -1,18 +1,22 @@
 import 'dart:async';
 
+import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
+import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
+import 'package:b2s_driver/src/app/widgets/index.dart';
 import 'package:flutter/material.dart';
 
-class BottomSheetArrangeListRouteViewModel extends ViewModelBase{
+class BottomSheetArrangeListRouteViewModel extends ViewModelBase {
   BottomSheetViewModelBase bottomSheetViewModelBase;
   DriverBusSession driverBusSession;
   StreamSubscription streamCloud;
   List<ChildDrenStatus> listChildrenStatus = List();
   List<RouteBus> listRouteBus = List();
+  bool isChanged = false;
   BottomSheetArrangeListRouteViewModel();
   @override
   dispose() {
@@ -40,17 +44,43 @@ class BottomSheetArrangeListRouteViewModel extends ViewModelBase{
           driverBusSession.listChildren, _childrenRoute.listChildrenID);
     return _listChildren;
   }
-  onTap(int position){
-    Navigator.pop(context,position);
+
+  onTap(int position) {
+    Navigator.pop(context, position);
   }
-  onCreateListRouteBus(){
-    driverBusSession.listRouteBus.forEach((routeBus){
+
+  onCreateListRouteBus() {
+    driverBusSession.listRouteBus.forEach((routeBus) {
       listRouteBus.add(routeBus);
     });
   }
-  onTapSave() {
-    driverBusSession.listRouteBus = listRouteBus;
-    driverBusSession.saveLocal();
-    Navigator.pop(context);
+
+  onTapSave() async {
+    Driver driver = Driver();
+    List<int> listRouteId = List();
+    for (var value in listRouteBus) {
+      if (!value.isSchool) listRouteId.add(value.id);
+    }
+    LoadingDialog.showLoadingDialog(context, "Đang thay đổi lịch trình");
+    var result = await api.updateListRouteBus(
+        listIdRouteBus: listRouteId,
+        driverId: driver.id,
+        vehicleId: driver.vehicleId,
+        type: driverBusSession.type);
+    print(result);
+    if (result) {
+      isChanged = true;
+      driverBusSession.listRouteBus = listRouteBus;
+      driverBusSession.saveLocal();
+      LoadingDialog.hideLoadingDialog(context);
+      Navigator.pop(context,isChanged);
+    } else {
+      LoadingDialog.showMsgDialog(context, "Không thể thay đổi lịch trình");
+      Future.delayed(Duration(seconds: 1)).then((_) {
+        LoadingDialog.hideLoadingDialog(context);
+        Navigator.pop(context,isChanged);
+      });
+    }
+
   }
 }

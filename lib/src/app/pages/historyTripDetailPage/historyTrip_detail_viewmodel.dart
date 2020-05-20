@@ -118,8 +118,8 @@ class HistoryTripDetailViewModel extends ViewModelBase {
   // }
 
   onTapMaps(List<RouteBus> listRouteBus) {
-    if (listPosition != null && listPosition.length > 0)
-      Navigator.pushNamed(context, HistoryTripDetailMap.routeName,
-          arguments: HistoryTripDetailMapArgs(listPosition, listRouteBus));
+    // if (listPosition != null && listPosition.length > 0)
+    Navigator.pushNamed(context, HistoryTripDetailMap.routeName,
+        arguments: HistoryTripDetailMapArgs(listPosition, listRouteBus));
   }
 }

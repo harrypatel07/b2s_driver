@@ -1,4 +1,5 @@
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
+import 'package:b2s_driver/src/app/helper/utils.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
@@ -10,6 +11,7 @@ import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_scaffold_widget.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AttendantManagerPage extends StatefulWidget {
   static const String routeName = "/attendantManager";
@@ -34,10 +36,10 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
   Widget _appBar() {
     return TS24AppBar(
       title: Text('Lịch trình'),
-       leading: IconButton(
-         icon: Icon(Icons.arrow_back),
-         onPressed: () => viewModel.onTapBackButton(),
-       ),
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () => viewModel.onTapBackButton(),
+      ),
     );
   }
 
@@ -55,9 +57,11 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
                 status.statusID == 3));
         if (_status.length > 0) totalLeave++;
       });
+      bool checkTomorrow = dateDifferent(
+          DateFormat('yyyy-MM-dd').parse(routeBus.date), DateTime.now());
       return InkWell(
         onTap: () {
-          viewModel.onTap(routeBus, index + 1);
+          if (!checkTomorrow) viewModel.onTap(routeBus, index + 1);
         },
         child: Container(
           margin: EdgeInsets.all(5),
@@ -123,7 +127,9 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
 //                color: ThemePrimary.primaryColor,
                   alignment: Alignment.center,
                   decoration: new BoxDecoration(
-                    color: ThemePrimary.primaryColor, //new Color(0xFF333366),
+                    color: checkTomorrow
+                        ? Colors.grey
+                        : ThemePrimary.primaryColor, //new Color(0xFF333366),
                     shape: BoxShape.rectangle,
                     borderRadius: new BorderRadius.circular(8.0),
 //                  boxShadow: <BoxShadow>[
@@ -347,10 +353,10 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
           builder: (context, snapshot) {
             return WillPopScope(
               child: TS24Scaffold(
-                  appBar: _appBar(),
-                  body: _buildBody(widget.driverBusSession),
+                appBar: _appBar(),
+                body: _buildBody(widget.driverBusSession),
               ),
-              onWillPop: ()async{
+              onWillPop: () async {
                 viewModel.onTapBackButton();
                 return false;
               },

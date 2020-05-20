@@ -34,24 +34,28 @@ class HistoryTripDetailMapViewModel extends ViewModelBase {
   }
 
   void animateToCenterRoute() async {
-    center = LatLng(listPosition[listPosition.length ~/ 2].latitude,
-        listPosition[listPosition.length ~/ 2].longitude);
-    mapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: center, zoom: 12.0)));
-    this.updateState();
+    if (listPosition != null && listPosition.length > 0) {
+      center = LatLng(listPosition[listPosition.length ~/ 2].latitude,
+          listPosition[listPosition.length ~/ 2].longitude);
+      mapController.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(target: center, zoom: 12.0)));
+      this.updateState();
+    }
   }
 
   Future drawPolylineAndMarkers() async {
-    polyline[selectedPolyline] = Polyline(
-      polylineId: selectedPolyline,
-      visible: true,
-      color: ThemePrimary.primaryColor.withOpacity(0.5),
-      width: 5,
-      zIndex: 2,
-      points: listPosition
-          .map((route) => LatLng(route.latitude, route.longitude))
-          .toList(),
-    );
+    if (listPosition != null && listPosition.length > 0) {
+      polyline[selectedPolyline] = Polyline(
+        polylineId: selectedPolyline,
+        visible: true,
+        color: ThemePrimary.primaryColor.withOpacity(0.5),
+        width: 5,
+        zIndex: 2,
+        points: listPosition
+            .map((route) => LatLng(route.latitude, route.longitude))
+            .toList(),
+      );
+    }
     var i = 1;
     for (var item in listRouteBus) {
       await _addMarker(LatLng(item.lat, item.lng), item.routeName, i++);

@@ -38,7 +38,8 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
               : widget.driver.phone.toString();
 //      viewModel.emailEditingController.text = widget.driver.email;
 //      viewModel.addressEditingController.text = widget.driver.contactAddress;
-      viewModel.genderEditingController.text = (widget.driver.gender == null)?'':widget.driver.gender.toString();
+      viewModel.genderEditingController.text =
+          (widget.driver.gender == null) ? '' : widget.driver.gender.toString();
     }
     super.initState();
   }
@@ -47,6 +48,7 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
   Widget build(BuildContext context) {
     // TODO: implement build
     viewModel.context = context;
+//    viewModel.driver.photo = null;
     Widget _avatar() {
       Widget _initImage() {
         // return Image(
@@ -57,10 +59,10 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
         // );
         return Image(
           image: (viewModel.driver == null && viewModel.imagePicker == null)
-              ? AssetImage('assets/images/user.png')
+              ? AssetImage('assets/images/user-default.jpeg')
               : (viewModel.driver != null && viewModel.imagePicker == null
                   ? (viewModel.driver.photo == null
-                      ? AssetImage('assets/images/user.png')
+                      ? AssetImage('assets/images/user-default.jpeg')
                       : NetworkImage(viewModel.driver.photo))
                   : MemoryImage(viewModel.imagePicker)),
           fit: BoxFit.cover,
@@ -141,28 +143,41 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
         ],
       );
     }
-    final __styleTextLabel =
-    TextStyle(color: ThemePrimary.primaryColor, fontWeight: FontWeight.bold,fontSize: 16);
-    Widget _textFormFieldLoading(String text){
+
+    final __styleTextLabel = TextStyle(
+        color: ThemePrimary.primaryColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 16);
+    Widget _textFormFieldLoading(String text) {
       return Container(
         child: Column(
           children: <Widget>[
             Row(
               children: <Widget>[
-                Container(height: 45,),
-                Text(text,style: __styleTextLabel,),
-                SizedBox(width: 10,),
+                Container(
+                  height: 45,
+                ),
+                Text(
+                  text,
+                  style: __styleTextLabel,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
                 SizedBox(
                   width: 15,
                   height: 15,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(ThemePrimary.primaryColor),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        ThemePrimary.primaryColor),
                   ),
                 )
               ],
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Container(
               width: MediaQuery.of(context).size.width,
               height: 1,
@@ -172,6 +187,7 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
         ),
       );
     }
+
     Widget _backButton() {
       return Positioned(
         top: 0,
@@ -202,6 +218,7 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
         ),
       );
     }
+
     Widget _card(Driver driver) {
       return Container(
         margin: EdgeInsets.fromLTRB(25, 0, 25, 0),
@@ -230,7 +247,8 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                         keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
                         onFieldSubmitted: (v) {
-                          viewModel.fieldFocusChange(context, viewModel.nameFocus, viewModel.phoneFocus);
+                          viewModel.fieldFocusChange(context,
+                              viewModel.nameFocus, viewModel.phoneFocus);
                         },
                       ),
                     ),
@@ -244,26 +262,27 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
               child: Row(
                 children: <Widget>[
                   Flexible(
-                    child: viewModel.loadingGender || viewModel.listGender.length == 0
+                    child: viewModel.loadingGender ||
+                            viewModel.listGender.length == 0
                         ? _textFormFieldLoading('Giới tính')
                         : FormBuilderDropdown(
-                      attribute: 'Giới tính',
-                      decoration: InputDecoration(
-                        errorText: viewModel.errorGender,
-                        labelText: 'Giới tính',
-                        labelStyle:__styleTextLabel,
-                      ),
-                      initialValue: viewModel.gender,
-                      validators: [FormBuilderValidators.required()],
-                      items: viewModel.listGender
-                          .map((gender) =>
-                          DropdownMenuItem<ItemDropDownField>(
-                            value: gender,
-                            child: Text(gender.displayName),
-                          ))
-                          .toList(),
-                      onChanged: (gender) => viewModel.gender = gender,
-                    ),
+                            attribute: 'Giới tính',
+                            decoration: InputDecoration(
+                              errorText: viewModel.errorGender,
+                              labelText: 'Giới tính',
+                              labelStyle: __styleTextLabel,
+                            ),
+                            initialValue: viewModel.gender,
+                            validators: [FormBuilderValidators.required()],
+                            items: viewModel.listGender
+                                .map((gender) =>
+                                    DropdownMenuItem<ItemDropDownField>(
+                                      value: gender,
+                                      child: Text(gender.displayName),
+                                    ))
+                                .toList(),
+                            onChanged: (gender) => viewModel.gender = gender,
+                          ),
                   ),
                 ],
               ),
@@ -284,17 +303,15 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                         decoration: InputDecoration(
                           labelText: 'Số điện thoại',
                           labelStyle: __styleTextLabel,
-                          hintText:"Nhập số điện thoại",
+                          hintText: "Nhập số điện thoại",
                           errorText: viewModel.errorPhone,
                         ),
                         textInputAction: TextInputAction.done,
                         keyboardType: TextInputType.number,
-                        onFieldSubmitted: (v){
+                        onFieldSubmitted: (v) {
                           LoadingDialog.showLoadingDialog(
                               context, 'Đang xử lý...');
-                          viewModel
-                              .saveDriver(viewModel.driver)
-                              .then((v) {
+                          viewModel.saveDriver(viewModel.driver).then((v) {
                             if (v) {
                               LoadingDialog.hideLoadingDialog(context);
                               Navigator.pop(context);
@@ -446,10 +463,12 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                                         .saveDriver(viewModel.driver)
                                         .then((v) {
                                       if (v) {
-                                        LoadingDialog.hideLoadingDialog(context);
+                                        LoadingDialog.hideLoadingDialog(
+                                            context);
                                         Navigator.pop(context);
                                       } else {
-                                        LoadingDialog.hideLoadingDialog(context);
+                                        LoadingDialog.hideLoadingDialog(
+                                            context);
 //                                        Navigator.pop(context);
                                       }
                                     });
@@ -457,7 +476,9 @@ class _EditProfileDriverState extends State<EditProfileDriver> {
                                   child: Center(
                                     child: Text(
                                       "LƯU",
-                                      style: TextStyle(color: Colors.white,fontWeight: FontWeight.w900),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w900),
                                     ),
                                   )),
                             ),

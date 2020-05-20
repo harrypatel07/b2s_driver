@@ -131,7 +131,7 @@ class ApiMaster {
     }).catchError((error) {
       print(error);
       return StatusCodeGetToken.invalid_domain;
-    }).timeout(Duration(seconds: 10), onTimeout: () {
+    }).timeout(Duration(seconds: 30), onTimeout: () {
       return StatusCodeGetToken.invalid_domain;
     });
   }

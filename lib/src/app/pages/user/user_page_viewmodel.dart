@@ -16,7 +16,6 @@ class UserPageViewModel extends ViewModelBase {
   }
 
   onTapDriver() {
-    //print('HIEP');
     Navigator.pushNamed(context, EditProfileDriver.routeName, arguments: driver)
         .then((_) {
       this.updateState();

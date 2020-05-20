@@ -95,6 +95,7 @@ class EditProfileDriverViewModel extends ViewModelBase {
       this.updateState();
     return true;
   }
+
 //  bool isValidAddress() {
 //    _errorAddress = null;
 //    var result = Validator.validAddress(_addressEditingController.text);
@@ -106,17 +107,18 @@ class EditProfileDriverViewModel extends ViewModelBase {
 //      this.updateState();
 //    return true;
 //  }
-    bool isValidGender(){
-      errorGender = null;
-      if(gender != null && gender.id !=-1) {
-        this.updateState();
-        return true;
-      }else{
-        errorGender = "Giới tính không đúng.";
-        this.updateState();
-        return false;
-      }
+  bool isValidGender() {
+    errorGender = null;
+    if (gender != null && gender.id != -1) {
+      this.updateState();
+      return true;
+    } else {
+      errorGender = "Giới tính không đúng.";
+      this.updateState();
+      return false;
     }
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -127,7 +129,8 @@ class EditProfileDriverViewModel extends ViewModelBase {
   }
 
   bool isValidInfo() {
-    if (isValidName() && isValidPhone()  /* && isValidEmail() && isValidAddress()*/) {
+    if (isValidName() &&
+        isValidPhone() /* && isValidEmail() && isValidAddress()*/) {
       this.updateState();
       return true;
     }
@@ -149,7 +152,7 @@ class EditProfileDriverViewModel extends ViewModelBase {
       driver.photo = imagePicker;
       driver.gender = gender.displayName;
       errorGender = null;
-    }else{
+    } else {
       errorGender = 'Giới tính không đúng.';
       this.updateState();
     }
@@ -217,22 +220,22 @@ class EditProfileDriverViewModel extends ViewModelBase {
         sourcePath: imageFile.path,
         aspectRatioPresets: Platform.isAndroid
             ? [
-          CropAspectRatioPreset.square,
+                CropAspectRatioPreset.square,
 //          CropAspectRatioPreset.ratio3x2,
 //          CropAspectRatioPreset.original,
 //          CropAspectRatioPreset.ratio4x3,
 //          CropAspectRatioPreset.ratio16x9
-        ]
+              ]
             : [
 //          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.square,
+                CropAspectRatioPreset.square,
 //          CropAspectRatioPreset.ratio3x2,
 //          CropAspectRatioPreset.ratio4x3,
 //          CropAspectRatioPreset.ratio5x3,
 //          CropAspectRatioPreset.ratio5x4,
 //          CropAspectRatioPreset.ratio7x5,
 //          CropAspectRatioPreset.ratio16x9
-        ],
+              ],
         androidUiSettings: AndroidUiSettings(
             toolbarTitle: 'Chỉnh sửa ảnh',
             toolbarColor: ThemePrimary.primaryColor,

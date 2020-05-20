@@ -79,7 +79,14 @@ class ScheduleViewModel extends ViewModelBase {
     cloudService.busSession
         .createListBusSessionFromDriverBusSession(driverBusSession);
     Navigator.pushNamed(context, HomePage.routeName,
-        arguments: HomePageArgs(
-            driverBusSession: driverBusSession, canStart: canStart));
+            arguments: HomePageArgs(
+                driverBusSession: driverBusSession, canStart: canStart))
+        .then((result) {
+      try {
+        if (result) {
+          onLoad(selectedVehicle.subTitle);
+        }
+      } catch (e) {}
+    });
   }
 }

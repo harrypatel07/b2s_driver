@@ -22,6 +22,7 @@ class HomePageViewModel extends ViewModelBase {
   List<Children> listChildrenSS1 = new List();
   List<Children> listChildrenSS2 = new List();
   String busId = "";
+  bool isChangRouteBus = false;
 
   List<Children> getListChildrenForTimeLine(
       DriverBusSession driverBusSession, int routeBusID) {
@@ -168,7 +169,12 @@ class HomePageViewModel extends ViewModelBase {
               child: BottomSheetArrangeListRoute(
                 driverBusSession: driverBusSession,
               ));
-        }).then((_){
+        }).then((result){
+          try{
+            if(result){
+              isChangRouteBus = true;
+            }
+          }catch(e){}
           this.updateState();
     });
 //    showModalBottomSheet(

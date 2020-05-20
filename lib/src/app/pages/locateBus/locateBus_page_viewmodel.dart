@@ -263,6 +263,13 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
         context: context,
         builder: (BuildContext bc) {
           return BottomSheetCustom(
+              callbackUpdateLocation: (value) {
+                if (value) {
+                  initMarkers();
+                  animateThePoint(pos - 1, true);
+                  this.updateState();
+                }
+              },
               arguments: BottomSheetCustomArgs(viewModel: this));
         }).then((result) {
       try {

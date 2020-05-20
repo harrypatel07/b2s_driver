@@ -58,8 +58,12 @@ class BottomSheetArrangeListRouteViewModel extends ViewModelBase {
   onTapSave() async {
     Driver driver = Driver();
     List<int> listRouteId = List();
-    for (var value in listRouteBus) {
-      if (!value.isSchool) listRouteId.add(value.id);
+    listRouteId =
+        listRouteBus.map((route) => int.parse(route.id.toString())).toList();
+    if (driverBusSession.type == 0) {
+      listRouteId.removeLast();
+    } else {
+      listRouteId.removeAt(0);
     }
     LoadingDialog.showLoadingDialog(context, "Đang thay đổi lịch trình");
     var result = await api.updateListRouteBus(
@@ -73,14 +77,13 @@ class BottomSheetArrangeListRouteViewModel extends ViewModelBase {
       driverBusSession.listRouteBus = listRouteBus;
       driverBusSession.saveLocal();
       LoadingDialog.hideLoadingDialog(context);
-      Navigator.pop(context,isChanged);
+      Navigator.pop(context, isChanged);
     } else {
       LoadingDialog.showMsgDialog(context, "Không thể thay đổi lịch trình");
       Future.delayed(Duration(seconds: 1)).then((_) {
         LoadingDialog.hideLoadingDialog(context);
-        Navigator.pop(context,isChanged);
+        Navigator.pop(context, isChanged);
       });
     }
-
   }
 }

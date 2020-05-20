@@ -10,16 +10,20 @@ import 'package:b2s_driver/src/app/models/picking-transport-info.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
 import 'package:b2s_driver/src/app/models/ticketCode.dart';
 import 'package:b2s_driver/src/app/pages/attendantManager/attendant_manager_viewmodel.dart';
+import 'package:b2s_driver/src/app/pages/bottomSheet/bottom_sheet_custom.dart';
 import 'package:b2s_driver/src/app/service/barcode-service.dart';
 import 'package:b2s_driver/src/app/service/text-to-speech-service.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
+import 'package:b2s_driver/src/app/widgets/popupConfirm.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:location/location.dart';
 
 class BottomSheetCustomViewModel extends ViewModelBase {
   BottomSheetViewModelBase bottomSheetViewModelBase;
   AttendantManagerViewModel attendantManagerViewModel;
   List<ChildDrenStatus> listChildrenStatus = List();
   StreamSubscription streamCloud;
+  bool isUpdatedLocation = false;
   BottomSheetCustomViewModel();
 
   @override
@@ -197,5 +201,37 @@ class BottomSheetCustomViewModel extends ViewModelBase {
       bottomSheetViewModelBase.driverBusSession.saveLocal();
       bottomSheetViewModelBase.updateState();
     });
+  }
+
+  onTapUpdateLocation(CallbackUpdateLocation callbackUpdateLocation) {
+    popupConfirm(
+        context: context,
+        title: 'THÔNG BÁO',
+        desc:
+            'Xác nhận cập nhật tọa độ điểm đón số ${bottomSheetViewModelBase.position}',
+        yes: 'Có',
+        no: 'Không',
+        onTap: () async {
+          var myLoc = await Location().getLocation();
+          bottomSheetViewModelBase.routeBus.lat = myLoc.latitude;
+          bottomSheetViewModelBase.routeBus.lng = myLoc.longitude;
+          LoadingDialog.showLoadingDialog(context, "Đang cập nhật tọa độ");
+          var result =
+              await api.updateCoordRouteBus(bottomSheetViewModelBase.routeBus);
+          LoadingDialog.hideLoadingDialog(context);
+          if (result) {
+            isUpdatedLocation = true;
+            callbackUpdateLocation(true);
+            LoadingDialog.showLoadingDialog(
+                context, "Cập nhật tọa độ thành công");
+          } else {
+            LoadingDialog.showLoadingDialog(
+                context, "Cập nhật tọa độ thất bại");
+          }
+          Future.delayed(Duration(seconds: 1)).then((result) {
+            LoadingDialog.hideLoadingDialog(context);
+            Navigator.pop(context);
+          });
+        });
   }
 }

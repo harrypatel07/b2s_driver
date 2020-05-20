@@ -8,13 +8,16 @@ import 'package:b2s_driver/src/app/pages/home/profile_children/profile_children.
 import 'package:b2s_driver/src/app/pages/home/widgets/timeline_widget.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/home_page_card_timeline.dart';
+import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+typedef CallbackUpdateLocation = void Function(bool changed);
 class BottomSheetCustom extends StatefulWidget {
   static const String routeName = "/bottomsheetcustom";
   final BottomSheetCustomArgs arguments;
-
-  const BottomSheetCustom({Key key, this.arguments}) : super(key: key);
+  final CallbackUpdateLocation callbackUpdateLocation;
+  const BottomSheetCustom({Key key, this.arguments,this.callbackUpdateLocation}) : super(key: key);
   @override
   _BottomSheetCustomState createState() => _BottomSheetCustomState();
 }
@@ -101,7 +104,7 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
               child: Stack(
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(left: 1,right: 1),
+                    margin: EdgeInsets.only(left: 1, right: 1),
                     height: MediaQuery.of(context).size.height * 3 / 4,
                     color: Colors.transparent,
                     child: Column(
@@ -109,7 +112,13 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                         Container(
                           height: 40,
                           alignment: Alignment.center,
-                          child: Text('THÔNG TIN ĐIỂM ${viewModel.bottomSheetViewModelBase.position}',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
+                          child: Text(
+                            'THÔNG TIN ĐIỂM ${viewModel.bottomSheetViewModelBase.position}',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                         Expanded(
                           child: Container(
@@ -122,13 +131,56 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                               margin: EdgeInsets.only(right: 2, left: 2),
                               child: HomePageTimeLineV2(
                                 listTimeLine: _buildListTimeLine(
-                                    viewModel.bottomSheetViewModelBase.driverBusSession,
-                                    viewModel.bottomSheetViewModelBase.routeBus),
-                                position: viewModel.bottomSheetViewModelBase.position,
+                                    viewModel.bottomSheetViewModelBase
+                                        .driverBusSession,
+                                    viewModel
+                                        .bottomSheetViewModelBase.routeBus),
+                                position:
+                                    viewModel.bottomSheetViewModelBase.position,
                                 atPageHome: false,
                               )),
                         )
                       ],
+                    ),
+                  ),
+                  Positioned(
+                    top: 20,
+                    right: 20,
+                    child: TS24Button(
+                      width: 35,
+                      height: 35,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 3.0,
+                              spreadRadius: 0.5,
+                              offset: Offset(
+                                3.0,
+                                3.0,
+                              ),
+                            ),
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 3.0,
+                              spreadRadius: 0.5,
+                              offset: Offset(
+                                -3.0,
+                                0.0,
+                              ),
+                            )
+                          ]),
+                      onTap: () {
+                        viewModel.onTapUpdateLocation(widget.callbackUpdateLocation);
+                      },
+                      child: Center(
+                          child: Icon(
+                        Icons.adjust,
+                        color: ThemePrimary.primaryColor,
+                      )),
                     ),
                   ),
                   Positioned(
@@ -144,27 +196,28 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                             BoxShadow(
                               color: Colors.grey,
                               blurRadius:
-                              2.0, // has the effect of softening the shadow
+                                  2.0, // has the effect of softening the shadow
                               spreadRadius:
-                              1.0, // has the effect of extending the shadow
+                                  1.0, // has the effect of extending the shadow
                               offset: Offset(
                                 2.0, // horizontal, move right 10
                                 2.0, // vertical, move down 10
                               ),
                             )
                           ],
-                          color:
-                          (viewModel.bottomSheetViewModelBase.routeBus.status)
+                          color: (viewModel
+                                  .bottomSheetViewModelBase.routeBus.status)
                               ? Colors.grey
                               : ThemePrimary.primaryColor,
                           borderRadius: BorderRadius.all(Radius.circular(
-                              25.0) //         <--- border radius here
-                          ),
+                                  25.0) //         <--- border radius here
+                              ),
                         ),
                         child: Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(25.0)),
                             onTap: () {
                               viewModel.onTapFinishRoute();
                             },
@@ -174,21 +227,21 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                               height: 40,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.all(Radius.circular(
-                                    25.0) //         <--- border radius here
-                                ),
+                                        25.0) //         <--- border radius here
+                                    ),
                               ),
                               child: (viewModel
-                                  .bottomSheetViewModelBase.routeBus.status)
+                                      .bottomSheetViewModelBase.routeBus.status)
                                   ? Text('ĐÃ HOÀN THÀNH',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold))
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold))
                                   : Text(
-                                'HOÀN THÀNH ĐIỂM ${viewModel.bottomSheetViewModelBase.position}',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                                      'HOÀN THÀNH ĐIỂM ${viewModel.bottomSheetViewModelBase.position}',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                             ),
                           ),
                         ),

@@ -18,6 +18,7 @@ class Driver {
   dynamic vehicleIdTracCar;
   List<FleetVehicle> listVehicle;
   bool isDriver = false;
+  bool checkPickDrop = false;
   dynamic driverId;
   static dynamic aliasName = "Driver";
   static Driver _singleton;
@@ -42,6 +43,7 @@ class Driver {
       this.vehicleId,
       this.vehicleName,
       this.isDriver,
+      this.checkPickDrop,
       this.driverId,
       this.vehicleNameTracCar,
       this.vehicleIdTracCar}) {

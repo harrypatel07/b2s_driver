@@ -617,6 +617,7 @@ class Api1 extends ApiMaster {
     body["vehicle_id"] = vehicleId;
     body["driver_id"] = driverId;
     body["date"] = date;
+    print(body);
     return client
         .callController("/handle_picking_info_request", body)
         .then((onValue) async {
@@ -688,7 +689,9 @@ class Api1 extends ApiMaster {
             routeBus.time = objPicking["time"];
             routeBus.lat = double.parse(objPicking["lat"].toString());
             routeBus.lng = double.parse(objPicking["lng"].toString());
-            routeBus.isSchool = false;
+            routeBus.isSchool = objPicking["is_school"] is bool
+                ? objPicking["is_school"]
+                : false;
             routeBus.type = i == 0 ? 0 : 1;
             routeBus.status = false;
             listRouteBus.add(routeBus);
@@ -1114,6 +1117,7 @@ class Api1 extends ApiMaster {
     body["driver_id"] = driverId;
     body["date"] = date;
     body["type"] = type == 0 ? "pick" : "drop";
+    print(body);
     bool check = false;
     return client
         .callController("/update_saleorder_sequence", body)

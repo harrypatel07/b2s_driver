@@ -59,6 +59,7 @@ class Driver {
     isDriver = isDriver;
     driverId = driverId;
     vehicleNameTracCar = vehicleNameTracCar;
+    checkPickDrop = checkPickDrop;
     vehicleIdTracCar = vehicleIdTracCar;
   }
 
@@ -101,6 +102,7 @@ class Driver {
     List list = json['listVehicle'];
     listVehicle = list.map((item) => FleetVehicle.fromJson(item)).toList();
     isDriver = json['isDriver'];
+    checkPickDrop = json['checkPickDrop'];
     driverId = json['driverId'];
   }
 
@@ -117,6 +119,7 @@ class Driver {
     List list = json['listVehicle'];
     listVehicle = list.map((item) => FleetVehicle.fromJson(item)).toList();
     isDriver = json['isDriver'];
+    checkPickDrop = json['checkPickDrop'];
     driverId = json['driverId'];
   }
 
@@ -135,6 +138,7 @@ class Driver {
         this.listVehicle.map((item) => item.toJson()).toList();
     data["isDriver"] = this.isDriver;
     data["driverId"] = this.driverId;
+    data["checkPickDrop"] = this.checkPickDrop;
     return data;
   }
 

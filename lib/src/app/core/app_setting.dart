@@ -16,6 +16,7 @@ const String client_secret = 'c665Xgd3mt3SLbPVLdVjRawJg4kzd5';
 const String password_client_id = 'jwLXOqcQ14QD68jUrVlnfQiYXgAPyn';
 const String password_client_secret = 'a2EEtXnVfjf1QPRy7CAzkdPpbiYP0m';
 
+
 const String admin_id = "bus2school";
 const String admin_password = "B@S#2019";
 
@@ -37,7 +38,7 @@ const emptyState = {
   'assetImage': AssetImage('assets/images/empty.png'),
   'assetPath': 'assets/images/empty.png',
 };
-const version = "1.0.24";
+const version = "1.0.25";
 
 Api api = new Api();
 

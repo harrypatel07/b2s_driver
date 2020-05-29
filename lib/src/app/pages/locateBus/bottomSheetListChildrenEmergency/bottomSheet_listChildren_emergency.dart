@@ -22,8 +22,10 @@ class _BottomSheetListChildrenEmergencyState
       BottomSheetListChildrenEmergencyViewModel();
   @override
   void initState() {
-    viewModel.driverBusSession = widget.driverBusSession;
-    viewModel.initListChildrenWithSelect();
+    if (widget.driverBusSession != null) {
+      viewModel.driverBusSession = widget.driverBusSession;
+      viewModel.initListChildrenWithSelect();
+    }
     super.initState();
   }
 
@@ -32,64 +34,65 @@ class _BottomSheetListChildrenEmergencyState
     Widget _body() {
       return Stack(
         children: <Widget>[
-          Container(
+              Container(
 //        padding: EdgeInsets.fromLTRB(8, 0, 10, 0),
-            height: MediaQuery.of(context).size.height * 0.8,
-            decoration: BoxDecoration(
-              color: ThemePrimary.primaryColor,
-              borderRadius: new BorderRadius.only(
-                  topLeft: Radius.circular(18), topRight: Radius.circular(18)),
-            ),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  height: 40,
-                  child: Text(
-                    'CHỌN HỌC SINH CẤP CỨU',
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  decoration: BoxDecoration(
+                    color: ThemePrimary.primaryColor,
+                    borderRadius: new BorderRadius.only(
+                        topLeft: Radius.circular(18),
+                        topRight: Radius.circular(18)),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.center,
+                        height: 40,
+                        child: Text(
+                          'CHỌN HỌC SINH CẤP CỨU',
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.only(top: 10, left: 5, right: 5),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: new BorderRadius.only(
+                                topLeft: Radius.circular(18),
+                                topRight: Radius.circular(18)),
+                          ),
+                          child: ListView(
+                            children: <Widget>[
+                              ...viewModel.listChildrenWithSelect
+                                  .map((item) => HomePageCardTimeLine(
+                                        children: item.children,
+                                        isEnablePicked: false,
+                                        status: StatusBus.list[0],
+                                        heroTag: item.children.id.toString(),
+                                        typePickDrop: 0,
+                                        selected: item.isSelect,
+                                        onChangeSelect: () {
+                                          viewModel.onChangeSelect(item);
+                                        },
+                                        onTapShowChildrenProfile: () {
+                                          viewModel.onTapShowChildrenProfile(
+                                              item.children,
+                                              item.children.id.toString());
+                                        },
+                                      ))
+                                  .toList(),
+                              SizedBox(
+                                height: 55,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(top: 10, left: 5, right: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: new BorderRadius.only(
-                          topLeft: Radius.circular(18),
-                          topRight: Radius.circular(18)),
-                    ),
-                    child: ListView(
-                      children: <Widget>[
-                        ...viewModel.listChildrenWithSelect
-                            .map((item) => HomePageCardTimeLine(
-                                  children: item.children,
-                                  isEnablePicked: false,
-                                  status: StatusBus.list[0],
-                                  heroTag: item.children.id.toString(),
-                                  typePickDrop: 0,
-                                  selected: item.isSelect,
-                                  onChangeSelect: () {
-                                    viewModel.onChangeSelect(item);
-                                  },
-                                  onTapShowChildrenProfile: () {
-                                    viewModel.onTapShowChildrenProfile(
-                                        item.children,
-                                        item.children.id.toString());
-                                  },
-                                ))
-                            .toList(),
-                        SizedBox(
-                          height: 55,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
           Positioned(
             bottom: 1,
             left: 15,
@@ -98,7 +101,7 @@ class _BottomSheetListChildrenEmergencyState
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey,
+                    color: Colors.black12,
                     blurRadius: 2.0, // has the effect of softening the shadow
                     spreadRadius: 1.0, // has the effect of extending the shadow
                     offset: Offset(
@@ -107,9 +110,10 @@ class _BottomSheetListChildrenEmergencyState
                     ),
                   )
                 ],
-                color: viewModel.getListChildrenSelected().length > 0
-                    ? ThemePrimary.primaryColor
-                    : Colors.grey,
+                color:
+                     viewModel.getListChildrenSelected().length > 0
+                        ? ThemePrimary.primaryColor
+                        : Colors.grey,
                 borderRadius: BorderRadius.all(
                     Radius.circular(25.0) //         <--- border radius here
                     ),

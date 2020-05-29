@@ -5,6 +5,7 @@ import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/core/baseViewModel.dart';
 import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
 import 'package:b2s_driver/src/app/models/children.dart';
+import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/models/picking-transport-info.dart';
 import 'package:b2s_driver/src/app/models/routeBus.dart';
@@ -24,6 +25,7 @@ class BottomSheetCustomViewModel extends ViewModelBase {
   List<ChildDrenStatus> listChildrenStatus = List();
   StreamSubscription streamCloud;
   bool isUpdatedLocation = false;
+  Driver driver = Driver();
   BottomSheetCustomViewModel();
 
   @override

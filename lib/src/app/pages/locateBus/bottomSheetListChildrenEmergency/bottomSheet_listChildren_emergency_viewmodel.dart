@@ -10,6 +10,8 @@ class BottomSheetListChildrenEmergencyViewModel extends ViewModelBase{
   DriverBusSession driverBusSession;
   List<ChildrenWithSelect> listChildrenWithSelect;
   BottomSheetListChildrenEmergencyViewModel();
+
+  TextEditingController textEditingController = TextEditingController();
   onTapShowChildrenProfile(Children children, String heroTag) {
     Navigator.pushNamed(context, ProfileChildrenPage.routeName,
         arguments: ProfileChildrenArgs(children: children, heroTag: heroTag));

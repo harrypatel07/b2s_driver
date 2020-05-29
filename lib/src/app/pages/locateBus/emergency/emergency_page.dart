@@ -3,7 +3,9 @@ import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/pages/locateBus/bottomSheetListChildrenEmergency/bottomSheet_listChildren_emergency.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/widgets/index.dart';
+import 'package:b2s_driver/src/app/widgets/popup_emergency_widget.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_appbar_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 //import 'package:intent/action.dart' as prefix0;
@@ -31,13 +33,15 @@ class EmergencyPage extends StatelessWidget {
       ),
     );
   }
-  void onTapCall(String phoneNumber){
+
+  void onTapCall(String phoneNumber) {
     launch('tel:$phoneNumber');
 //    intent.Intent()
 //      ..setAction(prefix0.Action.ACTION_CALL)
 //      ..setData(Uri(scheme: "tel", path: phoneNumber))
 //      ..startActivity().catchError((e) => print(e));
   }
+
   @override
   Widget build(BuildContext context) {
     Widget _buildBody() {
@@ -56,7 +60,7 @@ class EmergencyPage extends StatelessWidget {
               PolygonBoxShadow(color: Colors.black, elevation: 5.0)
             ],
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 onTapCall("113");
               },
               child: Container(
@@ -97,7 +101,7 @@ class EmergencyPage extends StatelessWidget {
               PolygonBoxShadow(color: Colors.black, elevation: 5.0)
             ],
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 onTapCall("115");
               },
               child: Container(
@@ -138,7 +142,7 @@ class EmergencyPage extends StatelessWidget {
               PolygonBoxShadow(color: Colors.black, elevation: 5.0)
             ],
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 onTapCall("114");
               },
               child: Container(
@@ -172,9 +176,7 @@ class EmergencyPage extends StatelessWidget {
               //color: Colors.grey[300],
               height: 345,
               alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.grey[200]
-              ),
+              decoration: BoxDecoration(color: Colors.grey[200]),
               //color: Colors.red,
               child: Stack(
                 children: <Widget>[
@@ -186,10 +188,13 @@ class EmergencyPage extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.only(left: 10,right: 10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               //color: Colors.grey[700],
               height: 50,
-              child: Text('THÔNG BÁO SỰ CỐ CHO PHỤ HUYNH & NHÀ TRƯỜNG',style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+              child: Text(
+                'THÔNG BÁO SỰ CỐ CHO PHỤ HUYNH & NHÀ TRƯỜNG',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              ),
             ),
             Container(
               margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
@@ -208,16 +213,18 @@ class EmergencyPage extends StatelessWidget {
                 color: ThemePrimary.primaryColor,
                 borderRadius: BorderRadius.all(
                     Radius.circular(25.0) //         <--- border radius here
-                ),
+                    ),
               ),
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
                   borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                  onTap: (){
-                    api.postNotificationProblem(driverBusSession.listChildren,0);
-                    Future.delayed(Duration(milliseconds: 300)).then((_){
-                      LoadingDialog().showMsgDialogWithCloseButton(context, "Đã gủi tin thành công.");
+                  onTap: () {
+                    api.postNotificationProblem(
+                        driverBusSession.listChildren, 0);
+                    Future.delayed(Duration(milliseconds: 300)).then((_) {
+                      LoadingDialog().showMsgDialogWithCloseButton(
+                          context, "Đã gủi tin thành công.");
                     });
                   },
                   child: Container(
@@ -230,8 +237,8 @@ class EmergencyPage extends StatelessWidget {
 //                    width: 1.5
 //                ),
                       borderRadius: BorderRadius.all(Radius.circular(
-                          25.0) //         <--- border radius here
-                      ),
+                              25.0) //         <--- border radius here
+                          ),
                     ),
                     child: Text(
                       'Kẹt xe nghiêm trọng',
@@ -261,16 +268,18 @@ class EmergencyPage extends StatelessWidget {
                 color: ThemePrimary.primaryColor,
                 borderRadius: BorderRadius.all(
                     Radius.circular(25.0) //         <--- border radius here
-                ),
+                    ),
               ),
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
                   borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                  onTap: (){
-                    api.postNotificationProblem(driverBusSession.listChildren, 1);
-                    Future.delayed(Duration(milliseconds: 300)).then((_){
-                      LoadingDialog().showMsgDialogWithCloseButton(context, "Đã gửi tin thành công.");
+                  onTap: () {
+                    api.postNotificationProblem(
+                        driverBusSession.listChildren, 1);
+                    Future.delayed(Duration(milliseconds: 300)).then((_) {
+                      LoadingDialog().showMsgDialogWithCloseButton(
+                          context, "Đã gửi tin thành công.");
                     });
                   },
                   child: Container(
@@ -283,8 +292,8 @@ class EmergencyPage extends StatelessWidget {
 //                    width: 1.5
 //                ),
                       borderRadius: BorderRadius.all(Radius.circular(
-                          25.0) //         <--- border radius here
-                      ),
+                              25.0) //         <--- border radius here
+                          ),
                     ),
                     child: Text(
                       'Tai nạn giao thông',
@@ -298,61 +307,130 @@ class EmergencyPage extends StatelessWidget {
               ),
             ),
             Container(
-                margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 2.0, // has the effect of softening the shadow
-                      spreadRadius: 1.0, // has the effect of extending the shadow
-                      offset: Offset(
-                        2.0, // horizontal, move right 10
-                        2.0, // vertical, move down 10
-                      ),
-                    )
-                  ],
-                  color: ThemePrimary.primaryColor,
-                  borderRadius: BorderRadius.all(
-                      Radius.circular(25.0) //         <--- border radius here
-                  ),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    onTap: (){
-                      showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          context: context,
-                          builder: (BuildContext bc) {
-                            return BottomSheetListChildrenEmergency(driverBusSession: driverBusSession,);
-                          });
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      //color: Colors.orange[700],
-                      height: 50,
-                      decoration: BoxDecoration(
+              margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 2.0, // has the effect of softening the shadow
+                    spreadRadius: 1.0, // has the effect of extending the shadow
+                    offset: Offset(
+                      2.0, // horizontal, move right 10
+                      2.0, // vertical, move down 10
+                    ),
+                  )
+                ],
+                color: ThemePrimary.primaryColor,
+                borderRadius: BorderRadius.all(
+                    Radius.circular(25.0) //         <--- border radius here
+                    ),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  onTap: () {
+                    showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (BuildContext bc) {
+                          return BottomSheetListChildrenEmergency(
+                            driverBusSession: driverBusSession,
+                          );
+                        });
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    //color: Colors.orange[700],
+                    height: 50,
+                    decoration: BoxDecoration(
 //                      color: ThemePrimary.primaryColor,
 //                border: Border.all(
 //                    width: 1.5
 //                ),
-                        borderRadius: BorderRadius.all(Radius.circular(
-                            25.0) //         <--- border radius here
-                        ),
-                      ),
-                      child: Text(
-                        'Học sinh cấp cứu',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700),
-                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(
+                              25.0) //         <--- border radius here
+                          ),
+                    ),
+                    child: Text(
+                      'Học sinh cấp cứu',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700),
                     ),
                   ),
                 ),
               ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 2.0, // has the effect of softening the shadow
+                    spreadRadius: 1.0, // has the effect of extending the shadow
+                    offset: Offset(
+                      2.0, // horizontal, move right 10
+                      2.0, // vertical, move down 10
+                    ),
+                  )
+                ],
+                color: ThemePrimary.primaryColor,
+                borderRadius: BorderRadius.all(
+                    Radius.circular(25.0) //         <--- border radius here
+                    ),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  onTap: () {
+                    showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (BuildContext bc) {
+                          return PopupEmergencyWidget(
+                            onTap: (message) {
+                              api.postNotificationProblem(
+                                  driverBusSession.listChildren, 3,
+                                  content: message);
+                              Future.delayed(Duration(milliseconds: 300))
+                                  .then((_) {
+                                LoadingDialog().showMsgDialogWithCloseButton(
+                                    context, "Đã gửi tin thành công.");
+                              });
+                            },
+                          );
+                        });
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    //color: Colors.orange[700],
+                    height: 50,
+                    decoration: BoxDecoration(
+//                      color: ThemePrimary.primaryColor,
+//                border: Border.all(
+//                    width: 1.5
+//                ),
+                      borderRadius: BorderRadius.all(Radius.circular(
+                              25.0) //         <--- border radius here
+                          ),
+                    ),
+                    child: Text(
+                      'Sự cố khác',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       );

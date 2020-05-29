@@ -22,6 +22,8 @@ class HomePageCardTimeLine extends StatelessWidget {
   final bool selected;
   final Function onChangeSelect;
   final PopupCardTimeLinePage popupCardTimeLinePage;
+  final bool isDriver;
+  final bool isPickDrop;
   const HomePageCardTimeLine({
     Key key,
     this.onTapScan,
@@ -35,6 +37,8 @@ class HomePageCardTimeLine extends StatelessWidget {
     this.typePickDrop = 0,
     this.note = "",
     this.selected,
+    this.isDriver,
+    this.isPickDrop,
     this.onChangeSelect,
     @required this.children,
     this.isEnablePicked,
@@ -130,8 +134,8 @@ class HomePageCardTimeLine extends StatelessWidget {
         width: 20,
         height: 20,
         alignment: Alignment.center,
-        decoration:
-            BoxDecoration(color: ThemePrimary.primaryColor, shape: BoxShape.circle),
+        decoration: BoxDecoration(
+            color: ThemePrimary.primaryColor, shape: BoxShape.circle),
         child: Icon(
           Icons.cake,
           color: Colors.yellow,
@@ -234,95 +238,99 @@ class HomePageCardTimeLine extends StatelessWidget {
                       ? cardType == 1
                           ? Column(
                               children: <Widget>[
-                                Container(
-                                  width: 70.0,
-                                  height: 30.0,
-                                  decoration: new BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        blurRadius:
-                                            5.0, // has the effect of softening the shadow
-                                        spreadRadius:
-                                            1.0, // has the effect of extending the shadow
-                                        offset: Offset(
-                                          5.0, // horizontal, move right 10
-                                          5.0, // vertical, move down 10
-                                        ),
-                                      )
-                                    ],
-                                    color: (typePickDrop == 0)
-                                        ? (status.statusID == 0)
-                                            ? ThemePrimary.primaryColor
-                                            : Colors.grey
-                                        : (status.statusID == 1)
-                                            ? ThemePrimary.primaryColor
-                                            : Colors.grey,
+                                if (isDriver || (!isDriver && isPickDrop))
+                                  Container(
+                                    width: 70.0,
+                                    height: 30.0,
+                                    decoration: new BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius:
+                                              5.0, // has the effect of softening the shadow
+                                          spreadRadius:
+                                              1.0, // has the effect of extending the shadow
+                                          offset: Offset(
+                                            5.0, // horizontal, move right 10
+                                            5.0, // vertical, move down 10
+                                          ),
+                                        )
+                                      ],
+                                      color: (typePickDrop == 0)
+                                          ? (status.statusID == 0)
+                                              ? ThemePrimary.primaryColor
+                                              : Colors.grey
+                                          : (status.statusID == 1)
+                                              ? ThemePrimary.primaryColor
+                                              : Colors.grey,
 //                                    : Colors.grey,
-                                    //border: new Border.all(color: Colors.white, width: 2.0),
-                                    borderRadius:
-                                        new BorderRadius.circular(15.0),
-                                  ),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: new InkWell(
-                                        onTap: onTapPickUp,
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
-                                        child: new Row(
+                                      //border: new Border.all(color: Colors.white, width: 2.0),
+                                      borderRadius:
+                                          new BorderRadius.circular(15.0),
+                                    ),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: new InkWell(
+                                          onTap: onTapPickUp,
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                          child: new Row(
 //                                          mainAxisAlignment:
 //                                              MainAxisAlignment.start,
-                                          children: <Widget>[
-                                            if (typePickDrop == 0 &&
-                                                    status.statusID == 0 ||
-                                                typePickDrop == 1 &&
-                                                    status.statusID == 1)
-                                              Expanded(
-                                                flex: 3,
-                                                child: Container(
+                                            children: <Widget>[
+                                              if (typePickDrop == 0 &&
+                                                      status.statusID == 0 ||
+                                                  typePickDrop == 1 &&
+                                                      status.statusID == 1)
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Container(
 //                                              color: Colors.red,
-                                                    alignment: Alignment.center,
+                                                      alignment:
+                                                          Alignment.center,
 //                                                width: 20,
-                                                    child: Icon(
-                                                      Icons.arrow_drop_up,
-                                                      color: Colors.white,
-                                                      size: 20,
-                                                    )),
-                                              ),
-                                            Expanded(
-                                              flex: 5,
-                                              child: Container(
-                                                alignment: (typePickDrop == 0 &&
-                                                            status.statusID ==
-                                                                0 ||
-                                                        typePickDrop == 1 &&
-                                                            status.statusID ==
-                                                                1)
-                                                    ? Alignment.centerLeft
-                                                    : Alignment.center,
-                                                child: Text(
-                                                  setTextButtonStatus(),
-                                                  style: new TextStyle(
-                                                      fontFamily: ThemePrimary
-                                                          .primaryFontFamily,
-                                                      fontSize: 14.0,
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                  textAlign: TextAlign.left,
+                                                      child: Icon(
+                                                        Icons.arrow_drop_up,
+                                                        color: Colors.white,
+                                                        size: 20,
+                                                      )),
                                                 ),
-                                              ),
-                                            )
+                                              Expanded(
+                                                flex: 5,
+                                                child: Container(
+                                                  alignment: (typePickDrop ==
+                                                                  0 &&
+                                                              status.statusID ==
+                                                                  0 ||
+                                                          typePickDrop == 1 &&
+                                                              status.statusID ==
+                                                                  1)
+                                                      ? Alignment.centerLeft
+                                                      : Alignment.center,
+                                                  child: Text(
+                                                    setTextButtonStatus(),
+                                                    style: new TextStyle(
+                                                        fontFamily: ThemePrimary
+                                                            .primaryFontFamily,
+                                                        fontSize: 14.0,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    textAlign: TextAlign.left,
+                                                  ),
+                                                ),
+                                              )
 ////                                          if(!setTextButtonStatus().contains('Đã đón'))
 ////                                            SizedBox(width: 4,),
 //
-                                          ],
-                                        )),
+                                            ],
+                                          )),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
+                                if (isDriver || (!isDriver && isPickDrop))
+                                  SizedBox(
+                                    height: 5,
+                                  ),
                                 new Container(
                                   width: 70.0,
                                   height: 30.0,

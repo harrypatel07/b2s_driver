@@ -17,7 +17,9 @@ class BottomSheetCustom extends StatefulWidget {
   static const String routeName = "/bottomsheetcustom";
   final BottomSheetCustomArgs arguments;
   final CallbackUpdateLocation callbackUpdateLocation;
-  const BottomSheetCustom({Key key, this.arguments,this.callbackUpdateLocation}) : super(key: key);
+  const BottomSheetCustom(
+      {Key key, this.arguments, this.callbackUpdateLocation})
+      : super(key: key);
   @override
   _BottomSheetCustomState createState() => _BottomSheetCustomState();
 }
@@ -61,6 +63,8 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                 //isEnablePicked: status.statusID == 0 ? true : false,
                 status: statusBus,
                 note: status.note,
+                isDriver: viewModel.driver.isDriver,
+                isPickDrop: viewModel.driver.checkPickDrop,
                 heroTag: tag,
                 typePickDrop: status.typePickDrop,
                 isEnableTapChildrenContentCard: true,
@@ -174,7 +178,8 @@ class _BottomSheetCustomState extends State<BottomSheetCustom> {
                             )
                           ]),
                       onTap: () {
-                        viewModel.onTapUpdateLocation(widget.callbackUpdateLocation);
+                        viewModel
+                            .onTapUpdateLocation(widget.callbackUpdateLocation);
                       },
                       child: Center(
                           child: Icon(

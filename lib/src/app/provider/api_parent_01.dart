@@ -745,12 +745,12 @@ class Api1 extends ApiMaster {
     if (date == null) date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     List<DriverBusSession> listResult = new List();
     body = new Map();
-    body["vehicle_id"] = vehicleId;
-    body["driver_id"] = driverId;
-    body["date"] = date;
-    // body["vehicle_id"] = 116;
-    // body["driver_id"] = 4609;
-    // body["date"] = "2020-05-28";
+//    body["vehicle_id"] = vehicleId;
+//    body["driver_id"] = driverId;
+//    body["date"] = date;
+     body["vehicle_id"] = 116;
+     body["driver_id"] = 4609;
+     body["date"] = "2020-06-01";
     print(body);
     return client
         .callController("/handle_picking_info_request_v2", body)
@@ -1309,10 +1309,10 @@ class Api1 extends ApiMaster {
     bool check = false;
     try {
       return client
-          .callController("/handle_picking_info_request_v2", body)
+          .callController("/check_user_right_picking_route", body)
           .then((onValue) {
         var result = onValue.getResult();
-        check = result;
+        check = result["result"];
         return check;
       });
     } catch (ex) {

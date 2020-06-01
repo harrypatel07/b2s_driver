@@ -37,7 +37,7 @@ const emptyState = {
   'assetImage': AssetImage('assets/images/empty.png'),
   'assetPath': 'assets/images/empty.png',
 };
-const version = "1.0.26";
+const version = "1.0.27";
 
 Api api = new Api();
 

@@ -155,6 +155,7 @@ class _SchedulePageState extends State<SchedulePage> {
                 var routeBus = driverBusSession.listRouteBus
                     .firstWhere((route) => route.id == routeBusID);
                 return Container(
+                  height: 44,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -167,7 +168,7 @@ class _SchedulePageState extends State<SchedulePage> {
                               children: <Widget>[
                                 Container(
                                   alignment: Alignment.centerLeft,
-                                  height: 43.5,
+                                  height: 43,
                                   child: Text(
                                     routeBus.routeName,
                                     overflow: TextOverflow.ellipsis,
@@ -231,7 +232,7 @@ class _SchedulePageState extends State<SchedulePage> {
                                         height: 10,
                                       )
                                     : Dash(
-                                        length: 25.0 + index * 1.0,
+                                        length: 28.5, //24.1 + index ,//* 1.0,
                                         dashLength: 2,
                                         direction: Axis.vertical,
                                         dashColor: ThemePrimary.primaryColor,
@@ -423,50 +424,54 @@ class _SchedulePageState extends State<SchedulePage> {
         onRefresh: () async {
           _select(_selectedChoices);
         },
-        child: viewModel.loading
-            ? LoadingSpinner.loadingView(
-                context: context,
-                loading: viewModel.loading,
-              )
-            : SingleChildScrollView(
-                child: (viewModel.listDriverBusSession.length == 0)
+        child: SingleChildScrollView(
+          child: Container(
+            constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top -
+                    AppBar().preferredSize.height -
+                    45),
+            child: viewModel.loading
+                ? LoadingSpinner.loadingView(
+                    context: context,
+                    loading: viewModel.loading,
+                  )
+                : (viewModel.listDriverBusSession.length == 0)
                     ? EmptyWidget(
                         message: 'Không có chuyến đi.',
                       )
-                    : Container(
-                        child: Column(
-                          children: <Widget>[
-                            ...viewModel.listDriverBusSession
-                                .map((driverBusSession) => Column(
-                                      children: <Widget>[
-                                        _item(
-                                            driverBusSession: driverBusSession,
-                                            title: _selectedChoices.title,
-                                            onTap: () {
-                                              if (_selectedChoices.id == 0)
-                                                viewModel.onTapItemPickDrop(
-                                                    driverBusSession, true);
-                                              else
-                                                viewModel.onTapItemPickDrop(
-                                                    driverBusSession, false);
-                                            }),
-                                        SizedBox(
-                                          height: 5,
-                                        )
-                                      ],
-                                    )),
-                            if (viewModel.listDriverBusSession.length == 1)
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.4,
-                              ),
-                            SizedBox(
-                              height: 35,
-                            )
-                          ],
-                        ),
+                    : Column(
+                        children: <Widget>[
+                          ...viewModel.listDriverBusSession
+                              .map((driverBusSession) => Column(
+                                    children: <Widget>[
+                                      _item(
+                                          driverBusSession: driverBusSession,
+                                          title: _selectedChoices.title,
+                                          onTap: () {
+                                            if (_selectedChoices.id == 0)
+                                              viewModel.onTapItemPickDrop(
+                                                  driverBusSession, true);
+                                            else
+                                              viewModel.onTapItemPickDrop(
+                                                  driverBusSession, false);
+                                          }),
+                                      SizedBox(
+                                        height: 5,
+                                      )
+                                    ],
+                                  )),
+                          if (viewModel.listDriverBusSession.length == 1)
+                            Container(
+                              height: MediaQuery.of(context).size.height * 0.4,
+                            ),
+                          SizedBox(
+                            height: 35,
+                          )
+                        ],
                       ),
-              ));
+          ),
+        ));
   }
 
   @override

@@ -39,7 +39,7 @@ class Parent {
       this.contactAddress,
       this.lat,
       this.lng}) {
-    id = id;
+    id = id == null ? 0 : id;
     name = name;
     photo = photo;
     email = email;

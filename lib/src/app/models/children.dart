@@ -47,7 +47,7 @@ class Children {
       this.parent});
 
   Children.fromJsonController(Map<dynamic, dynamic> partner) {
-    this.id = partner["id"];
+    this.id = (partner["id"] is bool) ? 0 : partner["id"];
     this.schoolName = (partner["school"] is bool) ? "" : partner["school"];
     this.phone = (partner["phone"] is bool) ? "" : partner["phone"];
     this.name = (partner["name"] is bool) ? "" : partner["name"];

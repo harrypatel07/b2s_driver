@@ -113,6 +113,8 @@ class HomePageCardTimeLine extends StatelessWidget {
                   backgroundImage: imageProvider,
                   backgroundColor: Colors.transparent,
                 ),
+                errorWidget: (context, url, error) => Image.asset(
+                    "assets/images/user-default.jpeg"),
               ),
             ),
           ),

@@ -14,14 +14,15 @@ class PopupCardTimeLinePage extends StatefulWidget {
   PopupCardTimeLinePage(this.arguments);
 
   @override
-  _PopupCardTimeLinePageState createState() =>
-      _PopupCardTimeLinePageState();
+  _PopupCardTimeLinePageState createState() => _PopupCardTimeLinePageState();
 }
+
 class ProfileChildrenDetailArgs {
   final Offset offset;
   final HomePageCardTimeLine homePageCardTimeLine;
   ProfileChildrenDetailArgs({this.offset, this.homePageCardTimeLine});
 }
+
 class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
@@ -54,7 +55,8 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
       Widget _buttonCall() {
         return GestureDetector(
           onTap: () {
-            launch('tel:${viewModel.homePageCardTimeLine.children.parent.phone}');
+            launch(
+                'tel:${viewModel.homePageCardTimeLine.children.parent.phone}');
           },
           child: Container(
             decoration: new BoxDecoration(
@@ -64,11 +66,22 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(alignment: Alignment.center, child: Icon(Icons.call,color: Colors.white,size: 15,)),
+                Container(
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.call,
+                      color: Colors.white,
+                      size: 15,
+                    )),
                 SizedBox(
                   width: 5,
                 ),
-                Container(alignment: Alignment.center, child: Text('Gọi',style: TextStyle(color: Colors.white,fontSize: 12),))
+                Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Gọi',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ))
               ],
             ),
           ),
@@ -83,17 +96,30 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
           child: Container(
             padding: EdgeInsets.only(right: 10),
             decoration: new BoxDecoration(
-                color: viewModel.homePageCardTimeLine.status.statusID == 0? Colors.red:Colors.grey,
+                color: viewModel.homePageCardTimeLine.status.statusID == 0
+                    ? Colors.red
+                    : Colors.grey,
                 borderRadius:
                     new BorderRadius.only(bottomRight: Radius.circular(70))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(alignment: Alignment.center, child: Icon(Icons.home,color: Colors.white,size: 15,)),
+                Container(
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.home,
+                      color: Colors.white,
+                      size: 15,
+                    )),
                 SizedBox(
                   width: 5,
                 ),
-                Container(alignment: Alignment.center, child: Text('Nghỉ',style: TextStyle(color: Colors.white,fontSize: 12),))
+                Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Nghỉ',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ))
               ],
             ),
           ),
@@ -103,23 +129,36 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
       Widget _buttonSms() {
         return GestureDetector(
           onTap: () {
-            launch('sms:${viewModel.homePageCardTimeLine.children.parent.phone}');
+            launch(
+                'sms:${viewModel.homePageCardTimeLine.children.parent.phone}');
           },
           child: Container(
             color: Colors.orange,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(alignment: Alignment.center, child: Icon(Icons.sms,color: Colors.white,size: 15,)),
+                Container(
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.sms,
+                      color: Colors.white,
+                      size: 15,
+                    )),
                 SizedBox(
                   width: 5,
                 ),
-                Container(alignment: Alignment.center, child: Text('SMS',style: TextStyle(color: Colors.white,fontSize: 12),))
+                Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'SMS',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ))
               ],
             ),
           ),
         );
       }
+
       Widget _buttonChat() {
         return GestureDetector(
           onTap: () {
@@ -130,21 +169,33 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(alignment: Alignment.center, child: Icon(FontAwesomeIcons.facebookMessenger,color: Colors.white,size: 15,)),
+                Container(
+                    alignment: Alignment.center,
+                    child: Icon(
+                      FontAwesomeIcons.facebookMessenger,
+                      color: Colors.white,
+                      size: 15,
+                    )),
                 SizedBox(
                   width: 5,
                 ),
-                Container(alignment: Alignment.center, child: Text('Chat',style: TextStyle(color: Colors.white,fontSize: 12),))
+                Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Chat',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ))
               ],
             ),
           ),
         );
       }
+
       return Transform.translate(
         offset: Offset(0, _animation.value * 50),
         child: Container(
           height: 120,
-          width: MediaQuery.of(context).size.width - 84,
+          width: MediaQuery.of(context).size.width - 86,
           margin: EdgeInsets.only(left: 25),
           decoration: new BoxDecoration(
               color: Colors.white,
@@ -157,40 +208,62 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
               Expanded(
                 flex: 3,
                 child: Container(
-                  padding: EdgeInsets.only(top:  5),
+                  padding: EdgeInsets.only(top: 5),
                   color: Colors.white,
                   child: Row(
                     children: <Widget>[
-                      SizedBox(width: 20,),
+                      SizedBox(
+                        width: 20,
+                      ),
                       Container(
                         width: 40,
                         height: 40,
                         child: Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            onTap: null,
-                            child: CachedNetworkImage(
-                              imageUrl: viewModel.homePageCardTimeLine.children.parent.photo,
-                              imageBuilder: (context, imageProvider) => CircleAvatar(
-                                radius: 35.0,
-                                backgroundImage: imageProvider,
-                                backgroundColor: Colors.transparent,
-                              ),
-                            ),
-                          ),
+                              onTap: null,
+                              child: viewModel.homePageCardTimeLine.children
+                                          .parent.photo !=
+                                      null
+                                  ? CachedNetworkImage(
+                                      imageUrl: viewModel.homePageCardTimeLine
+                                          .children.parent.photo,
+                                      imageBuilder: (context, imageProvider) =>
+                                          CircleAvatar(
+                                        radius: 35.0,
+                                        backgroundImage: imageProvider,
+                                        backgroundColor: Colors.transparent,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Image.asset(
+                                              "assets/images/user-default.jpeg"),
+                                    )
+                                  : CircleAvatar(
+                                      radius: 35.0,
+                                      backgroundImage: AssetImage(
+                                          "assets/images/user-default.jpeg"),
+                                      backgroundColor: Colors.transparent,
+                                    )),
                         ),
                       ),
-                      SizedBox(width: 10,),
-                      Expanded(
-                        child: Text(viewModel.homePageCardTimeLine.children.parent.name,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                color: Colors.grey.shade600,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.center,),
+                      SizedBox(
+                        width: 10,
                       ),
-                      SizedBox(width: 10,)
+                      Expanded(
+                        child: Text(
+                          viewModel.homePageCardTimeLine.children.parent.name ??
+                              "",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      )
                     ],
                   ),
                 ),
@@ -260,25 +333,40 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
                       left: viewModel.position.dx - 5,
                       child: Container(
                         height: 92,
-                        width: MediaQuery.of(context).size.width - 54,
-                        child:
-                        HomePageCardTimeLine(
-                            children: viewModel.homePageCardTimeLine.children,
-                            //isEnablePicked: status.statusID == 0 ? true : false,
-                            status: viewModel.status,
-                            note: viewModel.homePageCardTimeLine.note,
-                            heroTag: viewModel.homePageCardTimeLine.heroTag,
-                            typePickDrop: viewModel.homePageCardTimeLine.typePickDrop,
-                            isEnableTapChildrenContentCard: false,
-                            cardType: viewModel.homePageCardTimeLine.cardType,
-                            onTapPickUp: () {
-                              viewModel.onTapPicked();
-                              viewModel.homePageCardTimeLine.onTapPickUp();
-                            },
-                            onTapChangeStatusLeave: (){
-                              viewModel.homePageCardTimeLine.onTapChangeStatusLeave();
-                              viewModel.onTapChangeStatus(3);
-                            },
+                        width: MediaQuery.of(context).size.width - 56,
+                        child: HomePageCardTimeLine(
+                          children: viewModel.homePageCardTimeLine.children,
+                          //isEnablePicked: status.statusID == 0 ? true : false,
+                          status: viewModel.status,
+                          note: viewModel.homePageCardTimeLine.note,
+                          heroTag: viewModel.homePageCardTimeLine.heroTag,
+                          typePickDrop:
+                              viewModel.homePageCardTimeLine.typePickDrop,
+                          isEnableTapChildrenContentCard: false,
+                          cardType: viewModel.homePageCardTimeLine.cardType,
+                          onTapPickUp: () {
+                            viewModel.onTapPicked();
+                            viewModel.homePageCardTimeLine.onTapPickUp();
+                          },
+                          onTapScan:
+                              (viewModel.homePageCardTimeLine.typePickDrop == 0)
+                                  ? (viewModel.homePageCardTimeLine.status
+                                              .statusID ==
+                                          0)
+                                      ? viewModel.homePageCardTimeLine.onTapScan
+                                      : () {}
+                                  : (viewModel.homePageCardTimeLine.status
+                                              .statusID ==
+                                          1)
+                                      ? viewModel.homePageCardTimeLine.onTapScan
+                                      : () {},
+                          onTapChangeStatusLeave: () {
+                            viewModel.homePageCardTimeLine
+                                .onTapChangeStatusLeave();
+                            viewModel.onTapChangeStatus(3);
+                          },
+                          isPickDrop: viewModel.homePageCardTimeLine.isPickDrop,
+                          isDriver: viewModel.homePageCardTimeLine.isDriver,
                         ),
 //                        HomePageCardTimeLine(
 //                          children: viewModel.children,
@@ -300,4 +388,3 @@ class _PopupCardTimeLinePageState extends State<PopupCardTimeLinePage>
     );
   }
 }
-

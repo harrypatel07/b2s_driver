@@ -28,6 +28,8 @@ import 'package:flutter/material.dart';
 class Routes {
   static Widget defaultPage;
   static navigateDefaultPage() async {
+    //connect odoo server
+    api.authorizationOdoo();
     Driver driver = new Driver();
     bool result = await driver.checkDriverExist();
     if (result) {
@@ -92,12 +94,14 @@ class Routes {
     HistoryTripDetailMap.routeName: (context) => HistoryTripDetailMap(
           args: ModalRoute.of(context).settings.arguments,
         ),
-    ConnectQRScanDevicesPage.routeName: (context) => ConnectQRScanDevicesPage(bluetoothDevice: ModalRoute.of(context).settings.arguments,)
+    ConnectQRScanDevicesPage.routeName: (context) => ConnectQRScanDevicesPage(
+          bluetoothDevice: ModalRoute.of(context).settings.arguments,
+        )
   };
 }
 
 class MyRouteObserver extends RouteObserver<PageRoute<dynamic>> {
-  static String routeCurrentName='';
+  static String routeCurrentName = '';
   void _sendScreenView(PageRoute<dynamic> route) {
     handlerPushPageName.add(route.settings.name.toString());
     var screenName = route.settings.name;

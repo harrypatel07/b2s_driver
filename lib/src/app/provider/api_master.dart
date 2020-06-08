@@ -35,6 +35,7 @@ class ApiMaster {
   get accessToken => _accessToken;
   DateTime _expiresIn;
   get expiresIn => _expiresIn;
+  OdooClient _odooClient;
   ApiMaster();
 
   ApiMaster.fromJson(Map<String, dynamic> json) {
@@ -131,7 +132,7 @@ class ApiMaster {
     }).catchError((error) {
       print(error);
       return StatusCodeGetToken.invalid_domain;
-    }).timeout(Duration(seconds: 30), onTimeout: () {
+    }).timeout(Duration(seconds: 10), onTimeout: () {
       return StatusCodeGetToken.invalid_domain;
     });
   }
@@ -288,19 +289,24 @@ class ApiMaster {
   }
 
   Future<OdooClient> authorizationOdoo() async {
-    var client = new OdooClient(domainApi);
-    // Synchronize way
-    final version = await client.connect();
-    print(version);
-    return client.getDatabases().then((List databases) {
-      // deal with database list
-      return client
-          .authenticate(admin_id, admin_password, databases[0])
-          .then((AuthenticateCallback auth) {
-        print(auth.getSessionId());
-        return client;
+    if (_odooClient == null) {
+      var client = new OdooClient(domainApi);
+      // Synchronize way
+      final version = await client.connect();
+      print(version);
+      return client.getDatabases().then((List databases) {
+        // deal with database list
+        return client
+            .authenticate(admin_id, admin_password, databases[0])
+            .then((AuthenticateCallback auth) {
+          print(auth.getSessionId());
+          _odooClient = client;
+          return client;
+        });
       });
-    });
+    }
+    else
+      return _odooClient;
   }
 
   Future<void> demoOdoo() async {

@@ -752,126 +752,132 @@ class Api1 extends ApiMaster {
     // body["driver_id"] = 4609;
     // body["date"] = "2020-06-01";
     print(body);
-    return client
-        .callController("/handle_picking_info_request_v2", body)
-        .then((onValue) async {
-      try {
-        var result = onValue.getResult();
-        if (result['code'] != null) return listResult;
-        var data = result["data"];
-        if (data is List) if (data.length > 0)
-          for (var i = 0; i < data.length; i++) {
-            List resultData = data[i]["session"];
-            int _pickDrop = (data[i]["type"] == "pick") ? 0 : 1;
-            if (resultData.length > 0) {
-              List<ChildDrenStatus> listChildDrenStatus = List();
-              List<ChildDrenRoute> listChildDrenRoute = List();
-              List<RouteBus> listRouteBus = List();
-              List<Children> listChildren = List();
-              for (var j = 0; j < resultData.length; j++) {
-                var objPicking = resultData[j]["obj_picking"];
-                var partnerIds = objPicking["partner_ids"];
-                List<Children> listChildrenForRoute = List();
-                for (var k = 0; k < partnerIds.length; k++) {
-                  var partnerId = partnerIds[k]["partner_id"];
-                  //Tạo list Children
-                  listChildren.add(Children.fromJsonController(partnerId));
-                  //Tạo list Chidren for Route
-                  listChildrenForRoute
-                      .add(Children.fromJsonController(partnerId));
-                  //Tạo list Children Status
-                  ChildDrenStatus childrenStatus = ChildDrenStatus();
-                  var pickingTransportInfo =
-                      partnerIds[k]["picking_transport_info"];
-                  childrenStatus.id =
-                      int.parse(pickingTransportInfo["id"].toString());
-                  childrenStatus.childrenID = (partnerId["id"] is bool)
-                      ? 0
-                      : int.parse(partnerId["id"].toString());
-                  childrenStatus.routeBusID =
+    try {
+      return client
+          .callController("/handle_picking_info_request_v2", body)
+          .then((onValue) async {
+        try {
+          var result = onValue.getResult();
+          if (result['code'] != null) return listResult;
+          var data = result["data"];
+          if (data is List) if (data.length > 0)
+            for (var i = 0; i < data.length; i++) {
+              List resultData = data[i]["session"];
+              int _pickDrop = (data[i]["type"] == "pick") ? 0 : 1;
+              if (resultData.length > 0) {
+                List<ChildDrenStatus> listChildDrenStatus = List();
+                List<ChildDrenRoute> listChildDrenRoute = List();
+                List<RouteBus> listRouteBus = List();
+                List<Children> listChildren = List();
+                for (var j = 0; j < resultData.length; j++) {
+                  var objPicking = resultData[j]["obj_picking"];
+                  var partnerIds = objPicking["partner_ids"];
+                  List<Children> listChildrenForRoute = List();
+                  for (var k = 0; k < partnerIds.length; k++) {
+                    var partnerId = partnerIds[k]["partner_id"];
+                    //Tạo list Children
+                    listChildren.add(Children.fromJsonController(partnerId));
+                    //Tạo list Chidren for Route
+                    listChildrenForRoute
+                        .add(Children.fromJsonController(partnerId));
+                    //Tạo list Children Status
+                    ChildDrenStatus childrenStatus = ChildDrenStatus();
+                    var pickingTransportInfo =
+                        partnerIds[k]["picking_transport_info"];
+                    childrenStatus.id =
+                        int.parse(pickingTransportInfo["id"].toString());
+                    childrenStatus.childrenID = (partnerId["id"] is bool)
+                        ? 0
+                        : int.parse(partnerId["id"].toString());
+                    childrenStatus.routeBusID =
+                        int.parse(objPicking["id"].toString());
+                    childrenStatus.typePickDrop =
+                        partnerIds[k]["type"] == "pick" ? 0 : 1;
+                    childrenStatus.note = pickingTransportInfo["note"] is bool
+                        ? ""
+                        : pickingTransportInfo["note"];
+                    childrenStatus.pickingRoute =
+                        PickingRoute.fromJsonController(
+                            pickingTransportInfo["picking_route"]);
+                    PickingTransportInfo_State.values.forEach((value) {
+                      if (Common.getValueEnum(value) ==
+                          pickingTransportInfo["state"])
+                        switch (value) {
+                          case PickingTransportInfo_State.draft:
+                            childrenStatus.statusID = 0;
+                            break;
+                          case PickingTransportInfo_State.halt:
+                            childrenStatus.statusID = 1;
+
+                            break;
+                          case PickingTransportInfo_State.done:
+                            if (_pickDrop == 0)
+                              childrenStatus.statusID = 2;
+                            else
+                              childrenStatus.statusID = 4;
+                            break;
+                          case PickingTransportInfo_State.cancel:
+                            childrenStatus.statusID = 3;
+                            break;
+                          default:
+                        }
+                    });
+                    listChildDrenStatus.add(childrenStatus);
+                  }
+                  //Tạo list RouteBus
+                  RouteBus routeBus = RouteBus();
+                  routeBus.id = objPicking["id"];
+                  routeBus.routeName = objPicking["name"];
+                  routeBus.date = date;
+                  routeBus.time = objPicking["time"];
+                  routeBus.lat = double.parse(objPicking["lat"].toString());
+                  routeBus.lng = double.parse(objPicking["lng"].toString());
+                  routeBus.isSchool = objPicking["is_school"] is bool
+                      ? objPicking["is_school"]
+                      : false;
+                  routeBus.type = _pickDrop == 0 ? 0 : 1;
+                  routeBus.status = false;
+                  listRouteBus.add(routeBus);
+
+                  //Tạo list Children Route
+                  ChildDrenRoute childrenRoute = ChildDrenRoute();
+                  childrenRoute.id = j + 1;
+                  childrenRoute.routeBusID =
                       int.parse(objPicking["id"].toString());
-                  childrenStatus.typePickDrop =
-                      partnerIds[k]["type"] == "pick" ? 0 : 1;
-                  childrenStatus.note = pickingTransportInfo["note"] is bool
-                      ? ""
-                      : pickingTransportInfo["note"];
-                  childrenStatus.pickingRoute = PickingRoute.fromJsonController(
-                      pickingTransportInfo["picking_route"]);
-                  PickingTransportInfo_State.values.forEach((value) {
-                    if (Common.getValueEnum(value) ==
-                        pickingTransportInfo["state"])
-                      switch (value) {
-                        case PickingTransportInfo_State.draft:
-                          childrenStatus.statusID = 0;
-                          break;
-                        case PickingTransportInfo_State.halt:
-                          childrenStatus.statusID = 1;
-
-                          break;
-                        case PickingTransportInfo_State.done:
-                          if (_pickDrop == 0)
-                            childrenStatus.statusID = 2;
-                          else
-                            childrenStatus.statusID = 4;
-                          break;
-                        case PickingTransportInfo_State.cancel:
-                          childrenStatus.statusID = 3;
-                          break;
-                        default:
-                      }
-                  });
-                  listChildDrenStatus.add(childrenStatus);
+                  childrenRoute.listChildrenID =
+                      listChildrenForRoute.map((item) => item.id).toList();
+                  listChildDrenRoute.add(childrenRoute);
                 }
-                //Tạo list RouteBus
-                RouteBus routeBus = RouteBus();
-                routeBus.id = objPicking["id"];
-                routeBus.routeName = objPicking["name"];
-                routeBus.date = date;
-                routeBus.time = objPicking["time"];
-                routeBus.lat = double.parse(objPicking["lat"].toString());
-                routeBus.lng = double.parse(objPicking["lng"].toString());
-                routeBus.isSchool = objPicking["is_school"] is bool
-                    ? objPicking["is_school"]
-                    : false;
-                routeBus.type = _pickDrop == 0 ? 0 : 1;
-                routeBus.status = false;
-                listRouteBus.add(routeBus);
+                //Xóa children đã tồn tại trong list children
+                listChildren =
+                    Common.distinceArray<Children>(listChildren, "id");
 
-                //Tạo list Children Route
-                ChildDrenRoute childrenRoute = ChildDrenRoute();
-                childrenRoute.id = j + 1;
-                childrenRoute.routeBusID =
-                    int.parse(objPicking["id"].toString());
-                childrenRoute.listChildrenID =
-                    listChildrenForRoute.map((item) => item.id).toList();
-                listChildDrenRoute.add(childrenRoute);
+                Driver driver = Driver();
+                listResult.add(DriverBusSession.fromJsonController(
+                    busID: driver.vehicleName,
+                    date: date,
+                    type: _pickDrop == 0 ? 0 : 1,
+                    listChildren: listChildren,
+                    listRouteBus: listRouteBus,
+                    childDrenRoute: listChildDrenRoute,
+                    childDrenStatus: listChildDrenStatus));
               }
-              //Xóa children đã tồn tại trong list children
-              listChildren = Common.distinceArray<Children>(listChildren, "id");
-
-              Driver driver = Driver();
-              listResult.add(DriverBusSession.fromJsonController(
-                  busID: driver.vehicleName,
-                  date: date,
-                  type: _pickDrop == 0 ? 0 : 1,
-                  listChildren: listChildren,
-                  listRouteBus: listRouteBus,
-                  childDrenRoute: listChildDrenRoute,
-                  childDrenStatus: listChildDrenStatus));
+            }
+          if (listResult.length > 0) {
+            Driver driver = Driver();
+            for (var item in listResult) {
+              item.status = await checkBusSessionFinished(
+                  vehicleId: driver.vehicleId, date: date, type: item.type);
             }
           }
-        if (listResult.length > 0) {
-          Driver driver = Driver();
-          for (var item in listResult) {
-            item.status = await checkBusSessionFinished(
-                vehicleId: driver.vehicleId, date: date, type: item.type);
-          }
+          return listResult;
+        } catch (ex) {
+          return [];
         }
-        return listResult;
-      } catch (ex) {
-        return [];
-      }
-    });
+      });
+    } catch (ex) {
+      return [];
+    }
   }
 
   ///Lấy lịch sử chuyến đi của driver

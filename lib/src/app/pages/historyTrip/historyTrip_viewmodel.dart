@@ -20,7 +20,7 @@ class HistoryTripViewModel extends ViewModelBase {
   bool loadingMore = false;
   bool loadMoreDone = false;
   ScrollController controller = ScrollController();
-  int _take = 10;
+  int _take = 50;
   int _skip = 0;
   HistoryTripViewModel() {
     choicesVehicle = driver.listVehicle
@@ -53,7 +53,7 @@ class HistoryTripViewModel extends ViewModelBase {
     loading = true;
     loadMoreDone = false;
     this.updateState();
-    _take = 10;
+    _take = 50;
     _skip = 0;
     listHistoryDriverBusSession = List();
     api.getHistoryDriver(take: _take, skip: _skip).then((list) {

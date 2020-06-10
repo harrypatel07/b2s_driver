@@ -397,8 +397,20 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
   }
 
   showNotifyCantBack() {
-    LoadingDialog().showMsgDialogWithCloseButton(context,
-        "Chuyến xe vẫn chưa hoàn thành, bạn không thể thực hiện thao tác này.");
+    LoadingDialog()
+        .showMsgDialogWithButton(context,
+            'Chuyến xe vẫn chưa hoàn thành, bạn thực sự muốn thoát chuyến xe này?',
+            textNo: 'Hủy', textYes: 'Thoát')
+        .then((value) {
+      if (value) {
+        driverBusSession.clearLocal();
+        if (Navigator.canPop(context))
+          Navigator.pop(context);
+        else
+          Navigator.pushReplacementNamed(context, TabsPage.routeName,
+              arguments: TabsArgument(routeChildName: HomePage.routeName));
+      }
+    });
   }
 
   onTapBackButton() {

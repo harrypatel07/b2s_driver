@@ -6,7 +6,6 @@ import 'package:b2s_driver/src/app/models/historyDriver.dart';
 import 'package:b2s_driver/src/app/models/itemCustomPopupMenu.dart';
 import 'package:b2s_driver/src/app/pages/historyTripDetailPage/historyTrip_detail_page.dart';
 import 'package:b2s_driver/src/app/service/googlemap-service.dart';
-import 'package:b2s_driver/src/app/service/traccar-service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -20,7 +19,7 @@ class HistoryTripViewModel extends ViewModelBase {
   bool loadingMore = false;
   bool loadMoreDone = false;
   ScrollController controller = ScrollController();
-  int _take = 50;
+  int _take = 10;
   int _skip = 0;
   HistoryTripViewModel() {
     choicesVehicle = driver.listVehicle
@@ -53,7 +52,7 @@ class HistoryTripViewModel extends ViewModelBase {
     loading = true;
     loadMoreDone = false;
     this.updateState();
-    _take = 50;
+    _take = 10;
     _skip = 0;
     listHistoryDriverBusSession = List();
     api.getHistoryDriver(take: _take, skip: _skip).then((list) {

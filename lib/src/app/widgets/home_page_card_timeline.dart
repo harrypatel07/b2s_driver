@@ -1,4 +1,5 @@
 import 'package:b2s_driver/src/app/models/children.dart';
+import 'package:b2s_driver/src/app/models/picking-transport-info.dart';
 import 'package:b2s_driver/src/app/models/statusBus.dart';
 import 'package:b2s_driver/src/app/theme/theme_primary.dart';
 import 'package:b2s_driver/src/app/pages/home/popup_card_timeline/popup_card_timeline.dart';
@@ -113,8 +114,8 @@ class HomePageCardTimeLine extends StatelessWidget {
                   backgroundImage: imageProvider,
                   backgroundColor: Colors.transparent,
                 ),
-                errorWidget: (context, url, error) => Image.asset(
-                    "assets/images/user-default.jpeg"),
+                errorWidget: (context, url, error) =>
+                    Image.asset("assets/images/user-default.jpeg"),
               ),
             ),
           ),
@@ -169,6 +170,9 @@ class HomePageCardTimeLine extends StatelessWidget {
       onTap: () {
         if (isEnableTapChildrenContentCard) {
           _getPosition();
+          if (MediaQuery.of(context).size.height - _position.dy < 200)
+            _position =
+                Offset(_position.dx, MediaQuery.of(context).size.height - 200);
           showGeneralDialog(
               transitionBuilder: (context, a1, a2, widget) {
                 return PopupCardTimeLinePage(ProfileChildrenDetailArgs(

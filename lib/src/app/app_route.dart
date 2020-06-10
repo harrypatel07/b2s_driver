@@ -1,4 +1,5 @@
 import 'package:b2s_driver/src/app/core/app_setting.dart';
+import 'package:b2s_driver/src/app/helper/utils.dart';
 import 'package:b2s_driver/src/app/models/driver.dart';
 import 'package:b2s_driver/src/app/models/driverBusSession.dart';
 import 'package:b2s_driver/src/app/pages/attendant/attendant_page.dart';
@@ -36,13 +37,29 @@ class Routes {
       // //Kiểm tra bus session chưa kết thúc.
       DriverBusSession driverBusSession = DriverBusSession();
       result = await driverBusSession.checkDriverBusSessionExists();
-      if (result) if (driver.isDriver) {
-        Routes.defaultPage = LocateBusPage(driverBusSession: driverBusSession);
-      } else {
-        Routes.defaultPage =
-            AttendantManagerPage(driverBusSession: driverBusSession);
-      }
-      else
+      if (result) {
+        // kiểm tra nếu khác ngày -> quay về trang home
+        bool dateDiff = false;
+        if (driverBusSession.listRouteBus.length > 0)
+          dateDiff = dateDifferent(
+              DateTime.parse(driverBusSession.listRouteBus[0].date),
+              DateTime.now());
+        if (driver.isDriver) {
+          if (!dateDiff)
+            Routes.defaultPage =
+                LocateBusPage(driverBusSession: driverBusSession);
+          else
+            Routes.defaultPage =
+                TabsPage(TabsArgument(routeChildName: HomePage.routeName));
+        } else {
+          if (!dateDiff)
+            Routes.defaultPage =
+                AttendantManagerPage(driverBusSession: driverBusSession);
+          else
+            Routes.defaultPage =
+                TabsPage(TabsArgument(routeChildName: HomePage.routeName));
+        }
+      } else
         Routes.defaultPage =
             TabsPage(TabsArgument(routeChildName: HomePage.routeName));
     } else

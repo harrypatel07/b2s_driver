@@ -198,10 +198,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         right: 0,
         child: TS24Button(
           onTap: () {
-//            if (widget.args.canStart)
+            if (widget.args.canStart)
               viewModel.onStart();
-//            else
-//              viewModel.showNoticeCantStart();
+            else
+              viewModel.showNoticeCantStart();
           },
           decoration: new BoxDecoration(
               boxShadow: [

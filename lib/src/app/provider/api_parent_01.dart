@@ -880,6 +880,140 @@ class Api1 extends ApiMaster {
     }
   }
 
+  // ///Lấy lịch sử chuyến đi của driver
+  // Future<List<HistoryDriver>> getHistoryDriver({int take, int skip}) async {
+  //   var client = await this.authorizationOdoo();
+  //   Driver driver = Driver();
+  //   var _driverId = driver.isDriver == true ? driver.id : driver.driverId;
+  //   List<HistoryDriver> listResult = new List();
+  //   body = new Map();
+  //   body["driver_id"] = _driverId;
+  //   body["vehicle_id"] = driver.vehicleId;
+  //   body["take"] = take;
+  //   body["skip"] = skip;
+  //   try {
+  //     return client
+  //         .callController("/handle_picking_info_request_history", body)
+  //         .then((onValue) async {
+  //       var result = onValue.getResult();
+  //       if (!(result is List)) return listResult;
+  //       for (var h = 0; h < result.length; h++) {
+  //         var data = result[h];
+  //         HistoryDriver historyDriver = HistoryDriver();
+  //         var date = data["transport_date"];
+  //         historyDriver.transportDate = date;
+  //         historyDriver.listHistory = [];
+  //         historyDriver.listUrlHistoryPositions = [];
+  //         for (var i = 0; i < 2; i++) {
+  //           List resultData = (i == 0) ? data["outgoing"] : data["incoming"];
+  //           if (resultData.length > 0) {
+  //             List<ChildDrenStatus> listChildDrenStatus = List();
+  //             List<ChildDrenRoute> listChildDrenRoute = List();
+  //             List<RouteBus> listRouteBus = List();
+  //             List<Children> listChildren = List();
+  //             for (var j = 0; j < resultData.length; j++) {
+  //               var objPicking = resultData[j]["obj_picking"];
+  //               var partnerIds = objPicking["partner_ids"];
+  //               List<Children> listChildrenForRoute = List();
+  //               for (var k = 0; k < partnerIds.length; k++) {
+  //                 var partnerId = partnerIds[k]["partner_id"];
+  //                 //Tạo list Children
+  //                 listChildren.add(Children.fromJsonController(partnerId));
+  //                 //Tạo list Chidren for Route
+  //                 listChildrenForRoute
+  //                     .add(Children.fromJsonController(partnerId));
+  //                 //Tạo list Children Status
+  //                 ChildDrenStatus childrenStatus = ChildDrenStatus();
+  //                 var pickingTransportInfo =
+  //                     partnerIds[k]["picking_transport_info"];
+  //                 childrenStatus.id =
+  //                     int.parse(pickingTransportInfo["id"].toString());
+  //                 childrenStatus.childrenID = (partnerId["id"] is bool)
+  //                     ? 0
+  //                     : int.parse(partnerId["id"].toString());
+  //                 childrenStatus.routeBusID =
+  //                     int.parse(objPicking["id"].toString());
+  //                 childrenStatus.typePickDrop =
+  //                     partnerIds[k]["type"] == "pick" ? 0 : 1;
+  //                 childrenStatus.note = pickingTransportInfo["note"] is bool
+  //                     ? ""
+  //                     : pickingTransportInfo["note"];
+  //                 childrenStatus.pickingRoute = PickingRoute.fromJsonController(
+  //                     pickingTransportInfo["picking_route"]);
+  //                 PickingTransportInfo_State.values.forEach((value) {
+  //                   if (Common.getValueEnum(value) ==
+  //                       pickingTransportInfo["state"])
+  //                     switch (value) {
+  //                       case PickingTransportInfo_State.draft:
+  //                         childrenStatus.statusID = 0;
+  //                         break;
+  //                       case PickingTransportInfo_State.halt:
+  //                         childrenStatus.statusID = 1;
+
+  //                         break;
+  //                       case PickingTransportInfo_State.done:
+  //                         if (i == 0)
+  //                           childrenStatus.statusID = 2;
+  //                         else
+  //                           childrenStatus.statusID = 4;
+  //                         break;
+  //                       case PickingTransportInfo_State.cancel:
+  //                         childrenStatus.statusID = 3;
+  //                         break;
+  //                       default:
+  //                     }
+  //                 });
+  //                 listChildDrenStatus.add(childrenStatus);
+  //               }
+  //               //Tạo list RouteBus
+  //               RouteBus routeBus = RouteBus();
+  //               routeBus.id = objPicking["id"];
+  //               routeBus.routeName = objPicking["name"];
+  //               routeBus.date = date;
+  //               routeBus.time = objPicking["time"];
+  //               routeBus.lat = double.parse(objPicking["lat"].toString());
+  //               routeBus.lng = double.parse(objPicking["lng"].toString());
+  //               routeBus.isSchool = false;
+  //               routeBus.type = i == 0 ? 0 : 1;
+  //               routeBus.status = false;
+  //               listRouteBus.add(routeBus);
+
+  //               //Tạo list Children Route
+  //               ChildDrenRoute childrenRoute = ChildDrenRoute();
+  //               childrenRoute.id = j + 1;
+  //               childrenRoute.routeBusID =
+  //                   int.parse(objPicking["id"].toString());
+  //               childrenRoute.listChildrenID =
+  //                   listChildrenForRoute.map((item) => item.id).toList();
+  //               listChildDrenRoute.add(childrenRoute);
+  //             }
+  //             //Xóa children đã tồn tại trong list children
+  //             listChildren = Common.distinceArray<Children>(listChildren, "id");
+
+  //             Driver driver = Driver();
+  //             historyDriver.listHistory.add(DriverBusSession.fromJsonController(
+  //                 busID: driver.vehicleName,
+  //                 date: date,
+  //                 type: i == 0 ? 0 : 1,
+  //                 listChildren: listChildren,
+  //                 listRouteBus: listRouteBus,
+  //                 childDrenRoute: listChildDrenRoute,
+  //                 childDrenStatus: listChildDrenStatus,
+  //                 status: true));
+  //           }
+  //           historyDriver.listHistory.forEach((driverBusSession) {
+  //             historyDriver.listUrlHistoryPositions.add("");
+  //           });
+  //         }
+  //         listResult.add(historyDriver);
+  //       }
+  //       return listResult;
+  //     });
+  //   } catch (ex) {
+  //     return [];
+  //   }
+  // }
+
   ///Lấy lịch sử chuyến đi của driver
   Future<List<HistoryDriver>> getHistoryDriver({int take, int skip}) async {
     var client = await this.authorizationOdoo();
@@ -893,7 +1027,7 @@ class Api1 extends ApiMaster {
     body["skip"] = skip;
     try {
       return client
-          .callController("/handle_picking_info_request_history", body)
+          .callController("/handle_picking_info_request_history_v2", body)
           .then((onValue) async {
         var result = onValue.getResult();
         if (!(result is List)) return listResult;
@@ -901,11 +1035,12 @@ class Api1 extends ApiMaster {
           var data = result[h];
           HistoryDriver historyDriver = HistoryDriver();
           var date = data["transport_date"];
+          List childData = data["data"];
           historyDriver.transportDate = date;
           historyDriver.listHistory = [];
           historyDriver.listUrlHistoryPositions = [];
-          for (var i = 0; i < 2; i++) {
-            List resultData = (i == 0) ? data["outgoing"] : data["incoming"];
+          for (var i = 0; i < childData.length; i++) {
+            List resultData = childData[i]["session"];
             if (resultData.length > 0) {
               List<ChildDrenStatus> listChildDrenStatus = List();
               List<ChildDrenRoute> listChildDrenRoute = List();
@@ -1005,6 +1140,7 @@ class Api1 extends ApiMaster {
               historyDriver.listUrlHistoryPositions.add("");
             });
           }
+
           listResult.add(historyDriver);
         }
         return listResult;

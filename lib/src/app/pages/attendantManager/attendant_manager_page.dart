@@ -11,6 +11,7 @@ import 'package:b2s_driver/src/app/widgets/ts24_button_widget.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_scaffold_widget.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:intl/intl.dart';
 
 class AttendantManagerPage extends StatefulWidget {
@@ -40,6 +41,57 @@ class _AttendantManagerPageState extends State<AttendantManagerPage> {
         icon: Icon(Icons.arrow_back),
         onPressed: () => viewModel.onTapBackButton(),
       ),
+      actions: <Widget>[
+        (viewModel.bluetoothDeviceConnected != null)
+            ? StreamBuilder<BluetoothDeviceState>(
+                stream: viewModel.bluetoothDeviceConnected.state,
+                initialData: BluetoothDeviceState.disconnected,
+                builder: (c, snapshot) {
+                  return InkWell(
+                    onTap: () {
+                      viewModel.onTapSettingBluetoothDevice();
+                    },
+                    child: Center(
+                        child: viewModel.isBluetoothOn
+                            ? (snapshot.data == BluetoothDeviceState.connected)
+                                ? Icon(
+                                    Icons.settings_remote,
+                                    color: Colors.white,
+                                    size: 25,
+                                  )
+                                : CircleAvatar(
+                                    radius: 13.0,
+                                    backgroundImage: AssetImage(
+                                        "assets/images/scan-device-signal.gif"),
+                                    backgroundColor: Colors.transparent,
+                                  )
+                            : Icon(
+                                Icons.bluetooth_disabled,
+                                color: Colors.grey,
+                                size: 25,
+                              )),
+                  );
+                },
+              )
+            : InkWell(
+                onTap: () {
+                  viewModel.onTapSettingBluetoothDevice();
+                },
+                child: Center(
+                    child: viewModel.isBluetoothOn
+                        ? CircleAvatar(
+                            radius: 13.0,
+                            backgroundImage: AssetImage(
+                                "assets/images/scan-device-signal.gif"),
+                            backgroundColor: Colors.transparent,
+                          )
+                        : Icon(
+                            Icons.bluetooth_disabled,
+                            color: Colors.white,
+                            size: 25,
+                          )),
+              )
+      ],
     );
   }
 

@@ -9,7 +9,8 @@ import 'package:flutter_blue/flutter_blue.dart';
 class ConnectQRScanDevicesPage extends StatefulWidget {
   static const String routeName = "/ConnectQRScanDevices";
   final BluetoothDevice bluetoothDevice;
-  const ConnectQRScanDevicesPage({Key key, this.bluetoothDevice}) : super(key: key);
+  const ConnectQRScanDevicesPage({Key key, this.bluetoothDevice})
+      : super(key: key);
   @override
   _ConnectQRScanDevicesPageState createState() =>
       _ConnectQRScanDevicesPageState();
@@ -22,6 +23,7 @@ class _ConnectQRScanDevicesPageState extends State<ConnectQRScanDevicesPage> {
     viewModel.bluetoothDevice = widget.bluetoothDevice;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     viewModel.context = context;
@@ -124,7 +126,7 @@ class _ConnectQRScanDevicesPageState extends State<ConnectQRScanDevicesPage> {
     List<dynamic> _listConnectDevicesAvailable(AsyncSnapshot snapshot) {
       return snapshot.data
           .map(
-            (r) => (viewModel.barcodeService.checkTargetDeive(r)
+            (r) => (viewModel.barcodeService.checkTargetDevice(r)
                 ? ScanResultTile(
                     result: r,
                     onTap: () => viewModel.onTapConnectDevice(r),

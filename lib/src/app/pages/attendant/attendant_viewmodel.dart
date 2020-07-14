@@ -35,13 +35,15 @@ class AttendantPageViewModel extends ViewModelBase {
     onLoad(date);
   }
 
-  onLoad(String date) {
+  onLoad(String date) async {
     print('OnLoad');
     loading = true;
+    await api.changeDriverByVehicle(driver.vehicleId);
     api
         .getListDriverBusSession(
             vehicleId: driver.vehicleId, driverId: driver.driverId, date: date)
         .then((value) {
+      api.getDriverInfo(driver.id);
       if (value is List) {
         listDriverBusSession = value;
         if (value.length > 0) busId = value[0].busID;

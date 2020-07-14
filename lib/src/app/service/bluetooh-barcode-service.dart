@@ -3,15 +3,38 @@ import 'dart:convert';
 
 import 'package:flutter_blue/flutter_blue.dart';
 
+class ServiceCharacteristic {
+  String serviceUUID;
+  String characteristicUUID;
+  ServiceCharacteristic({this.serviceUUID, this.characteristicUUID});
+}
+
 class BluetoothBarcodeService {
-  final String _serviceUUID = "d973f2e0-b19e-11e2-9e96-0800200c9a66";
-  final String _characteristicUUID = "d973f2e1-b19e-11e2-9e96-0800200c9a66";
+  // final List<String> _serviceUUID = [
+  //   "d973f2e0-b19e-11e2-9e96-0800200c9a66",
+  //   "0000feea-0000-1000-8000-00805f9b34fb"
+  // ];
+  // final List<String> _characteristicUUID = [
+  //   "d973f2e1-b19e-11e2-9e96-0800200c9a66",
+  //   "00002aa1-0000-1000-8000-00805f9b34fb"
+  // ];
+  final List<ServiceCharacteristic> _listServiceCharacteristicUUID = [
+    ServiceCharacteristic(
+      serviceUUID: "d973f2e0-b19e-11e2-9e96-0800200c9a66",
+      characteristicUUID: "d973f2e1-b19e-11e2-9e96-0800200c9a66",
+    ),
+    ServiceCharacteristic(
+      serviceUUID: "0000feea-0000-1000-8000-00805f9b34fb",
+      characteristicUUID: "00002aa1-0000-1000-8000-00805f9b34fb",
+    )
+  ];
   final Duration durationScan = Duration(seconds: 10);
   final List<String> _deviceName = [
     "BLE-Chat",
     "B2S-Scanner",
     "bluenrg!",
-    "bluenrg"
+    "bluenrg",
+    "Eyoyo-015"
   ];
   StreamController<String> _streamController =
       StreamController<String>.broadcast();
@@ -68,7 +91,7 @@ class BluetoothBarcodeService {
     return instance.scanResults;
   }
 
-  bool checkTargetDeive(ScanResult sr) {
+  bool checkTargetDevice(ScanResult sr) {
     bool result = false;
     print(sr.device.name);
     for (var item in _deviceName) {
@@ -86,28 +109,57 @@ class BluetoothBarcodeService {
       if (onData == BluetoothDeviceState.connected) {
         _qrString = "";
         List<BluetoothService> services = await device.discoverServices();
+        print(services);
+
+        // services.forEach((service) {
+        //   if (service.uuid.toString() == _serviceUUID) {
+        //     service.characteristics.forEach((characteristic) async {
+        //       if (characteristic.uuid.toString() == _characteristicUUID) {
+        //         await characteristic.setNotifyValue(true);
+        //         if (_streamCharacteristic != null)
+        //           _streamCharacteristic.cancel();
+        //         _streamCharacteristic = characteristic.value.listen((value) {
+        //           if (_timer != null) _timer.cancel();
+        //           print(value);
+        //           _timer = Timer.periodic(Duration(milliseconds: 200), (t) {
+        //             if (_qrString.length > 0)
+        //               _qrString = _qrString.replaceAll("\r", "");
+        //             _streamController.add(_qrString);
+        //             _qrString = "";
+        //             _timer.cancel();
+        //           });
+        //           _qrString += utf8.decode(value).trim();
+        //         });
+        //       }
+        //     });
+        //   }
+        // });
+
         services.forEach((service) {
-          if (service.uuid.toString() == _serviceUUID) {
-            service.characteristics.forEach((characteristic) async {
-              if (characteristic.uuid.toString() == _characteristicUUID) {
-                await characteristic.setNotifyValue(true);
-                if (_streamCharacteristic != null)
-                  _streamCharacteristic.cancel();
-                _streamCharacteristic = characteristic.value.listen((value) {
-                  if (_timer != null) _timer.cancel();
-                  print(value);
-                  _timer = Timer.periodic(Duration(milliseconds: 200), (t) {
-                    if (_qrString.length > 0)
-                      _qrString = _qrString.replaceAll("\r", "");
-                    _streamController.add(_qrString);
-                    _qrString = "";
-                    _timer.cancel();
+          _listServiceCharacteristicUUID.forEach((serviceChartacter) {
+            if (service.uuid.toString() == serviceChartacter.serviceUUID) {
+              service.characteristics.forEach((characteristic) async {
+                if (characteristic.uuid.toString() ==
+                    serviceChartacter.characteristicUUID) {
+                  await characteristic.setNotifyValue(true);
+                  if (_streamCharacteristic != null)
+                    _streamCharacteristic.cancel();
+                  _streamCharacteristic = characteristic.value.listen((value) {
+                    if (_timer != null) _timer.cancel();
+                    print(value);
+                    _timer = Timer.periodic(Duration(milliseconds: 200), (t) {
+                      if (_qrString.length > 0)
+                        _qrString = _qrString.replaceAll("\r", "");
+                      _streamController.add(_qrString);
+                      _qrString = "";
+                      _timer.cancel();
+                    });
+                    _qrString += utf8.decode(value).trim();
                   });
-                  _qrString += utf8.decode(value).trim();
-                });
-              }
-            });
-          }
+                }
+              });
+            }
+          });
         });
       }
     });

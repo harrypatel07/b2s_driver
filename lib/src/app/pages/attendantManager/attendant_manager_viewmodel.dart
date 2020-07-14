@@ -1,16 +1,28 @@
-import 'dart:io';
+import 'dart:async';
 
 import 'package:b2s_driver/src/app/core/app_setting.dart';
 import 'package:b2s_driver/src/app/models/bottom_sheet_viewmodel_abstract.dart';
 import 'package:b2s_driver/src/app/pages/attendant/attendant_page.dart';
 import 'package:b2s_driver/src/app/pages/home/home_page.dart';
+import 'package:b2s_driver/src/app/pages/locateBus/connectQRscanDevices/connect_qrscan_devices_page.dart';
 import 'package:b2s_driver/src/app/pages/tabs/tabs_page.dart';
 import 'package:b2s_driver/src/app/service/barcode-service.dart';
+import 'package:b2s_driver/src/app/service/bluetooh-barcode-service.dart';
 import 'package:b2s_driver/src/app/widgets/ts24_utils_widget.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 
 class AttendantManagerViewModel extends BottomSheetViewModelBase {
-  AttendantManagerViewModel();
+  BluetoothBarcodeService barcodeService = BluetoothBarcodeService();
+  BluetoothDevice bluetoothDeviceConnected;
+  StreamSubscription streamQrCode;
+  StreamSubscription streamBluetoothAvailable;
+  StreamSubscription streamConnectedDevice;
+  bool isBluetoothOn = false;
+  AttendantManagerViewModel() {
+    listenBluetoothAvailable();
+    listenBluetoothDeviceConnected();
+  }
   int countChildrenPickDrop(int routeBusId, int typePickDrop) {
     int count = 0;
     driverBusSession.childDrenStatus.forEach((status) {
@@ -81,5 +93,65 @@ class AttendantManagerViewModel extends BottomSheetViewModelBase {
             arguments: TabsArgument(routeChildName: HomePage.routeName));
     } else
       showNotifyCantBack();
+  }
+
+  onTapSettingBluetoothDevice() {
+    Navigator.pushNamed(context, ConnectQRScanDevicesPage.routeName,
+            arguments: this.bluetoothDeviceConnected)
+        .then((bluetoothDevice) {
+      listenBluetoothAvailable();
+      if (bluetoothDevice != null) {
+        this.bluetoothDeviceConnected = bluetoothDevice;
+        this.updateState();
+        listenQrCode(bluetoothDevice);
+      } else
+        this.updateState();
+    });
+  }
+
+  listenBluetoothAvailable() {
+    if (streamBluetoothAvailable != null) streamBluetoothAvailable.cancel();
+    streamBluetoothAvailable =
+        barcodeService.checkBluetoothAvaiable().listen((onData) {
+      if (onData != isBluetoothOn) {
+        isBluetoothOn = onData;
+        if (!onData) {
+          ToastController.show(
+              context: context,
+              message:
+                  "Bluetooth chưa bật hoặc thiết bị không có chức năng bluetooth.",
+              duration: Duration(seconds: 2));
+        }
+        this.updateState();
+      }
+    });
+  }
+
+  listenBluetoothDeviceConnected() {
+    if (streamConnectedDevice != null) streamConnectedDevice.cancel();
+    streamConnectedDevice =
+        barcodeService.getConnectedDevice().listen((onData) {
+      if ((this.bluetoothDeviceConnected == null ||
+              this.bluetoothDeviceConnected != onData) &&
+          onData != null) {
+        this.bluetoothDeviceConnected = onData;
+        this.updateState();
+        listenQrCode(this.bluetoothDeviceConnected);
+      }
+    });
+//    barcodeService.getConnectedDevice().then((bluetoothDevice){
+//      if(bluetoothDevice != null)
+//        listenQrCode(bluetoothDevice);
+//    });
+  }
+
+  listenQrCode(BluetoothDevice bluetoothDevice) {
+    if (streamQrCode != null) streamQrCode.cancel();
+    streamQrCode = barcodeService
+        .listenDataQrCode(device: this.bluetoothDeviceConnected)
+        .listen((onData) {
+      if (onData.length > 0) listenQRcodeDevice(onData);
+      print(onData);
+    });
   }
 }

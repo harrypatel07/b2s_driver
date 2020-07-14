@@ -244,7 +244,7 @@ class HomePageCardTimeLine extends StatelessWidget {
                       ? cardType == 1
                           ? Column(
                               children: <Widget>[
-                                if (isDriver || (!isDriver && isPickDrop))
+                                if (isPickDrop)
                                   Container(
                                     width: 70.0,
                                     height: 30.0,
@@ -333,7 +333,7 @@ class HomePageCardTimeLine extends StatelessWidget {
                                           )),
                                     ),
                                   ),
-                                if (isDriver || (!isDriver && isPickDrop))
+                                if (isPickDrop)
                                   SizedBox(
                                     height: 5,
                                   ),

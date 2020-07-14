@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:b2s_driver/src/app/app_localizations.dart';
 import 'package:b2s_driver/src/app/core/app_setting.dart';
@@ -68,8 +69,10 @@ class BottomSheetCustomViewModel extends ViewModelBase {
 
   onTapPickUpLocateBus(
       DriverBusSession driverBusSession, Children children, RouteBus routeBus) {
-    var childrenStatus = driverBusSession.childDrenStatus.singleWhere((item) =>
-        item.childrenID == children.id && item.routeBusID == routeBus.id);
+    var childrenStatus = driverBusSession.childDrenStatus.firstWhere(
+        (item) =>
+            item.childrenID == children.id && item.routeBusID == routeBus.id,
+        orElse: () => null);
     if (childrenStatus.typePickDrop == 0 && childrenStatus.statusID != 0)
       return;
     if (childrenStatus.typePickDrop == 1 && childrenStatus.statusID != 1)

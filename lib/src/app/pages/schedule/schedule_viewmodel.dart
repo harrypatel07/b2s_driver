@@ -49,6 +49,7 @@ class ScheduleViewModel extends ViewModelBase {
         .getListDriverBusSession(
             vehicleId: driver.vehicleId, driverId: driver.id, date: date)
         .then((value) {
+      api.getDriverInfo(driver.id);
       if (value is List) {
         listDriverBusSession = value;
         if (value.length > 0) busId = value[0].busID;

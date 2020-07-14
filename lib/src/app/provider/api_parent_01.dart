@@ -136,6 +136,49 @@ class Api1 extends ApiMaster {
     });
   }
 
+  ///Hàm thay đổi driverId vào model Driver khi chọn vehicle cho attendent
+  Future<bool> changeDriverByVehicle(int vehicleId) async {
+    await this.authorization();
+    body = new Map();
+    body["domain"] = [
+      ['id', '=', vehicleId]
+    ];
+    body["fields"] = [
+      "name",
+      "id",
+      "x_posx",
+      "x_posy",
+      "x_posz",
+      "driver_id",
+      "license_plate",
+      "x_qr_code"
+    ];
+    var params = convertSerialize(body);
+    return http
+        .get('${this.api}/search_read/fleet.vehicle?$params',
+            headers: this.headers)
+        .then((http.Response response) async {
+      if (response.statusCode == 200) {
+        List list = json.decode(response.body);
+        if (list.length > 0) {
+          List<FleetVehicle> listFleetVehicle =
+              list.map((item) => FleetVehicle.fromJson(item)).toList();
+          Driver driver = Driver();
+          driver.vehicleId = listFleetVehicle[0].id;
+          driver.vehicleName = listFleetVehicle[0].licensePlate;
+          driver.vehicleNameTracCar = listFleetVehicle[0].name;
+          driver.isDriver = false;
+          driver.driverId = listFleetVehicle[0].driverId[0];
+          await driver.saveLocal();
+          return true;
+        }
+      }
+      return false;
+    }).catchError((error) {
+      return false;
+    });
+  }
+
   ///Lấy thông tin driver
   Future<Driver> getDriverInfo(int id) async {
     await this.authorization();
@@ -1292,26 +1335,63 @@ class Api1 extends ApiMaster {
   ///Update tọa độ và thời điểm xe đến trạm
   Future<bool> updatePickingRouteByDriver(
       PickingRoute pickingRoute, int typePickDrop) async {
-    Location location = Location();
-    var myLoc = await location.getLocation();
+    //Location location = Location();
+    //var myLoc = await location.getLocation();
+    PickingRoute _pickingRoute = PickingRoute();
+    _pickingRoute.id = pickingRoute.id;
     var date = DateTime.now();
     var strDateTime = DateFormat('yyyy-MM-dd HH:mm:ss')
         .format(date.add(Duration(hours: -date.timeZoneOffset.inHours)))
         .toString();
     if (typePickDrop == 0) {
-      pickingRoute.gpsTracking = "${myLoc.latitude},${myLoc.longitude}";
-      pickingRoute.xRealStartTime = strDateTime;
-      pickingRoute.status = "halt";
+      //pickingRoute.gpsTracking = "${myLoc.latitude},${myLoc.longitude}";
+      _pickingRoute.xRealStartTime = strDateTime;
+      _pickingRoute.status = "halt";
     } else {
-      pickingRoute.xGpsTrackingDes = "${myLoc.latitude},${myLoc.longitude}";
-      pickingRoute.xRealEndTime = strDateTime;
-      pickingRoute.status = "reach";
+      // pickingRoute.xGpsTrackingDes = "${myLoc.latitude},${myLoc.longitude}";
+      _pickingRoute.xRealEndTime = strDateTime;
+      _pickingRoute.status = "reach";
     }
     await this.authorization();
     body = new Map();
     body["model"] = "picking.route";
-    body["ids"] = json.encode([int.parse(pickingRoute.id.toString())]);
-    body["values"] = json.encode(pickingRoute.toJsonUpdate(typePickDrop));
+    body["ids"] = json.encode([int.parse(_pickingRoute.id.toString())]);
+    body["values"] = json.encode(_pickingRoute.toJsonUpdate(typePickDrop));
+    return http
+        .put('${this.api}/write', headers: this.headers, body: body)
+        .then((http.Response response) {
+      this.updateCroodPickingRouteByDriver(pickingRoute, typePickDrop);
+      var result = false;
+      if (response.statusCode == 200) {
+        print(response.body);
+        result = true;
+        //print(list);
+      } else {
+        result = false;
+      }
+      return result;
+    });
+  }
+
+  ///Update tọa độ và thời điểm xe đến trạm
+  Future<bool> updateCroodPickingRouteByDriver(
+      PickingRoute pickingRoute, int typePickDrop) async {
+    PickingRoute _pickingRoute = PickingRoute();
+    _pickingRoute.id = pickingRoute.id;
+    Location location = Location();
+    var myLoc = await location.getLocation();
+    if (typePickDrop == 0) {
+      _pickingRoute.gpsTracking = "${myLoc.latitude},${myLoc.longitude}";
+      _pickingRoute.status = "halt";
+    } else {
+      _pickingRoute.xGpsTrackingDes = "${myLoc.latitude},${myLoc.longitude}";
+      _pickingRoute.status = "reach";
+    }
+    await this.authorization();
+    body = new Map();
+    body["model"] = "picking.route";
+    body["ids"] = json.encode([int.parse(_pickingRoute.id.toString())]);
+    body["values"] = json.encode(_pickingRoute.toJsonUpdate(typePickDrop));
     return http
         .put('${this.api}/write', headers: this.headers, body: body)
         .then((http.Response response) {

@@ -1165,6 +1165,9 @@ class Api1 extends ApiMaster {
                     listChildrenForRoute.map((item) => item.id).toList();
                 listChildDrenRoute.add(childrenRoute);
               }
+              //Group lại listChildrenRoute cho trường hợp 1 địa điểm chia làm nhiều dòng.
+              listChildDrenRoute =
+                  ChildDrenRoute.groupByRouteId(listChildDrenRoute);
               //Xóa children đã tồn tại trong list children
               listChildren = Common.distinceArray<Children>(listChildren, "id");
 

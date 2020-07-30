@@ -347,4 +347,21 @@ class ChildDrenRoute {
     ChildDrenRoute(id: 2, listChildrenID: [1, 2], routeBusID: 2),
     ChildDrenRoute(id: 3, listChildrenID: [1, 2], routeBusID: 4),
   ];
+
+  static List<ChildDrenRoute> groupByRouteId(listChildrenRoute) {
+    List<ChildDrenRoute> result = [];
+    Map<int, ChildDrenRoute> mapObject = Map();
+    for (var i = 0; i < listChildrenRoute.length; i++) {
+      var item = listChildrenRoute[i];
+      if (!mapObject.containsKey(item.routeBusID))
+        mapObject[item.routeBusID] = item;
+      else {
+        mapObject[item.routeBusID].listChildrenID.addAll(item.listChildrenID);
+      }
+    }
+    mapObject.forEach((key, value) {
+      result.add(value);
+    });
+    return result;
+  }
 }

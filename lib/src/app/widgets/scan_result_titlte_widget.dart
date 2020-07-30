@@ -45,3 +45,48 @@ class ScanResultTile extends StatelessWidget {
     );
   }
 }
+
+class ScanResultTileConnecting extends StatelessWidget {
+  const ScanResultTileConnecting({Key key, this.result}) : super(key: key);
+
+  final ScanResult result;
+
+  Widget _buildTitle(BuildContext context) {
+    if (result.device.name.length > 0) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            result.device.name,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            result.device.id.toString(),
+            style: Theme.of(context).textTheme.caption,
+          )
+        ],
+      );
+    } else {
+      return Text(result.device.id.toString());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+      title: _buildTitle(context),
+      leading: Icon(
+        Icons.settings_remote,
+      ),
+      trailing: Container(
+        width: 20,
+        height: 20,
+        child: CircularProgressIndicator(
+          strokeWidth: 3,
+          valueColor: AlwaysStoppedAnimation<Color>(ThemePrimary.primaryColor),
+        ),
+      ),
+    );
+  }
+}

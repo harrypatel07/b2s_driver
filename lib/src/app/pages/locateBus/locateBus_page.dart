@@ -48,6 +48,7 @@ class _LocateBusPageState extends State<LocateBusPage>
         myLocationButtonEnabled: false,
         compassEnabled: true,
         markers: Set<Marker>.of(viewModel.markers.values),
+        zoomControlsEnabled: false,
         polylines: Set<Polyline>.of(viewModel.polyline.values),
         onTap: (lat) {
           var coord = lat;

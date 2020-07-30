@@ -216,7 +216,7 @@ Bạn có muốn tiếp tục?
                       stt.childrenID == children.id && stt.typePickDrop == 0,
                   orElse: () => null);
               if (childrenStatusPick != null) {
-                if (DateTime.now()
+                if (childrenStatusPick.timePickDrop != null) if (DateTime.now()
                         .difference(childrenStatusPick.timePickDrop)
                         .inSeconds >
                     (60 * 3)) {

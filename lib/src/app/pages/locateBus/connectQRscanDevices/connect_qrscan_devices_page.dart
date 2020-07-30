@@ -127,10 +127,14 @@ class _ConnectQRScanDevicesPageState extends State<ConnectQRScanDevicesPage> {
       return snapshot.data
           .map(
             (r) => (viewModel.barcodeService.checkTargetDevice(r)
-                ? ScanResultTile(
-                    result: r,
-                    onTap: () => viewModel.onTapConnectDevice(r),
-                  )
+                ? viewModel.isConnecting
+                    ? ScanResultTileConnecting(
+                        result: r,
+                      )
+                    : ScanResultTile(
+                        result: r,
+                        onTap: () => viewModel.onTapConnectDevice(r),
+                      )
                 : Container()),
           )
           .toList();

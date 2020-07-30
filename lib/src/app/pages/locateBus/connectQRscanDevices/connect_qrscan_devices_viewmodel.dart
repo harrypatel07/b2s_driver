@@ -12,6 +12,7 @@ class ConnectQRScanDeviceViewModel extends ViewModelBase {
   BluetoothDevice bluetoothDevice;
   bool isBluetoothOn = false;
   bool isScanning = false;
+  bool isConnecting = false;
   ConnectQRScanDeviceViewModel() {
     listenBluetoothAvailable();
     isScanning = true;
@@ -40,11 +41,14 @@ class ConnectQRScanDeviceViewModel extends ViewModelBase {
   }
 
   onTapConnectDevice(ScanResult scanResult) async {
+    isConnecting = true;
+    this.updateState();
     await scanResult.device.connect();
     if (barcodeService.isScanning) await stopScan();
     // Future.delayed(Duration(milliseconds: 200)).then((_) {
     //   barcodeService.scanResult();
     // });
+    isConnecting = false;
     Navigator.pop(context, scanResult.device);
   }
 

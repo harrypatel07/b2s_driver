@@ -220,7 +220,7 @@ class LocateBusPageViewModel extends BottomSheetViewModelBase {
         driverBusSession.clearLocal();
       // Navigator.pushReplacementNamed(context, TabsPage.routeName,
       //     arguments: TabsArgument(routeChildName: HomePage.routeName));
-      Get.offAllNamed(TabsPage.routeName, (route) => false,
+      Get.offAllNamed(TabsPage.routeName,
           arguments: TabsArgument(routeChildName: HomePage.routeName));
     } else
       LoadingDialog.showMsgDialog(context,
